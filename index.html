@@ -120,6 +120,7 @@ sub,sup{font-size:.7em}
 .btn.link{border:0;background:transparent;color:var(--cx);padding:6px 4px}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 22px}
+.controls[hidden]{display:none}
 .ctl{display:flex;flex-direction:column;gap:4px}
 .ctl label,.ctl .lbl{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted)}
 .ctl output{font:500 13px var(--f-mono);color:var(--ink);font-variant-numeric:tabular-nums}
@@ -667,6 +668,14 @@ details>p,details>div{margin-top:8px!important;padding:10px 14px;background:var(
 .rh .labbar .seg button{font-size:12.5px}
 #rh-sdir button{font-size:12.5px}
 .rh .readout strong{white-space:normal;font-size:15px;line-height:1.35}
+.intuit .k,.try h3,.example h3,.oops h3,.ttip h3,.labbar .title{display:inline-flex;align-items:center;gap:8px}
+.intuit .k::before,.try h3::before,.example h3::before,.oops h3::before,.ttip h3::before,.labbar .title::before{content:"";flex:none;width:16px;height:16px;background:currentColor;-webkit-mask:var(--ico) center/contain no-repeat;mask:var(--ico) center/contain no-repeat}
+.intuit .k{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z'/%3E%3C/svg%3E")}.try h3{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M7.5 15h9'/%3E%3C/svg%3E")}.example h3{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l4-1 11-11-3-3L5 16l-1 4zM14 6l3 3'/%3E%3C/svg%3E")}.oops h3{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4l9 16H3zM12 10v4M12 17v.5'/%3E%3C/svg%3E")}.ttip h3{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7z'/%3E%3C/svg%3E")}.labbar .title{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12h4l2-6 4 12 2-6h6'/%3E%3C/svg%3E")}
+.mod .glyph{position:absolute;right:14px;top:16px;width:30px;height:30px;color:var(--c);transition:transform .5s var(--ease-spring)}
+.mod .glyph svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.mod:hover .glyph{transform:translateY(-3px) rotate(-6deg) scale(1.08)}
+.mod h3{padding-right:40px}
+#hero-canvas{cursor:ew-resize;touch-action:pan-y}
 @media (prefers-reduced-motion: reduce){*,::before,::after{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
 </style>
 
@@ -1656,6 +1665,7 @@ details>p,details>div{margin-top:8px!important;padding:10px 14px;background:var(
         </div>
         <canvas id="k-canvas" aria-label="Two carts colliding on a track"></canvas>
         <div class="ctl"><label for="k-time"><span>Time, collision at 0</span> <output id="k-time-out"></output></label><input type="range" id="k-time" min="-2" max="2" step="0.01" value="-2"></div>
+        <div class="v3block"><p class="v3cap"><b>In 3D</b> The same collision on a track. Spin the view to see both carts and the center of mass (the black marker under the track). The CM keeps moving at the same velocity before and after the hit, because the collision forces are internal.</p><canvas id="k3-canvas" aria-label="3D carts colliding on a track; drag to rotate"></canvas></div>
         <div class="controls">
           <div class="ctl"><label for="k-m1"><span>Cart 1 mass</span> <output id="k-m1-out"></output></label><input type="range" id="k-m1" min="0.5" max="5" step="0.5" value="2"></div>
           <div class="ctl"><label for="k-v1"><span>Cart 1 velocity</span> <output id="k-v1-out"></output></label><input type="range" id="k-v1" min="-5" max="5" step="0.5" value="3"></div>
@@ -1932,11 +1942,12 @@ details>p,details>div{margin-top:8px!important;padding:10px 14px;background:var(
               <p class="small" style="margin:0">Wheel: 1.0 kg uniform disk, radius 0.25 m, so I = ½mR² = 0.031 kg·m². Flip the spin and both arrows flip.</p>
             </div>
             <div data-rh="3" hidden>
-              <h3>Why a spinning wheel doesn't fall</h3>
+              <h3>Why a spinning gyroscope doesn't fall</h3>
               <ol class="rh-how"><li><b>Find L</b> (step 2): curl with the spin. L points along the axle.</li><li><b>Find τ</b> (step 1): r goes from the pivot to the wheel, F = mg points down. τ = r × mg is <b>sideways</b>: level, and at right angles to the axle.</li><li><b>Torque changes L:</b> dL = τ dt. The tip of L moves sideways along τ, not down. So the axle swings around the post instead of falling. That swing is <b>precession</b>.</li></ol>
               <div class="ctl"><label for="rh-w3"><span>Spin rate ω</span> <output id="rh-w3-out"></output></label><input type="range" id="rh-w3" min="40" max="200" step="5" value="100"></div>
               <div class="ctl"><label for="rh-r3"><span>Distance from pivot to wheel, r</span> <output id="rh-r3-out"></output></label><input type="range" id="rh-r3" min="0.15" max="0.45" step="0.01" value="0.35"></div>
-              <div class="row"><button type="button" class="btn" id="rh-rev">Reverse the spin</button></div>
+              <div class="row"><button type="button" class="btn" id="rh-rev">Reverse the spin</button><button type="button" class="btn" id="rh-stop">Stop the spin</button></div>
+              <div class="status" id="rh-st">—</div>
               <div class="readout"><div><span>τ = mgr</span><strong id="rh-t3">—</strong></div><div><span>L = Iω</span><strong id="rh-l3">—</strong></div><div><span>Ω = τ / L</span><strong id="rh-om">—</strong></div><div><span>One trip around</span><strong id="rh-per">—</strong></div></div>
               <div class="box"><p>In a time dt the tip of L moves |dL| = τ dt sideways, so the axle turns through dφ = τ dt / L. The precession rate is <span class="m">Ω = dφ/dt = τ/L = <i>mgr</i>/(<i>I</i>ω)</span>. Spin faster and it precesses slower. Reverse the spin and it precesses the other way.</p></div>
               <p class="small" style="margin:0">This is the fast-spin picture: it assumes ω is much bigger than Ω and ignores the small wobble (nutation) a real gyroscope also shows. Same wheel: 1.0 kg, radius 0.25 m. The spin is drawn slowed down; the precession is shown at its real rate.</p>
@@ -2093,6 +2104,7 @@ details>p,details>div{margin-top:8px!important;padding:10px 14px;background:var(
           <button type="button" class="btn primary" id="s-play">Pause</button>
         </div>
         <canvas id="s-canvas" aria-label="Oscillator animation with linked position, velocity and acceleration graphs"></canvas>
+        <div class="v3block"><p class="v3cap"><b>In 3D</b> The same oscillator as a real object. Velocity (green) is biggest passing through the middle; acceleration (pink) is biggest at the ends and always points back toward the middle.</p><canvas id="s3-canvas" aria-label="3D spring or pendulum oscillating; drag to rotate"></canvas></div>
         <div class="controls" id="s-spring-ctl">
           <div class="ctl"><label for="s-m"><span>Mass m</span> <output id="s-m-out"></output></label><input type="range" id="s-m" min="0.2" max="4" step="0.1" value="1"></div>
           <div class="ctl"><label for="s-k"><span>Spring constant k</span> <output id="s-k-out"></output></label><input type="range" id="s-k" min="1" max="40" step="1" value="10"></div>
@@ -2665,6 +2677,8 @@ function view3d(cv,o){
         [[0,1,2,3,[0,0,-1]],[4,5,6,7,[0,0,1]],[0,1,5,4,[0,-1,0]],[2,3,7,6,[0,1,0]],[1,2,6,5,[1,0,0]],[0,3,7,4,[-1,0,0]]].forEach(([a,b,cc,d,nl])=>{
           const n=[nl[0]*cr+nl[2]*sr,nl[1],-nl[0]*sr+nl[2]*cr],ctr=V3.mul(V3.add(V3.add(v[a],v[b]),V3.add(v[cc],v[d])),.25);if(V3.dot(n,V3.sub(eye,ctr))<=0)return;
           const lit=.62+.38*Math.max(0,V3.dot(n,LIGHT));S.poly([v[a],v[b],v[cc],v[d]],al<1?alpha(col,al):shade(col,lit),al<1?alpha(col,.9):shade(col,lit*.8));});},
+      tube(a,b,rad,col){const A=P(a),B=P(b);if(!A||!B)return;push((A[2]+B[2])/2-.001,x=>{const w=Math.max(1.5,rad*(A[3]+B[3]));x.save();x.lineCap='round';x.strokeStyle=shade(col,.72);x.lineWidth=w+1.6;x.beginPath();x.moveTo(A[0],A[1]);x.lineTo(B[0],B[1]);x.stroke();
+          x.strokeStyle=col;x.lineWidth=w;x.stroke();x.strokeStyle=shade(col,1.25);x.lineWidth=w*.32;x.beginPath();x.moveTo(A[0]-w*.18,A[1]-w*.2);x.lineTo(B[0]-w*.18,B[1]-w*.2);x.stroke();x.restore();});},
       disk(c,R,col,n=48,stroke){S.poly(Array.from({length:n},(_,i)=>{const a=i/n*Math.PI*2;return [c[0]+R*Math.cos(a),c[1]+R*Math.sin(a),c[2]];}),col,stroke);},
       stars(){STARS.forEach(([a,b,c2,sz])=>{const C=P(V3.add(cam.target,[a,b,c2]));if(C)push(3e6,x=>{x.fillStyle=alpha(T.muted,.55);x.fillRect(C[0],C[1],sz,sz);});});}};
     o.scene(S,t);L.sort((a,b)=>b[0]-a[0]);L.forEach(e=>e[1](ctx));}
@@ -2692,7 +2706,7 @@ function view3d(cv,o){
 (function hero(){
   /* The balls fall in slowed real time. Each 0.1 s flash leaves a dot (with a brief ripple) and a dashed
      line joining the pair, so you see them land at the same height every time. At rest: the full strobe. */
-  const cv=$('#hero-canvas');const N=9,dt=.1,ux=2.1,SLOW=.32,HOLD=1.8,TF=(N-1)*dt;let t0=null,nowT=null;
+  const cv=$('#hero-canvas');const N=9,dt=.1,SLOW=.32,HOLD=1.8,TF=(N-1)*dt;let ux=2.1,t0=null,nowT=null,dragX=null;
   function draw(ts){if(ts!==undefined)nowT=ts;const w=cv.clientWidth;if(!w)return;const h=Math.round(clamp(w*.72,230,330));const c=prep(cv,h);if(!c)return;const {ctx}=c;
     const fall=.5*G*TF**2, top=22, bot=20, s=(h-top-bot)/fall, x0=Math.max(46,w*.16);
     const live=!REDUCE&&nowT!=null;let tt=TF,fadeAll=1;
@@ -2711,8 +2725,12 @@ function view3d(cv,o){
       const since=(tt/dt)%1;if(since<.15){ctx.fillStyle=alpha(T.surface,.3*(1-since/.15));ctx.fillRect(0,0,w,h);}}
     label(ctx,'dropped',8,top-14,T.muted,'left','middle',MONO);
     label(ctx,'launched sideways →',Math.max(x0+14,62),top-14,T.hot,'left','middle',MONO);
+    label(ctx,'drag sideways · launch speed '+fmt(ux,1)+' m/s',w-8,h-8,T.muted,'right','bottom',MONO);
   }
   drawers.overview=()=>draw();
+  cv.addEventListener('pointerdown',e=>{dragX=e.clientX;cv.setPointerCapture(e.pointerId);});
+  cv.addEventListener('pointermove',e=>{if(dragX===null)return;ux=clamp(ux+(e.clientX-dragX)*.012,.5,3.6);dragX=e.clientX;if(REDUCE)draw();});
+  const end=()=>{dragX=null;};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
   function tickLoop(ts){if(current==='overview'&&!REDUCE&&!document.hidden)draw(ts);requestAnimationFrame(tickLoop);}
   requestAnimationFrame(tickLoop);
 })();
@@ -2773,10 +2791,11 @@ GROUPS.forEach(g=>g.ids.forEach(id=>{const eb=document.querySelector('#v-'+id+' 
   GROUPS.forEach(g=>{nh+=`<div class="grp">${g.w} · ${g.name}</div>`;sh+=`<optgroup label="${g.w} · ${g.name}">`;g.ids.forEach(id=>{nh+=`<a href="#${id}" data-view="${id}">${MODS[id].t}</a>`;sh+=`<option value="${id}">${MODS[id].t}</option>`;});sh+='</optgroup>';});
   nh+='<div class="grp">Review</div><a href="#practice" data-view="practice">Practice set</a><a href="#methods" data-view="methods">Which principle?</a><a href="#exam" data-view="exam">Exam review</a><a href="#review" data-view="review">Review my mistakes</a><a href="#frq" data-view="frq">AP C FRQ practice</a>';sh+='<option value="practice">Practice set</option><option value="methods">Which principle?</option><option value="exam">Exam review</option><option value="review">Review my mistakes</option><option value="frq">AP C FRQ practice</option>';
   $('#nav').innerHTML=nh;const sel=$('#navsel');sel.innerHTML=sh;sel.addEventListener('change',()=>{location.hash=sel.value;});})();
+const GLYPH={"deriv": "<path d=\"M3 20C8 20 10 6 21 4\"/><path d=\"M5 17l14-8\"/><circle cx=\"12\" cy=\"13\" r=\"1.6\"/>", "integ": "<path d=\"M3 20h18M4 18c4-1 6-10 16-12\"/><path d=\"M8 19v-5M11 19v-7M14 19v-9M17 19v-10\"/>", "products": "<path d=\"M4 18l8-3M4 18l3-9M4 18v-12\"/><path d=\"M12 15l-1.5-1.8M12 15l-2.3.4\"/>", "diffeq": "<path d=\"M4 6l3-1M10 6l3-1M16 6l3-1M4 12l3 0M10 12l3 0M16 12l3 0M4 18l3 1M10 18l3 1M16 18l3 1\"/>", "graphs": "<path d=\"M3 20h18M3 20V4\"/><path d=\"M4 16c3-8 6-8 8-2s5 4 8-6\"/>", "constant": "<path d=\"M3 20h18M3 20V4\"/><path d=\"M4 18L20 6\"/>", "variable": "<path d=\"M3 20h18M3 20V4\"/><path d=\"M4 19c3-9 8-12 16-12\"/><path d=\"M4 7h16\" stroke-dasharray=\"2 2\"/>", "vectors": "<path d=\"M4 19l14-6M4 19L9 5\"/><path d=\"M18 13l-3-.2M18 13l-2 2.3M9 5l-.2 3M9 5l2 2.3\"/>", "projectile": "<path d=\"M3 20h18\"/><path d=\"M4 19C8 4 15 4 20 19\" stroke-dasharray=\"1 3\"/><circle cx=\"12\" cy=\"8.5\" r=\"1.8\"/>", "relative": "<path d=\"M3 8h18M3 16h18\"/><path d=\"M8 18l6-12M14 6l-.5 3M14 6l-2.5 1.5\"/>", "forces": "<path d=\"M3 20h18L3 9z\"/><path d=\"M8 13l4-2 2 3-4 2z\"/>", "friction": "<path d=\"M3 18h18\"/><rect x=\"7\" y=\"11\" width=\"7\" height=\"7\"/><path d=\"M16 14h5M7 14H3\"/>", "pulleys": "<circle cx=\"16\" cy=\"6\" r=\"3\"/><path d=\"M3 6h13M19 6v12\"/><rect x=\"17\" y=\"15\" width=\"4\" height=\"5\"/><rect x=\"4\" y=\"3\" width=\"5\" height=\"5\"/>", "circular": "<circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M12 4l4-1.5M12 4l3 2.5\"/><circle cx=\"12\" cy=\"4\" r=\"1.4\"/>", "dynamics": "<path d=\"M3 20h18L6 10\"/><circle cx=\"13\" cy=\"12\" r=\"2.5\"/>", "energy": "<path d=\"M3 5c3 0 4 13 9 13s6-13 9-13\"/><circle cx=\"7\" cy=\"12\" r=\"1.8\"/><path d=\"M3 10h18\" stroke-dasharray=\"2 2\"/>", "loop": "<path d=\"M3 20c6 0 8-1 9-6a4 4 0 1 0-1 0c1 5 3 6 10 6\"/>", "com": "<circle cx=\"6\" cy=\"12\" r=\"3\"/><circle cx=\"18\" cy=\"12\" r=\"2\"/><path d=\"M6 12h12M11 9v6M9 12h4\"/>", "momentum": "<rect x=\"3\" y=\"10\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"11\" width=\"6\" height=\"6\"/><path d=\"M3 20h18M11 6l2 2M13 6l-2 2\"/>", "impulse": "<path d=\"M3 20h18M3 20V4\"/><path d=\"M4 19c3 0 3-14 5-14s2 14 5 14h6\"/>", "torque": "<path d=\"M2 15l20-4\"/><path d=\"M12 13l-3 7h6z\"/><rect x=\"3\" y=\"9\" width=\"4\" height=\"4\"/>", "rotation": "<path d=\"M3 20h18L3 8\"/><circle cx=\"10\" cy=\"11\" r=\"3.5\"/><path d=\"M10 11l2.5-2.5\"/>", "angular": "<ellipse cx=\"12\" cy=\"15\" rx=\"8\" ry=\"3\"/><path d=\"M12 15V3M12 3l-2 3M12 3l2 3\"/>", "gravity": "<ellipse cx=\"12\" cy=\"12\" rx=\"9\" ry=\"6\"/><circle cx=\"9\" cy=\"12\" r=\"2\"/><circle cx=\"21\" cy=\"12\" r=\"1.2\"/>", "gfield": "<circle cx=\"12\" cy=\"12\" r=\"2.5\"/><path d=\"M12 3v5M12 21v-5M3 12h5M21 12h-5M5.5 5.5l3.3 3.3M18.5 18.5l-3.3-3.3\"/>", "shm": "<path d=\"M3 12h2l1.5-4 3 8 3-8 3 8 1.5-4H18\"/><rect x=\"18\" y=\"9\" width=\"4\" height=\"6\"/>", "damped": "<path d=\"M3 12c2-8 3-8 4 0s3 6 4 0 3-4 4 0 2 2 3 0 2-1 3 0\"/>", "waves": "<path d=\"M2 12c2.5-6 5-6 7.5 0s5 6 7.5 0 3.5-4 5-2\"/>", "interf": "<circle cx=\"5\" cy=\"12\" r=\"1.5\"/><path d=\"M9 7a7 7 0 0 1 0 10M13 4a11 11 0 0 1 0 16M17 2a14 14 0 0 1 0 20\"/>", "sound": "<path d=\"M3 12c3-6 6-6 9 0s6 6 9 0M3 12c3 6 6 6 9 0s6-6 9 0\"/>", "beats": "<path d=\"M2 12c1-3 1.5 3 2.5 0s1.5-6 2.5 0 1.5 7 2.5 0 1.5-5 2.5 0 1.5 3 2.5 0 1.5-6 2.5 0 1.5 7 2.5 0 1-3 2 0\"/>", "fourier": "<path d=\"M3 16V8h6v8h6V8h6\"/><path d=\"M3 12c1.5-5 4.5-5 6 0s4.5 5 6 0 4.5-5 6 0\" stroke-dasharray=\"1.5 2\"/>"};
 const apTag=id=>MODS[id].ap.startsWith('AP')?'ap':'na';
 function renderMods(){const solved=store('kin-solved')||{};const cnt={};let k=0;PROBS.forEach(p=>{const c=cnt[p.topic]=cnt[p.topic]||[0,0];c[1]++;if(solved[p.id])c[0]++;});
   $('#modgrid').innerHTML=GROUPS.map(g=>`<div class="modgroup"><div class="eyebrow">${g.w}</div><h3 class="gtitle">${g.name}</h3><div class="modgrid-inner">${g.ids.map(id=>{const m=MODS[id],c=cnt[id]||[0,0];
-    return `<a class="mod" href="#${id}" style="--i:${Math.min(k++,14)}"><h3>${m.t}</h3><p>${m.d}</p><div class="row"><span class="tag ${apTag(id)}">${m.ap}</span><span class="prog">${c[0]}/${c[1]} solved</span></div></a>`;}).join('')}</div></div>`).join('');}
+    return `<a class="mod" href="#${id}" style="--i:${Math.min(k++,14)}">${GLYPH[id]?`<span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24">${GLYPH[id]}</svg></span>`:''}<h3>${m.t}</h3><p>${m.d}</p><div class="row"><span class="tag ${apTag(id)}">${m.ap}</span><span class="prog">${c[0]}/${c[1]} solved</span></div></a>`;}).join('')}</div></div>`).join('');}
 
 /* ---------------- Overview: See it in 3D ---------------- */
 (function g3(){const cv=$('#g3-canvas');if(!cv)return;let scene='proj';
@@ -3285,7 +3304,15 @@ function setText(id,v){const el=$('#'+id);if(el)el.textContent=v;}
     setText('k-time-out',fmt(t)+' s');$('#k-time').value=t;}
   function readouts(){const r=res();setText('k-u1',fmt(r.u1)+' m/s');setText('k-u2',fmt(r.u2)+' m/s');setText('k-p',fmt(r.P)+' kg·m/s');setText('k-K0',fmt(r.K0)+' J');setText('k-K1',fmt(r.K1)+' J');setText('k-lost',r.K0>0?fmt(100*(r.K0-r.K1)/r.K0,0)+'%':'0%');
     setText('k-status',r.hit?`Momentum before = after = ${fmt(r.P)} kg·m/s. The center of mass moves at ${fmt(r.P/r.M)} m/s the whole time.`:'Cart 1 never catches cart 2 (v₁ ≤ v₂), so they never collide. Make v₁ bigger than v₂.');}
-  drawers.momentum=()=>{readouts();draw();};
+  const v3=view3d($('#k3-canvas'),{yaw:-1.3,pitch:.42,dist:7.2,target:[0,0,.35],height:w=>clamp(w*.42,240,360),scene:S=>{const r=res(),p=posAt(r,t);
+      let lo=1e9,hi=-1e9;[-2,0,2].forEach(tt=>{const q=posAt(r,tt);lo=Math.min(lo,q[0]-W);hi=Math.max(hi,q[1]+W);});const mid=(lo+hi)/2,k=6.4/Math.max(2,hi-lo),X=z=>(z-mid)*k;
+      S.box([0,0,-.06],[7.6,.9,.12],0,T.muted);for(let z=Math.ceil(lo);z<=hi;z++)S.line([X(z),-.46,0],[X(z),-.62,0],T.muted,1);
+      const vNow=(t<0||!r.hit?[s.v1,s.v2]:[r.u1,r.u2]).map(z=>z-(cmF?r.P/r.M:0));
+      [[X(p[0])-.4,s.m1,T.cx,vNow[0],'1'],[X(p[1])+.4,s.m2,T.hot,vNow[1],'2']].forEach(([cx,m,col,v,l])=>{const hgt=.3+.06*m,len=.8;
+        S.box([cx,0,hgt/2+.12],[len,.7,hgt],0,col);[-1,1].forEach(a=>[-1,1].forEach(b=>S.ball([cx+a*len*.32,b*.36,.1],.1,T.ink,1,false)));
+        const top=[cx,0,hgt+.35];if(Math.abs(v)>.01)S.arrow(top,V3.add(top,[v*.45,0,0]),T.cv,3,fmt(v,1)+' m/s');S.text([cx,0,hgt/2+.12],l,'#fff');});
+      const xcm=(s.m1*(p[0]-W/2)+s.m2*(p[1]+W/2))/r.M;S.ball([X(xcm),0,-.22],.12,T.ink,1,false);S.text([X(xcm),-.55,-.3],'CM',T.ink);}});
+  drawers.momentum=()=>{readouts();draw();v3.render();};
   ticker('momentum',dt=>{if(!run)return;t+=dt*.8;if(t>2)t=-2;draw();});
   const up=()=>{readouts();draw();};
   bindRange('k-m1',x=>fmt(x,1)+' kg',x=>{s.m1=x;up();});bindRange('k-v1',x=>fmt(x,1)+' m/s',x=>{s.v1=x;up();});bindRange('k-m2',x=>fmt(x,1)+' kg',x=>{s.m2=x;up();});bindRange('k-v2',x=>fmt(x,1)+' m/s',x=>{s.v2=x;up();});
@@ -3360,42 +3387,56 @@ function setText(id,v){const el=$('#'+id);if(el)el.textContent=v;}
    Gyroscope: L = Iω along the axle; τ = r × mg is level and at right angles to the axle; dL = τ dt swings the
    axle around the post at Ω = mgr/(Iω) (fast-spin approximation). */
 (function righthand(){const cv=$('#rh-canvas');if(!cv)return;
-  const m=1,Rw=.25,Iw=.5*m*Rw*Rw,K=4,rF=.5,F=20;let step=1,phi=90,sd2=1,w2=3,w3=100,r3=.35,sd3=1,prec=0,psi=0,lastT=null;
-  const HOME={1:{yaw:-1.05,pitch:.62,dist:7.2,target:[.9,0,.3]},2:{yaw:-1,pitch:.32,dist:6.6,target:[0,0,1.1]},3:{yaw:-.75,pitch:.62,dist:6.8,target:[0,0,1.35]}};
+  const m=1,Rw=.25,Iw=.5*m*Rw*Rw,K=4,rF=.5,F=20;let step=1,phi=90,sd2=1,w2=3,w3=100,r3=.35,sd3=1,prec=0,psi=0,lastT=null,spinning=true,beta=0,bv=0;
+  const HOME={1:{yaw:-1.1,pitch:.42,dist:7.4,target:[.85,0,.9]},2:{yaw:-1,pitch:.32,dist:6.6,target:[0,0,1.1]},3:{yaw:-.75,pitch:.45,dist:8.4,target:[0,0,1.9]}};
   const arc=(c,e1,e2,R,a0,a1,n=28)=>Array.from({length:n+1},(_,i)=>{const a=a0+(a1-a0)*i/n;return V3.add(c,V3.add(V3.mul(e1,R*Math.cos(a)),V3.mul(e2,R*Math.sin(a))));});
   function curl(S,pts,col,lab){if(pts.length<2)return;S.path(pts,col,2.5);S.arrow(pts[pts.length-2],pts[pts.length-1],col,2.5);if(lab)S.text(pts[Math.floor(pts.length/2)],lab,col,MONO);}
   function wheel(S,c,u,R,ang,col){const e1=Math.abs(u[2])>.9?[1,0,0]:[0,0,1],e2=V3.cross(u,e1),rim=arc(c,e1,e2,R,0,Math.PI*2,48);
-    S.poly(rim,alpha(col,.16),null);for(let i=0;i<48;i++)S.line(rim[i],rim[i+1],col,3);
+    S.poly(rim,alpha(col,.14),null);for(let i=0;i<48;i++)S.tube(rim[i],rim[i+1],.055,col);S.ball(c,.09,col,1,false);
     for(let k=0;k<6;k++){const a=ang+k*Math.PI/3;S.line(c,V3.add(c,V3.add(V3.mul(e1,R*Math.cos(a)),V3.mul(e2,R*Math.sin(a)))),col,2);}
     const a=ang;S.ball(V3.add(c,V3.add(V3.mul(e1,R*Math.cos(a)),V3.mul(e2,R*Math.sin(a)))),.07,T.hot,1,false);return [e1,e2];}
+  /* a right hand: fingers start along f, curl toward td × f; the thumb points along td */
+  const SKIN='#DDA07A';
+  function hand(S,base,f,td,cu,Z=1.45){const sd=V3.cross(td,f),dir=a=>V3.add(V3.mul(f,Math.cos(a)),V3.mul(sd,Math.sin(a)));
+    for(let i=0;i<4;i++){const o=V3.add(base,V3.mul(td,-i*.13*Z)),kn=V3.add(o,V3.mul(f,.55*Z));S.tube(o,kn,.085*Z,SKIN);let pt=kn,a=0;const sc=i===3?.78:i===0?.92:1;
+      [.3,.22,.17].forEach((L,j)=>{a+=cu*[.75,1,.8][j];const nx=V3.add(pt,V3.mul(dir(a),L*sc*Z));S.tube(pt,nx,.058*Z,SKIN);pt=nx;});}
+    const t0=V3.add(base,V3.add(V3.mul(f,.16*Z),V3.mul(td,.1*Z))),t1=V3.add(t0,V3.add(V3.mul(td,.3*Z),V3.mul(f,.1*Z))),t2=V3.add(t1,V3.mul(td,.28*Z));S.tube(t0,t1,.07*Z,SKIN);S.tube(t1,t2,.062*Z,SKIN);}
   const SC={
     1(S,t){S.grid(-1.5,3,-2,2,.5);const P=[0,0,.42],tip=[2,0,.42],th=phi*Math.PI/180,sn=Math.sin(th);
       S.box([0,0,.2],[.2,.2,.4],0,T.muted);S.box([1,0,.36],[2.1,.18,.07],0,T.ink);
       S.arrow(P,tip,T.cx,3,'r');const Fd=[Math.cos(th),Math.sin(th),0];S.arrow(tip,V3.add(tip,V3.mul(Fd,1.3)),T.hot,3.5,'F');
-      const c=t==null?2.6:t%3.4,p=clamp(c/1.3,0,1),q=clamp((c-1.4)/.7,0,1),sw=th<=Math.PI?th:th-2*Math.PI;
-      if(Math.abs(sn)>.02){curl(S,arc(tip,[1,0,0],[0,1,0],.6,0,sw*Math.max(.05,p)),T.muted,p>.5?'curl r → F':'');
-        if(q>0)S.arrow(P,V3.add(P,[0,0,1.9*sn*q]),T.ca,4,'τ');
+      const c=t==null?3.8:t%4.8,p=clamp((c-.5)/1.6,0,1),q=clamp((c-2.3)/.7,0,1),sw=th<=Math.PI?th:th-2*Math.PI,ez=x=>x<.5?2*x*x:1-2*(1-x)*(1-x);
+      if(Math.abs(sn)>.02){hand(S,[-.3,0,sn>0?1.2:1.85],[1,0,0],[0,0,Math.sign(sn)],ez(p)*1.15);
+        curl(S,arc(tip,[1,0,0],[0,1,0],.6,0,sw*Math.max(.05,ez(p))),T.muted,p>.5?'curl r → F':'');
+        if(q>0)S.arrow(P,V3.add(P,[0,0,1.9*sn*q]),T.ca,4,q>.9?'τ, along the thumb':'');
         curl(S,arc([0,0,.05],[1,0,0],[0,1,0],.55,0,Math.sign(sn)*4.4),alpha(T.ca,.55));}
       else S.text(V3.add(P,[0,0,.5]),'τ = 0',T.ca);},
     2(S,t,dt){S.grid(-1.5,1.5,-1.5,1.5,.5);psi+=sd2*w2*dt;const c=[0,0,1.1],u=[0,0,1];S.line([0,0,0],[0,0,2.3],T.muted,2.5);
       wheel(S,c,u,1,psi,T.ink);curl(S,arc(V3.add(c,[0,0,.25]),[1,0,0],[0,1,0],1.35,psi+.3*sd2,psi+.3*sd2+sd2*4.4),T.muted,'fingers curl with the spin');
       const len=.45+w2*.22;S.arrow(V3.add(c,[0,0,sd2>0?.05:-.05]),V3.add(c,[0,0,sd2*len]),T.cv,4,'ω');S.arrow(V3.add(c,[.42,0,sd2>0?.05:-.05]),V3.add(c,[.42,0,sd2*len*.8]),T.ink,3,'L = Iω');},
-    3(S,t,dt){S.grid(-3,3,-3,3,.5);const L=Iw*w3,tau=m*G*r3,Om=tau/L;prec+=sd3*Om*dt;psi+=sd3*9*dt;
-      const Hp=1.6,P=[0,0,Hp],u=[Math.cos(prec),Math.sin(prec),0],c=V3.add(P,V3.mul(u,r3*K));
-      S.box([0,0,Hp/2],[.12,.12,Hp],0,T.muted);S.box([0,0,.03],[.8,.8,.06],0,T.muted);S.ball(P,.09,T.ink,1,false);
-      S.line(P,V3.add(c,V3.mul(u,.3)),T.ink,4);wheel(S,c,u,Rw*K,psi,T.ink);
-      const Ll=clamp(.5+L*.28,.6,2.2),tipL=V3.add(c,V3.mul(u,sd3*Ll));
-      S.arrow(V3.add(P,[0,0,-.14]),V3.add(c,[0,0,-.14]),T.cx,2.5,'r');S.arrow(c,V3.add(c,[0,0,-1.05]),T.hot,3,'mg');
-      S.arrow(V3.add(c,V3.mul(u,sd3*.05)),tipL,T.ink,4.5,'L');
-      const td=V3.norm(V3.cross(u,[0,0,-1])),tl=.4+tau*.25;S.arrow(P,V3.add(P,V3.mul(td,tl)),T.ca,3.5,'τ');S.arrow(tipL,V3.add(tipL,V3.mul(td,.55)),T.ca,2.5,'dL');
-      const Rt=r3*K+sd3*Ll;S.path(Array.from({length:73},(_,i)=>{const a=i/72*Math.PI*2;return [Rt*Math.cos(a),Rt*Math.sin(a),Hp];}),alpha(T.muted,.7),1.25,[4,5]);
-      const zt=.55;curl(S,arc([0,0,zt],[1,0,0],[0,1,0],.42,prec,prec+sd3*4.2),T.cv,'Ω');}};
+    3(S,t,dt){S.grid(-3,3,-3,3,.5);const L=Iw*w3,tau=m*G*r3,Om=tau/L;
+      if(spinning){prec+=sd3*Om*dt;psi+=sd3*9*dt;}
+      else{const Ip=.25*m*Rw*Rw+m*r3*r3;bv+=(m*G*r3*Math.cos(beta)/Ip-1.5*bv)*dt;beta=clamp(beta+bv*dt,-.2,Math.PI);}   /* no spin: it tips over and swings like a pendulum */
+      const Hp=2.9,P=[0,0,Hp],u=[Math.cos(prec)*Math.cos(beta),Math.sin(prec)*Math.cos(beta),-Math.sin(beta)],c=V3.add(P,V3.mul(u,r3*K)),Rr=Rw*K;
+      S.box([0,0,Hp/2],[.14,.14,Hp],0,T.muted);S.box([0,0,.04],[1,1,.08],0,T.muted);S.ball(P,.1,T.ink,1,false);
+      const wv=V3.norm(V3.sub([0,0,1],V3.mul(u,u[2]))),fr=arc(c,u,wv,Rr*1.2,0,Math.PI*2,48);for(let i=0;i<48;i++)S.tube(fr[i],fr[i+1],.035,T.muted);
+      S.tube(P,V3.add(c,V3.mul(u,Rr*1.2)),.04,T.ink);wheel(S,c,u,Rr,psi,T.ink);
+      S.arrow(V3.add(P,[0,0,-.16]),V3.add(c,[0,0,-.16]),T.cx,2.5,'r');S.arrow(c,V3.add(c,[0,0,-1.05]),T.hot,3,'mg');
+      const td=V3.norm(V3.cross(u,[0,0,-1])),tl=(.4+tau*.25)*Math.max(.05,Math.cos(beta));if(Math.cos(beta)>.05)S.arrow(P,V3.add(P,V3.mul(td,tl)),T.ca,3.5,'τ');
+      if(spinning){const Ll=clamp(.5+L*.28,.6,2.2),tipL=V3.add(c,V3.mul(u,sd3*Ll));S.arrow(V3.add(c,V3.mul(u,sd3*.05)),tipL,T.ink,4.5,'L');S.arrow(tipL,V3.add(tipL,V3.mul(td,.55)),T.ca,2.5,'dL');
+        const Rt=r3*K+sd3*Ll;S.path(Array.from({length:73},(_,i)=>{const a=i/72*Math.PI*2;return [Rt*Math.cos(a),Rt*Math.sin(a),Hp];}),alpha(T.muted,.7),1.25,[4,5]);
+        curl(S,arc([0,0,.7],[1,0,0],[0,1,0],.42,prec,prec+sd3*4.2),T.cv,'Ω');}
+      else S.text(V3.add(P,[0,0,.5]),'no spin: L ≈ 0',T.ink);}};
   const v=view3d(cv,{...HOME[1],auto:false,height:w=>clamp(w*.72,300,460),scene:(S,t)=>{let dt=0;if(t!=null){dt=lastT==null?0:Math.min(.05,Math.max(0,t-lastT));lastT=t;}SC[step](S,t,dt);}});
   function upd(){const th=phi*Math.PI/180,tz=rF*F*Math.sin(th);setText('rh-tau',fmt(Math.abs(tz),1)+' N·m');setText('rh-tdir',Math.abs(tz)<.05?'nowhere: zero':tz>0?'up: turns counterclockwise seen from above':'down: turns clockwise seen from above');
     setText('rh-wv',fmt(w2,1)+' rad/s, '+(sd2>0?'up':'down'));setText('rh-lv',fmt(Iw*w2,3)+' kg·m²/s, '+(sd2>0?'up':'down'));
-    const L=Iw*w3,tau=m*G*r3,Om=tau/L;setText('rh-t3',fmt(tau,2)+' N·m');setText('rh-l3',fmt(L,2)+' kg·m²/s');setText('rh-om',fmt(Om,2)+' rad/s '+(sd3>0?'(counterclockwise from above)':'(clockwise from above)'));setText('rh-per',fmt(2*Math.PI/Om,1)+' s');v.render();}
+    const L=Iw*w3,tau=m*G*r3,Om=tau/L;setText('rh-t3',fmt(tau,2)+' N·m');
+    if(spinning){setText('rh-l3',fmt(L,2)+' kg·m²/s');setText('rh-om',fmt(Om,2)+' rad/s '+(sd3>0?'(counterclockwise from above)':'(clockwise from above)'));setText('rh-per',fmt(2*Math.PI/Om,1)+' s');
+      setText('rh-st','Spinning: the torque keeps turning L sideways, so the wheel swings around the post instead of falling.');}
+    else{setText('rh-l3','about 0 (not spinning)');setText('rh-om','none');setText('rh-per','—');setText('rh-st','No spin, so there is no L for the torque to turn sideways. The torque just tips the wheel over, and it swings down like a pendulum. Spin it up again to see it precess.');}
+    $('#rh-stop').textContent=spinning?'Stop the spin':'Spin it up';v.render();}
   bindRange('rh-phi',x=>x+'°',x=>{phi=x;upd();});bindRange('rh-w2',x=>fmt(x,1)+' rad/s',x=>{w2=x;upd();});bindRange('rh-w3',x=>fmt(x,0)+' rad/s',x=>{w3=x;upd();});bindRange('rh-r3',x=>fmt(x,2)+' m',x=>{r3=x;upd();});
-  segBind('rh-sdir','k',k=>{sd2=+k;upd();});$('#rh-rev').addEventListener('click',()=>{sd3=-sd3;upd();});
+  segBind('rh-sdir','k',k=>{sd2=+k;upd();});$('#rh-rev').addEventListener('click',()=>{sd3=-sd3;upd();});$('#rh-stop').addEventListener('click',()=>{spinning=!spinning;beta=0;bv=0;upd();});
   segBind('rh-step','k',k=>{step=+k;$$('[data-rh]').forEach(d=>d.hidden=d.dataset.rh!==k);v.setHome(HOME[step]);upd();});
   upd();const d0=drawers.angular;drawers.angular=()=>{d0&&d0();v.render();};})();
 
@@ -3456,7 +3497,16 @@ function setText(id,v){const el=$('#'+id);if(el)el.textContent=v;}
     fs.forEach((f,i)=>{const box={x:L,y:AN+i*(ph3+GAP),w:w-L-R,h:ph3};if(i===0)top=box.y;bot=box.y+box.h;const Pn=panel(ctx,box,[0,2*Tp],[-amps[i]*1.2,amps[i]*1.2],{ylabel:p.yl[i],color:cols[i],xlabel:i===2?'t (s)':null});curve(ctx,Pn,f,0,2*Tp,cols[i]);dot(ctx,Pn.X(tm),Pn.Y(f(tm)),5,cols[i]);if(i===0)ctx.cx0=Pn.X(tm);});
     ctx.save();ctx.strokeStyle=T.muted;ctx.setLineDash([3,4]);ctx.lineWidth=1;const cx=Math.round(L+(w-L-R)*tm/(2*Tp))+.5;ctx.beginPath();ctx.moveTo(cx,top);ctx.lineTo(cx,bot);ctx.stroke();ctx.restore();
     setText('s-w',fmt(p.w)+' rad/s');setText('s-T',fmt(Tp)+' s');setText('s-f',fmt(p.w/(2*Math.PI))+' Hz');setText('s-vmax',fmt(p.A*p.w*p.lin)+' m/s');setText('s-amax',fmt(p.A*p.w*p.w*p.lin)+' m/s²');}
-  drawers.shm=draw;
+  const v3=view3d($('#s3-canvas'),{yaw:-1.3,pitch:.3,dist:5.8,target:[-.5,0,.9],height:w=>clamp(w*.42,240,360),scene:S=>{const p=par(),Tp=2*Math.PI/p.w,tm=t%(2*Tp),x=p.A*Math.cos(p.w*tm+p.ph),v=-p.A*p.w*Math.sin(p.w*tm+p.ph),a=-p.A*p.w*p.w*Math.cos(p.w*tm+p.ph),kv=1.1/(p.A*p.w),ka=1.1/(p.A*p.w*p.w);
+      S.grid(-3,3,-1.5,1.5,.5);
+      if(s.mode==='spring'){const K=1.6/.8,xm=x*K,wallX=-2.6;S.box([wallX-.1,0,.6],[.2,1.2,1.2],0,T.muted);S.box([0,0,.02],[5.4,.8,.04],0,T.sunk);
+        const bx=xm-.25,N=180,coils=11,R=.16,zc=.42,pts=[];for(let i=0;i<=N;i++){const f=i/N,ang=f*coils*2*Math.PI;pts.push([wallX+(bx-wallX)*f,R*Math.cos(ang),zc+R*Math.sin(ang)]);}
+        for(let i=0;i<N;i++)S.line(pts[i],pts[i+1],T.muted,2.2);S.line([0,-.5,.03],[0,.5,.03],T.muted,1,[3,3]);S.text([0,-.75,.05],'x = 0',T.muted,MONO);
+        const c=[xm,0,.42];S.box(c,[.5,.5,.5],0,T.cx);S.arrow([xm,0,.85],[xm+v*kv,0,.85],T.cv,3,'v');S.arrow([xm,0,1.12],[xm+a*ka,0,1.12],T.ca,3,'a');}
+      else{const top=2.6,Lp=2.1,th=x;S.box([0,0,top+.04],[1.2,.3,.08],0,T.ink);const b=[Lp*Math.sin(th),0,top-Lp*Math.cos(th)];S.line([0,0,top],b,T.ink,2);S.line([0,0,top],[0,0,top-Lp-.25],T.muted,1,[3,4]);
+        S.path(Array.from({length:25},(_,i)=>{const q=-p.A+2*p.A*i/24;return [Lp*Math.sin(q),0,top-Lp*Math.cos(q)];}),T.muted,1,[3,4]);
+        const tg=[Math.cos(th),0,Math.sin(th)];S.ball(b,.2,T.cx);S.arrow(b,V3.add(b,V3.mul(tg,v*kv)),T.cv,3,'v');S.arrow(V3.add(b,[0,0,-.3]),V3.add(b,V3.add([0,0,-.3],V3.mul(tg,a*ka))),T.ca,3,'a');}}});
+  drawers.shm=()=>{draw();v3.render();};
   ticker('shm',dt=>{if(!run)return;t+=dt;draw();});
   segBind('s-mode','k',k=>{s.mode=k;$('#s-spring-ctl').hidden=k!=='spring';$('#s-pend-ctl').hidden=k==='spring';t=0;draw();});
   bindRange('s-m',x=>fmt(x,1)+' kg',x=>{s.m=x;draw();});bindRange('s-k',x=>x+' N/m',x=>{s.k=x;draw();});bindRange('s-A',x=>fmt(x,2)+' m',x=>{s.A=x;draw();});
