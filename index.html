@@ -814,7 +814,7 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
       <div class="lv"><b>v</b> velocity</div>
       <div class="la"><b>a</b> acceleration</div>
     </div>
-    <div class="foot">For Physics 1 and AP Physics C: Mechanics. <span class="m"><i>g</i> = 9.8 m/s²</span> throughout.<span class="mapnote">Week numbers are mapped to the PHY 103 schedule at Princeton.</span><span class="mapnote">Unofficial study aid. Not affiliated with Princeton University or the College Board.</span><span class="mapnote">Last updated October 22, 2026</span><span class="mapnote credit">Made by <a href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener">JL</a> · Princeton Class of 2030</span></div>
+    <div class="foot">For Physics 1 and AP Physics C: Mechanics. <span class="m"><i>g</i> = 9.8 m/s²</span> throughout.<span class="mapnote">Week numbers are mapped to the PHY 103 schedule at Princeton.</span><span class="mapnote">Unofficial study aid. Not affiliated with Princeton University or the College Board.</span><span class="mapnote">Last updated October 22, 2026</span><span class="mapnote">Anonymous visit counts (GoatCounter, no cookies).</span><span class="mapnote credit">Made by <a href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener">JL</a> · Princeton Class of 2030</span></div>
   </aside>
 
   <main>
@@ -4505,6 +4505,13 @@ let rz;new ResizeObserver(()=>{cancelAnimationFrame(rz);rz=requestAnimationFrame
 function onTheme(){readTokens();redraw();}
 const mq=matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',onTheme);
 new MutationObserver(onTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+/* ---------------- Visit counts ----------------
+   GoatCounter: anonymous, no cookies, no personal data. Loads only on the public GitHub Pages site, and counts
+   each module view as its own page (the site switches modules without reloading). */
+(function analytics(){if(!/\.github\.io$/.test(location.hostname))return;window.goatcounter={no_onload:true};
+  const s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';s.dataset.goatcounter='https://mechanicslab.goatcounter.com/count';
+  const view=()=>{const id=(location.hash||'').slice(1)||'overview';if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:location.pathname.replace(/\/$/,'')+'/'+id,title:id});};
+  s.onload=()=>{view();addEventListener('hashchange',view);};document.head.appendChild(s);})();
 /* ---------------- AP exam countdown ----------------
    College Board sets the date each year. Add the next date here when it is announced (apstudents.collegeboard.org/exam-dates).
    Until then the countdown says the date isn't announced instead of guessing. Times are 8 a.m. local (morning session). */
