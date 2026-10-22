@@ -658,6 +658,15 @@ details>p,details>div{margin-top:8px!important;padding:10px 14px;background:var(
 .v3ui button:hover{background:var(--surface);transform:scale(1.08)}
 .v3ui button:active{transform:scale(.94)}
 
+.rh-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.rh-grid{grid-template-columns:minmax(0,1fr)}}
+.rh-side>div:not([hidden]){display:flex;flex-direction:column;gap:12px;animation:swap var(--d-3) var(--ease-out)}
+.rh-side h3{font:600 18px/1.25 var(--f-display)}
+.rh-how{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px;font-size:14.5px}
+.rh-how li::marker{font:600 13px var(--f-mono);color:var(--hot)}
+.rh .labbar .seg button{font-size:12.5px}
+#rh-sdir button{font-size:12.5px}
+.rh .readout strong{white-space:normal;font-size:15px;line-height:1.35}
 @media (prefers-reduced-motion: reduce){*,::before,::after{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
 </style>
 
@@ -1901,6 +1910,39 @@ details>p,details>div{margin-top:8px!important;padding:10px 14px;background:var(
           <div><span>Kinetic energy</span><strong id="am-K">—</strong></div>
         </div>
         <p class="small" style="margin:0">Changing m or I₀ starts a new spin at 2 rad/s. Moving r keeps L fixed: watch ω and the kinetic energy rise as the masses come in.</p>
+      </div>
+      <div class="lab rh" id="rh-lab">
+        <div class="labbar"><span class="title">Right-hand rule and precession, in 3D</span><div class="seg" id="rh-step" role="group" aria-label="Step"><button type="button" data-k="1" aria-pressed="true">1 · Torque</button><button type="button" data-k="2" aria-pressed="false">2 · Spin and L</button><button type="button" data-k="3" aria-pressed="false">3 · Precession</button></div></div>
+        <div class="rh-grid">
+          <canvas id="rh-canvas" aria-label="3D right-hand-rule scene; drag to rotate the view"></canvas>
+          <div class="rh-side">
+            <div data-rh="1">
+              <h3>Which way does a torque point?</h3>
+              <ol class="rh-how"><li><b>Point your fingers along r</b>, from the pivot (the bolt) to where the force pushes.</li><li><b>Curl them toward F</b>, the short way around.</li><li><b>Your thumb points along τ = r × F.</b> The wrench turns the way your fingers curl.</li></ol>
+              <div class="ctl"><label for="rh-phi"><span>Angle from r to F</span> <output id="rh-phi-out"></output></label><input type="range" id="rh-phi" min="0" max="360" step="5" value="90"></div>
+              <div class="readout"><div><span>τ = rF sin θ</span><strong id="rh-tau">—</strong></div><div><span>τ points</span><strong id="rh-tdir">—</strong></div></div>
+              <p class="small" style="margin:0">Here r = 0.50 m and F = 20 N. Try 180°: pushing straight along the wrench gives no torque. Past 180° your thumb flips down, and the wrench turns the other way.</p>
+            </div>
+            <div data-rh="2" hidden>
+              <h3>Which way do ω and L point?</h3>
+              <ol class="rh-how"><li><b>Curl your fingers the way the wheel turns.</b></li><li><b>Your thumb points along ω</b>, along the axle.</li><li><b>L = Iω points the same way</b>, because I is just a positive number.</li></ol>
+              <div class="seg" id="rh-sdir" role="group" aria-label="Spin direction"><button type="button" data-k="1" aria-pressed="true">Counterclockwise from above</button><button type="button" data-k="-1" aria-pressed="false">Clockwise from above</button></div>
+              <div class="ctl"><label for="rh-w2"><span>Spin rate ω</span> <output id="rh-w2-out"></output></label><input type="range" id="rh-w2" min="1" max="6" step="0.5" value="3"></div>
+              <div class="readout"><div><span>ω</span><strong id="rh-wv">—</strong></div><div><span>L = Iω</span><strong id="rh-lv">—</strong></div></div>
+              <p class="small" style="margin:0">Wheel: 1.0 kg uniform disk, radius 0.25 m, so I = ½mR² = 0.031 kg·m². Flip the spin and both arrows flip.</p>
+            </div>
+            <div data-rh="3" hidden>
+              <h3>Why a spinning wheel doesn't fall</h3>
+              <ol class="rh-how"><li><b>Find L</b> (step 2): curl with the spin. L points along the axle.</li><li><b>Find τ</b> (step 1): r goes from the pivot to the wheel, F = mg points down. τ = r × mg is <b>sideways</b>: level, and at right angles to the axle.</li><li><b>Torque changes L:</b> dL = τ dt. The tip of L moves sideways along τ, not down. So the axle swings around the post instead of falling. That swing is <b>precession</b>.</li></ol>
+              <div class="ctl"><label for="rh-w3"><span>Spin rate ω</span> <output id="rh-w3-out"></output></label><input type="range" id="rh-w3" min="40" max="200" step="5" value="100"></div>
+              <div class="ctl"><label for="rh-r3"><span>Distance from pivot to wheel, r</span> <output id="rh-r3-out"></output></label><input type="range" id="rh-r3" min="0.15" max="0.45" step="0.01" value="0.35"></div>
+              <div class="row"><button type="button" class="btn" id="rh-rev">Reverse the spin</button></div>
+              <div class="readout"><div><span>τ = mgr</span><strong id="rh-t3">—</strong></div><div><span>L = Iω</span><strong id="rh-l3">—</strong></div><div><span>Ω = τ / L</span><strong id="rh-om">—</strong></div><div><span>One trip around</span><strong id="rh-per">—</strong></div></div>
+              <div class="box"><p>In a time dt the tip of L moves |dL| = τ dt sideways, so the axle turns through dφ = τ dt / L. The precession rate is <span class="m">Ω = dφ/dt = τ/L = <i>mgr</i>/(<i>I</i>ω)</span>. Spin faster and it precesses slower. Reverse the spin and it precesses the other way.</p></div>
+              <p class="small" style="margin:0">This is the fast-spin picture: it assumes ω is much bigger than Ω and ignores the small wobble (nutation) a real gyroscope also shows. Same wheel: 1.0 kg, radius 0.25 m. The spin is drawn slowed down; the precession is shown at its real rate.</p>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="try"><h3>Try this</h3><p class="small" style="margin:0">Predict what will happen first. Then set it up and check.</p><ol><li><p>Pull the masses in. <button type="button" class="btn link" data-show='[["#am-r", 0.3]]'>Set it up for me</button></p><details><summary>What you should see</summary><p>ω climbs, L stays the same, and the kinetic energy goes up.</p></details></li><li><p>Push them back out. <button type="button" class="btn link" data-show='[["#am-r", 1.2]]'>Set it up for me</button></p><details><summary>What you should see</summary><p>The kinetic energy drops back. The energy you put in by pulling comes back out.</p></details></li><li><p>Make the platform heavy, then pull in. <button type="button" class="btn link" data-show='[["#am-I0", 3], ["#am-r", 0.3]]'>Set it up for me</button></p><details><summary>What you should see</summary><p>A smaller effect: the movable masses are now a smaller share of the total I.</p></details></li></ol></div>
       <div class="example"><h3>Worked example</h3><p class="prob">A merry-go-round (uniform disk, 100 kg, radius 2.0 m) spins at 1.0 rad/s. A 50 kg child, initially not moving, jumps onto its edge. What is the new angular speed?</p><p class="small" style="margin:0">Try it yourself first, then reveal one step at a time.</p><div class="exgrid"><div class="figs"><figure class="fbdfig"><div class="fbd" data-fbd="{&quot;obj&quot;: &quot;box&quot;, &quot;forces&quot;: [[&quot;mg&quot;, 270, 0.7, {}], [&quot;N (axle)&quot;, 90, 0.7, {}]], &quot;cap&quot;: &quot;Merry-go-round plus child. Both forces act along the axle.&quot;}"></div><figcaption>Merry-go-round plus child. Both forces act along the axle.</figcaption></figure></div><div class="exbody"><ol class="exsteps"><li hidden><b>Picture and FBD.</b> External forces on the system are gravity and the axle's push, both along the axle. Neither exerts a torque about it, so angular momentum is conserved.</li><li hidden><b>Moments of inertia.</b> Disk: <span class="m">½<i>MR</i>² = 200 kg·m²</span>. Child at the edge: <span class="m"><i>mR</i>² = 200 kg·m²</span>.</li><li hidden><b>Conserve L.</b> <span class="m">200·1.0 = (200 + 200)ω</span>, so <span class="m">ω = 0.50 rad/s</span>.</li><li hidden><b>Energy.</b> K goes from 100 J to 50 J. Like a sticky collision, energy is lost even though L is conserved.</li><li hidden><b>Check.</b> Doubling I halved ω. ✓</li></ol><div class="row"><button type="button" class="btn primary" data-next>Show step 1</button><button type="button" class="btn" data-all>Show all steps</button></div></div></div></div>
@@ -3312,6 +3354,50 @@ function setText(id,v){const el=$('#'+id);if(el)el.textContent=v;}
   bindRange('am-r',x=>fmt(x,2)+' m',x=>{s.r=x;draw();});bindRange('am-m',x=>fmt(x,1)+' kg',x=>{s.m=x;spin();draw();});bindRange('am-I0',x=>fmt(x,1)+' kg·m²',x=>{s.I0=x;spin();draw();});
   $('#am-spin').addEventListener('click',()=>{spin();draw();});playBtn('am-play',()=>run,b=>run=b);spin();
 })();
+
+/* ---------------- Right-hand rule and precession, in 3D ----------------
+   Colors follow the site code: r blue (position), F orange (force), ω and Ω green (rates), τ and dL pink, L ink.
+   Gyroscope: L = Iω along the axle; τ = r × mg is level and at right angles to the axle; dL = τ dt swings the
+   axle around the post at Ω = mgr/(Iω) (fast-spin approximation). */
+(function righthand(){const cv=$('#rh-canvas');if(!cv)return;
+  const m=1,Rw=.25,Iw=.5*m*Rw*Rw,K=4,rF=.5,F=20;let step=1,phi=90,sd2=1,w2=3,w3=100,r3=.35,sd3=1,prec=0,psi=0,lastT=null;
+  const HOME={1:{yaw:-1.05,pitch:.62,dist:7.2,target:[.9,0,.3]},2:{yaw:-1,pitch:.32,dist:6.6,target:[0,0,1.1]},3:{yaw:-.75,pitch:.62,dist:6.8,target:[0,0,1.35]}};
+  const arc=(c,e1,e2,R,a0,a1,n=28)=>Array.from({length:n+1},(_,i)=>{const a=a0+(a1-a0)*i/n;return V3.add(c,V3.add(V3.mul(e1,R*Math.cos(a)),V3.mul(e2,R*Math.sin(a))));});
+  function curl(S,pts,col,lab){if(pts.length<2)return;S.path(pts,col,2.5);S.arrow(pts[pts.length-2],pts[pts.length-1],col,2.5);if(lab)S.text(pts[Math.floor(pts.length/2)],lab,col,MONO);}
+  function wheel(S,c,u,R,ang,col){const e1=Math.abs(u[2])>.9?[1,0,0]:[0,0,1],e2=V3.cross(u,e1),rim=arc(c,e1,e2,R,0,Math.PI*2,48);
+    S.poly(rim,alpha(col,.16),null);for(let i=0;i<48;i++)S.line(rim[i],rim[i+1],col,3);
+    for(let k=0;k<6;k++){const a=ang+k*Math.PI/3;S.line(c,V3.add(c,V3.add(V3.mul(e1,R*Math.cos(a)),V3.mul(e2,R*Math.sin(a)))),col,2);}
+    const a=ang;S.ball(V3.add(c,V3.add(V3.mul(e1,R*Math.cos(a)),V3.mul(e2,R*Math.sin(a)))),.07,T.hot,1,false);return [e1,e2];}
+  const SC={
+    1(S,t){S.grid(-1.5,3,-2,2,.5);const P=[0,0,.42],tip=[2,0,.42],th=phi*Math.PI/180,sn=Math.sin(th);
+      S.box([0,0,.2],[.2,.2,.4],0,T.muted);S.box([1,0,.36],[2.1,.18,.07],0,T.ink);
+      S.arrow(P,tip,T.cx,3,'r');const Fd=[Math.cos(th),Math.sin(th),0];S.arrow(tip,V3.add(tip,V3.mul(Fd,1.3)),T.hot,3.5,'F');
+      const c=t==null?2.6:t%3.4,p=clamp(c/1.3,0,1),q=clamp((c-1.4)/.7,0,1),sw=th<=Math.PI?th:th-2*Math.PI;
+      if(Math.abs(sn)>.02){curl(S,arc(tip,[1,0,0],[0,1,0],.6,0,sw*Math.max(.05,p)),T.muted,p>.5?'curl r → F':'');
+        if(q>0)S.arrow(P,V3.add(P,[0,0,1.9*sn*q]),T.ca,4,'τ');
+        curl(S,arc([0,0,.05],[1,0,0],[0,1,0],.55,0,Math.sign(sn)*4.4),alpha(T.ca,.55));}
+      else S.text(V3.add(P,[0,0,.5]),'τ = 0',T.ca);},
+    2(S,t,dt){S.grid(-1.5,1.5,-1.5,1.5,.5);psi+=sd2*w2*dt;const c=[0,0,1.1],u=[0,0,1];S.line([0,0,0],[0,0,2.3],T.muted,2.5);
+      wheel(S,c,u,1,psi,T.ink);curl(S,arc(V3.add(c,[0,0,.25]),[1,0,0],[0,1,0],1.35,psi+.3*sd2,psi+.3*sd2+sd2*4.4),T.muted,'fingers curl with the spin');
+      const len=.45+w2*.22;S.arrow(V3.add(c,[0,0,sd2>0?.05:-.05]),V3.add(c,[0,0,sd2*len]),T.cv,4,'ω');S.arrow(V3.add(c,[.42,0,sd2>0?.05:-.05]),V3.add(c,[.42,0,sd2*len*.8]),T.ink,3,'L = Iω');},
+    3(S,t,dt){S.grid(-3,3,-3,3,.5);const L=Iw*w3,tau=m*G*r3,Om=tau/L;prec+=sd3*Om*dt;psi+=sd3*9*dt;
+      const Hp=1.6,P=[0,0,Hp],u=[Math.cos(prec),Math.sin(prec),0],c=V3.add(P,V3.mul(u,r3*K));
+      S.box([0,0,Hp/2],[.12,.12,Hp],0,T.muted);S.box([0,0,.03],[.8,.8,.06],0,T.muted);S.ball(P,.09,T.ink,1,false);
+      S.line(P,V3.add(c,V3.mul(u,.3)),T.ink,4);wheel(S,c,u,Rw*K,psi,T.ink);
+      const Ll=clamp(.5+L*.28,.6,2.2),tipL=V3.add(c,V3.mul(u,sd3*Ll));
+      S.arrow(V3.add(P,[0,0,-.14]),V3.add(c,[0,0,-.14]),T.cx,2.5,'r');S.arrow(c,V3.add(c,[0,0,-1.05]),T.hot,3,'mg');
+      S.arrow(V3.add(c,V3.mul(u,sd3*.05)),tipL,T.ink,4.5,'L');
+      const td=V3.norm(V3.cross(u,[0,0,-1])),tl=.4+tau*.25;S.arrow(P,V3.add(P,V3.mul(td,tl)),T.ca,3.5,'τ');S.arrow(tipL,V3.add(tipL,V3.mul(td,.55)),T.ca,2.5,'dL');
+      const Rt=r3*K+sd3*Ll;S.path(Array.from({length:73},(_,i)=>{const a=i/72*Math.PI*2;return [Rt*Math.cos(a),Rt*Math.sin(a),Hp];}),alpha(T.muted,.7),1.25,[4,5]);
+      const zt=.55;curl(S,arc([0,0,zt],[1,0,0],[0,1,0],.42,prec,prec+sd3*4.2),T.cv,'Ω');}};
+  const v=view3d(cv,{...HOME[1],auto:false,height:w=>clamp(w*.72,300,460),scene:(S,t)=>{let dt=0;if(t!=null){dt=lastT==null?0:Math.min(.05,Math.max(0,t-lastT));lastT=t;}SC[step](S,t,dt);}});
+  function upd(){const th=phi*Math.PI/180,tz=rF*F*Math.sin(th);setText('rh-tau',fmt(Math.abs(tz),1)+' N·m');setText('rh-tdir',Math.abs(tz)<.05?'nowhere: zero':tz>0?'up: turns counterclockwise seen from above':'down: turns clockwise seen from above');
+    setText('rh-wv',fmt(w2,1)+' rad/s, '+(sd2>0?'up':'down'));setText('rh-lv',fmt(Iw*w2,3)+' kg·m²/s, '+(sd2>0?'up':'down'));
+    const L=Iw*w3,tau=m*G*r3,Om=tau/L;setText('rh-t3',fmt(tau,2)+' N·m');setText('rh-l3',fmt(L,2)+' kg·m²/s');setText('rh-om',fmt(Om,2)+' rad/s '+(sd3>0?'(counterclockwise from above)':'(clockwise from above)'));setText('rh-per',fmt(2*Math.PI/Om,1)+' s');v.render();}
+  bindRange('rh-phi',x=>x+'°',x=>{phi=x;upd();});bindRange('rh-w2',x=>fmt(x,1)+' rad/s',x=>{w2=x;upd();});bindRange('rh-w3',x=>fmt(x,0)+' rad/s',x=>{w3=x;upd();});bindRange('rh-r3',x=>fmt(x,2)+' m',x=>{r3=x;upd();});
+  segBind('rh-sdir','k',k=>{sd2=+k;upd();});$('#rh-rev').addEventListener('click',()=>{sd3=-sd3;upd();});
+  segBind('rh-step','k',k=>{step=+k;$$('[data-rh]').forEach(d=>d.hidden=d.dataset.rh!==k);v.setHome(HOME[step]);upd();});
+  upd();const d0=drawers.angular;drawers.angular=()=>{d0&&d0();v.render();};})();
 
 /* ---------------- Gravity & orbits ---------------- */
 (function gravity(){
