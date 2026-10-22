@@ -7,7 +7,7 @@
 /* Layout: a lab-notebook app. Module rail on the left (top strip on phones), one module per view.
    Position, velocity and acceleration keep one color each on every graph, arrow and equation. */
 :root{
-  --bg:#EDF0F3; --surface:#FFFFFF; --sunk:#E3E8EE; --ink:#111923; --muted:#566271; --line:#CCD4DD; --grid:#E5EAF0;
+  --bg:#F5F1E8; --surface:#FFFCF5; --sunk:#EFE8DA; --ink:#1D1A16; --muted:#6B6152; --line:#D9CDB8; --grid:#E9E1D1;
   --cx:#2350C6; --cv:#0A8262; --ca:#BC2A76; --hot:#D46F1C;
   --good:#167A4A; --bad:#B42318;
   --f-display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
@@ -17,19 +17,37 @@
   /* motion: one set of timings. Enter decelerates; exit accelerates and runs ~65% as long. */
   --ease-out:cubic-bezier(.2,.8,.2,1); --ease-in:cubic-bezier(.4,0,1,1); --ease-spring:cubic-bezier(.34,1.56,.64,1);
   --d-1:.16s; --d-2:.28s; --d-3:.45s; --d-exit:.2s;
-  --shadow-1:0 1px 2px rgba(17,25,35,.06),0 2px 8px rgba(17,25,35,.05); --shadow-2:0 2px 4px rgba(17,25,35,.06),0 12px 28px rgba(17,25,35,.10);
+  --shadow-1:none; --shadow-2:0 2px 4px rgba(40,30,15,.06),0 12px 28px rgba(40,30,15,.12);
+  /* skin: light = Textbook (paper, serif headlines, hairlines); dark = Instrument (see the dark blocks) */
+  --h-font:"STIX Two Text",Georgia,serif; --h-w:400; --h-track:-.01em; --brand-w:600;
+  --radius:4px; --btn-bg:var(--ink); --btn-fg:var(--surface); --btn-font:var(--f-body); --btn-case:none; --btn-track:0; --btn-size:14px;
+  --nav-bg:var(--ink); --nav-fg:var(--surface); --lab-c:var(--muted); --ro-c:var(--ink);
+  --cap-font:"STIX Two Text",Georgia,serif; --cap-style:italic; --cap-size:14px; --page-grid:none; --top-grid:none;
+  --fig-tag:"Fig. 1"; --fig-tag-c:var(--muted); --hl-style:italic; --h2-rule:2px solid var(--ink); --h2-bar:none; --lift:0px; --mg-gap:0px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0C1117; --surface:#131A22; --sunk:#1A232D; --ink:#E3E9EF; --muted:#94A0AF; --line:#2A3542; --grid:#1C2530;
-    --cx:#7D9DFF; --cv:#3FC89B; --ca:#EF6CAF; --hot:#F2A04E; --good:#4CC488; --bad:#FF7D6E; color-scheme:dark;
-    --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 2px 4px rgba(0,0,0,.4),0 14px 30px rgba(0,0,0,.45);
+    --bg:#0A0F17; --surface:#0E1520; --sunk:#141D2A; --ink:#DCE3EC; --muted:#8E9CAD; --line:#233042; --grid:#18212E;
+    --cx:#7FA2FF; --cv:#43D3A0; --ca:#FF6FB5; --hot:#FFA94D; --good:#43D3A0; --bad:#FF7D6E; color-scheme:dark;
+    --shadow-1:none; --shadow-2:0 2px 4px rgba(0,0,0,.4),0 14px 30px rgba(0,0,0,.45);
+    --h-font:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif; --h-w:800; --h-track:-.03em; --brand-w:800;
+    --radius:6px; --btn-bg:var(--hot); --btn-fg:#0A0F17; --btn-font:var(--f-mono); --btn-case:uppercase; --btn-track:.06em; --btn-size:12.5px;
+    --nav-bg:var(--hot); --nav-fg:#0A0F17; --lab-c:var(--cv); --ro-c:var(--cv);
+    --cap-font:var(--f-body); --cap-style:normal; --cap-size:12.5px;
+    --page-grid:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);
+    --fig-tag:"CH1 · STROBE 10 Hz"; --fig-tag-c:var(--cv); --hl-style:normal; --h2-rule:0; --h2-bar:block; --lift:-2px; --mg-gap:12px;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0C1117; --surface:#131A22; --sunk:#1A232D; --ink:#E3E9EF; --muted:#94A0AF; --line:#2A3542; --grid:#1C2530;
-  --cx:#7D9DFF; --cv:#3FC89B; --ca:#EF6CAF; --hot:#F2A04E; --good:#4CC488; --bad:#FF7D6E; color-scheme:dark;
-    --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 2px 4px rgba(0,0,0,.4),0 14px 30px rgba(0,0,0,.45);
+    --bg:#0A0F17; --surface:#0E1520; --sunk:#141D2A; --ink:#DCE3EC; --muted:#8E9CAD; --line:#233042; --grid:#18212E;
+    --cx:#7FA2FF; --cv:#43D3A0; --ca:#FF6FB5; --hot:#FFA94D; --good:#43D3A0; --bad:#FF7D6E; color-scheme:dark;
+    --shadow-1:none; --shadow-2:0 2px 4px rgba(0,0,0,.4),0 14px 30px rgba(0,0,0,.45);
+    --h-font:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif; --h-w:800; --h-track:-.03em; --brand-w:800;
+    --radius:6px; --btn-bg:var(--hot); --btn-fg:#0A0F17; --btn-font:var(--f-mono); --btn-case:uppercase; --btn-track:.06em; --btn-size:12.5px;
+    --nav-bg:var(--hot); --nav-fg:#0A0F17; --lab-c:var(--cv); --ro-c:var(--cv);
+    --cap-font:var(--f-body); --cap-style:normal; --cap-size:12.5px;
+    --page-grid:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);
+    --fig-tag:"CH1 · STROBE 10 Hz"; --fig-tag-c:var(--cv); --hl-style:normal; --h2-rule:0; --h2-bar:block; --lift:-2px; --mg-gap:12px;
 }
 *{box-sizing:border-box}
 html,body{background:var(--bg)}
@@ -686,6 +704,47 @@ details>p,details>div{margin-top:8px!important;padding:10px 14px;background:var(
 .fbd .fbnew{animation:fb-in .7s var(--ease-out) backwards}
 @keyframes pop-note{from{opacity:0;transform:translateY(6px) scale(.9)}}
 @keyframes fb-in{from{opacity:0}}
+
+/* ---------------- Skins: Textbook (light) and Instrument (dark) ----------------
+   Everything below reads the skin variables set with the color tokens, so the theme switch flips the whole look. */
+html{background-color:var(--bg);background-image:var(--page-grid);background-size:32px 32px}
+body{background:transparent}
+main::before{display:none}
+h1,h2,.mod h3,.modgroup .gtitle,.start h3,.rh-side h3,.mp-hero h2,.fs header h2,.rp header h2,.mod-h{font-family:var(--h-font);font-weight:var(--h-w);letter-spacing:var(--h-track)}
+h1{font-size:clamp(36px,5.4vw,62px);line-height:1.02}
+.view:not(#v-overview) .head h1{font-size:clamp(34px,4.8vw,54px)}
+.mod h3{font-size:19px}.modgroup .gtitle{font-size:24px}.start h3{font-size:19px}
+.brand{font-family:var(--h-font);font-weight:var(--brand-w)}
+.hero h1 .hl{background:none;animation:none;color:var(--hot);font-style:var(--hl-style)}
+.btn.primary,.fs-btn{background:var(--btn-bg);border-color:var(--btn-bg);color:var(--btn-fg);font-family:var(--btn-font);text-transform:var(--btn-case);letter-spacing:var(--btn-track);font-size:var(--btn-size);box-shadow:none}
+.btn.primary:hover{box-shadow:var(--shadow-2)}
+.btn,.seg,.seg button,select,input[type=text],.status,.coach,.readout,.box,.rub,.eqn,.themebtn,.searchbtn,details summary,.quiz .opts button,.sopts button{border-radius:var(--radius)}
+.nav a,.nav .ind{border-radius:var(--radius)}
+.nav .ind,.steps .ind{background:var(--nav-bg)}
+.nav a[aria-current="page"],.steps a.on,.steps a.on .sn{color:var(--nav-fg)}
+.lab,.example,.sorter,.frq,.mod,.start>div,.try,.quiz,.prob,.tablewrap,.modnav a,.strobe,.v3,.ttip,.assume,.fcase,.frqtypes div,.sol,.xpsteps>div{border-radius:var(--radius)}
+.intuit,.oops{border-radius:0 var(--radius) var(--radius) 0}
+.labbar .title,.example h3{color:var(--lab-c)}
+.readout strong{color:var(--ro-c)}
+.readout strong.a,.readout strong[style]{color:inherit}
+figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-font);font-style:var(--cap-style);font-size:var(--cap-size)}
+.strobe{overflow:visible}
+.strobe::after{content:var(--fig-tag);position:absolute;top:-9px;right:16px;padding:0 6px;background:var(--bg);font:600 10.5px/1.6 var(--f-mono);letter-spacing:.1em;color:var(--fig-tag-c)}
+.wrap>.head h2{border-top:var(--h2-rule);padding-top:10px}
+.wrap>.head h2::after{display:var(--h2-bar)}
+.mod:hover,.modnav a:hover{transform:translateY(var(--lift))}
+.mod{border-top:1px solid var(--line)}
+.mod:hover{border-color:var(--hot)}
+.modgrid-inner{gap:var(--mg-gap)}
+/* Textbook only: module cards sit in one ruled table, like a book's contents page */
+:root:not([data-theme="dark"]) .modgrid-inner{border-top:1px solid var(--line);border-left:1px solid var(--line)}
+:root:not([data-theme="dark"]) .mod{border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;background:transparent}
+:root:not([data-theme="dark"]) .mod:hover{background:var(--surface)}
+:root:not([data-theme="dark"]) .mod::before{display:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .modgrid-inner{border:0}:root:not([data-theme="light"]) .mod{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}:root:not([data-theme="light"]) .mod:hover{border-color:var(--hot);background:var(--surface)}:root:not([data-theme="light"]) .mod::before{display:block}}
+/* Instrument only: chips and tags read like panel labels */
+:root[data-theme="dark"] .eyebrow .tag.pu{background:var(--hot);color:#0A0F17;border-color:var(--hot)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .eyebrow .tag.pu{background:var(--hot);color:#0A0F17;border-color:var(--hot)}}
 @media (prefers-reduced-motion: reduce){*,::before,::after{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
 </style>
 
