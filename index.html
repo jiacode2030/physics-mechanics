@@ -32,7 +32,8 @@
     --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 2px 4px rgba(0,0,0,.4),0 14px 30px rgba(0,0,0,.45);
 }
 *{box-sizing:border-box}
-html,body{background:var(--bg)}
+html{background:var(--bg)}
+body{background:transparent}
 body{color:var(--ink);font:400 15px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
 a{color:var(--cx)}
@@ -620,9 +621,70 @@ details>p,details>div{margin-top:8px!important;padding:10px 14px;background:var(
 .cele .x{grid-row:1;grid-column:3;align-self:start;border:0;background:transparent;color:var(--muted);cursor:pointer;padding:4px;font-size:18px;line-height:1}
 @media (max-width:640px){.cele{bottom:max(76px,calc(env(safe-area-inset-bottom,0px) + 76px))}}
 
+/* ---------------- Color: aurora background, gradient borders, tinted sections ---------------- */
+:root{--grad:linear-gradient(120deg,var(--cx),color-mix(in srgb,var(--cx) 45%,var(--ca)) 55%,var(--ca));--grad-xva:linear-gradient(120deg,var(--cx),var(--cv) 50%,var(--ca))}
+.aurora{position:fixed;inset:-20vmax;z-index:-1;pointer-events:none;
+  background:radial-gradient(38vmax 30vmax at 18% 12%,color-mix(in srgb,var(--cx) 22%,transparent),transparent 70%),
+    radial-gradient(34vmax 28vmax at 82% 8%,color-mix(in srgb,var(--ca) 18%,transparent),transparent 70%),
+    radial-gradient(40vmax 30vmax at 70% 78%,color-mix(in srgb,var(--hot) 15%,transparent),transparent 70%),
+    radial-gradient(36vmax 30vmax at 12% 88%,color-mix(in srgb,var(--cv) 15%,transparent),transparent 70%);
+  animation:aurora 38s ease-in-out infinite alternate}
+@keyframes aurora{50%{transform:translate(4vmax,-3vmax) rotate(6deg) scale(1.06)}100%{transform:translate(-3vmax,2vmax) rotate(-4deg) scale(1.03)}}
+.rail{background:color-mix(in srgb,var(--surface) 78%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
+.nav .ind,.steps .ind{background:var(--grad);box-shadow:0 4px 14px color-mix(in srgb,var(--cx) 35%,transparent)}
+.brand span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.view:not(#v-overview) .head h1{background:linear-gradient(100deg,var(--ink) 35%,var(--cx) 75%,var(--ca));-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+.wrap>.head h2::after{content:"";display:block;width:56px;height:4px;border-radius:4px;margin-top:10px;background:var(--grad)}
+.btn.primary,.fs-btn{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 6px 18px color-mix(in srgb,var(--cx) 35%,transparent)}
+.btn.primary:hover{box-shadow:0 10px 26px color-mix(in srgb,var(--ca) 40%,transparent)}
+:root[data-theme="dark"] .btn.primary,:root[data-theme="dark"] .fs-btn{color:#0C1117}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary,:root:not([data-theme="light"]) .fs-btn{color:#0C1117}}
+.btn.isdone{background:var(--good)}
+/* gradient borders on the framed objects: position → velocity → acceleration */
+.lab,.strobe,.example{border:1.5px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,var(--grad-xva) border-box}
+.lab.lab3d{background:linear-gradient(160deg,color-mix(in srgb,var(--cx) 7%,var(--surface)),var(--surface) 60%) padding-box,var(--grad-xva) border-box}
+.strobe{box-shadow:0 18px 50px color-mix(in srgb,var(--cx) 18%,transparent)}
+/* tinted teaching sections */
+.intuit{border:0;border-radius:14px;padding:16px 18px 16px 20px;background:linear-gradient(120deg,color-mix(in srgb,var(--cv) 14%,var(--surface)),color-mix(in srgb,var(--cv) 4%,var(--surface)));box-shadow:inset 4px 0 0 var(--cv),var(--shadow-1)}
+.try{background:linear-gradient(120deg,color-mix(in srgb,var(--cx) 13%,var(--surface)),color-mix(in srgb,var(--cx) 4%,var(--surface)));border:1px solid color-mix(in srgb,var(--cx) 25%,transparent);box-shadow:var(--shadow-1)}
+.oops{border:0;border-radius:14px;padding:16px 18px 16px 20px;background:linear-gradient(120deg,color-mix(in srgb,var(--bad) 11%,var(--surface)),color-mix(in srgb,var(--bad) 3%,var(--surface)));box-shadow:inset 4px 0 0 var(--bad),var(--shadow-1)}
+.ttip{background:linear-gradient(120deg,color-mix(in srgb,var(--hot) 15%,var(--surface)),color-mix(in srgb,var(--hot) 4%,var(--surface)));box-shadow:var(--shadow-1)}
+.quiz{border-top:0;border-radius:16px;padding:18px 20px;background:linear-gradient(120deg,color-mix(in srgb,var(--ca) 11%,var(--surface)),color-mix(in srgb,var(--ca) 3%,var(--surface)));border:1px solid color-mix(in srgb,var(--ca) 25%,transparent);box-shadow:var(--shadow-1)}
+.eqn{background:linear-gradient(120deg,var(--sunk),color-mix(in srgb,var(--cx) 7%,var(--sunk)));transition:transform var(--d-2) var(--ease-out),box-shadow var(--d-2)}
+.eqgrid .eqn:hover{transform:translateY(-2px);box-shadow:var(--shadow-2)}
+.assume.upgrade,.assume.fornow{box-shadow:var(--shadow-1)}
+.start>div,.sorter,.frq,.prob,.modnav a,.tablewrap{box-shadow:var(--shadow-1)}
+.start>div:nth-child(1){border-top:4px solid var(--cx)}.start>div:nth-child(2){border-top:4px solid var(--cv)}.start>div:nth-child(3){border-top:4px solid var(--ca)}
+th{background:linear-gradient(90deg,color-mix(in srgb,var(--cx) 10%,var(--sunk)),var(--sunk))}
+.steps a{background:color-mix(in srgb,var(--surface) 80%,transparent)}
+/* module cards: a color per week, a spotlight that follows the pointer, a slight 3D tilt */
+.mod{--c:var(--cx);background:linear-gradient(160deg,color-mix(in srgb,var(--c) 10%,var(--surface)),var(--surface) 55%);border-top:4px solid var(--c);transform-style:preserve-3d}
+.mod::before{background:var(--c)}
+.mod::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity var(--d-2);background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--c) 22%,transparent),transparent 70%)}
+.mod:hover::after{opacity:1}
+.mod:hover{border-color:color-mix(in srgb,var(--c) 50%,var(--line));border-top-color:var(--c);box-shadow:0 14px 34px color-mix(in srgb,var(--c) 22%,transparent)}
+.modgroup:nth-child(5n+1) .mod{--c:var(--cx)}.modgroup:nth-child(5n+2) .mod{--c:var(--cv)}.modgroup:nth-child(5n+3) .mod{--c:var(--ca)}.modgroup:nth-child(5n+4) .mod{--c:var(--hot)}.modgroup:nth-child(5n) .mod{--c:color-mix(in srgb,var(--cx) 50%,var(--ca))}
+.modgroup .gtitle{display:flex;align-items:center;gap:10px}
+.modgroup .gtitle::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--grad);box-shadow:0 0 0 4px color-mix(in srgb,var(--cx) 15%,transparent)}
+.mp-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--cx) 22%,var(--surface)),color-mix(in srgb,var(--ca) 18%,var(--surface)) 60%,color-mix(in srgb,var(--hot) 16%,var(--surface)))}
+/* 3D views */
+.v3{position:relative;border-radius:12px;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,color-mix(in srgb,var(--cx) 12%,var(--surface)),var(--surface) 70%)}
+.v3 canvas{cursor:grab;touch-action:none;outline-offset:-3px}
+.v3 canvas:active{cursor:grabbing}
+.v3hint{position:absolute;left:10px;top:10px;font:500 11.5px var(--f-mono);padding:5px 11px;border-radius:999px;color:var(--ink);pointer-events:none;
+  background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--line);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:hint 2.6s ease-in-out 3;transition:opacity .5s}
+.v3.used .v3hint{opacity:0}
+@keyframes hint{50%{transform:translateX(8px)}}
+.v3ui{position:absolute;right:10px;top:10px;display:flex;gap:6px}
+.v3ui button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 85%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  cursor:pointer;font:600 17px/1 var(--f-body);color:var(--ink);display:grid;place-items:center;transition:transform var(--d-1),background var(--d-1)}
+.v3ui button:hover{background:var(--surface);transform:scale(1.08)}
+.v3ui button:active{transform:scale(.94)}
+
 @media (prefers-reduced-motion: reduce){*,::before,::after{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
 </style>
 
+<div class="aurora" aria-hidden="true"></div>
 <div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>
 <button type="button" class="fs-btn" id="fs-btn" aria-controls="fs" aria-expanded="false"><span class="fs-ico" aria-hidden="true">Σ</span><span class="fs-lbl">Formula sheet</span></button>
 <aside class="fs" id="fs" aria-label="Formula sheet" aria-hidden="true">
@@ -702,6 +764,12 @@ details>p,details>div{margin-top:8px!important;padding:10px 14px;background:var(
           <canvas id="hero-canvas" aria-label="Strobe image of a dropped ball and a ball launched sideways, one flash every 0.1 seconds"></canvas>
           <figcaption>Strobe photo, one flash every 0.1 s. The dropped ball and the ball launched sideways fall the same distance in every interval: horizontal and vertical motion are independent.</figcaption>
         </figure>
+      </div>
+
+      <div class="lab lab3d">
+        <div class="labbar"><span class="title">See it in 3D</span><div class="seg" id="g3-scene" role="group" aria-label="3D scene"><button type="button" data-k="proj" aria-pressed="true">Projectile</button><button type="button" data-k="orbit" aria-pressed="false">Orbit</button><button type="button" data-k="cross" aria-pressed="false">Cross product</button></div></div>
+        <canvas id="g3-canvas" aria-label="3D scene you can rotate: drag to spin it all the way around"></canvas>
+        <p class="small" id="g3-cap" style="margin:0"></p>
       </div>
 
       <div class="head"><h2>New to physics? Start here</h2><p class="lede" style="font-size:15px">You don't need to know any physics yet. You do need to be comfortable with algebra; the calculus is explained as it comes up.</p></div>
@@ -2520,6 +2588,62 @@ function burst(el,n=14){if(REDUCE||!el)return;const r=el.getBoundingClientRect()
     document.body.appendChild(d);setTimeout(()=>d.remove(),800);}}
 function redraw(id){const f=drawers[id||current];if(f)f();}
 
+/* ---------------- 3D views: a small perspective renderer on a 2D canvas ----------------
+   z is up. Drag to orbit all the way around, pinch or Ctrl+scroll to zoom, arrow keys when focused,
+   double-click to reset. Each frame the scene adds primitives; they are drawn far to near. */
+const V3={sub:(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],add:(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]],mul:(a,k)=>[a[0]*k,a[1]*k,a[2]*k],
+  dot:(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],cross:(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],len:a=>Math.hypot(a[0],a[1],a[2])};
+V3.norm=a=>V3.mul(a,1/(V3.len(a)||1));
+const STARS=Array.from({length:140},(_,i)=>{const u=Math.sin(i*12.9898)*43758.5453%1,v=Math.sin(i*78.233)*12345.678%1,th=Math.abs(u)*Math.PI*2,ph=Math.acos(2*Math.abs(v)-1);return [40*Math.sin(ph)*Math.cos(th),40*Math.sin(ph)*Math.sin(th),40*Math.cos(ph),.6+Math.abs(u*v)*1.6];});
+function view3d(cv,o){
+  let cam={yaw:o.yaw??-.9,pitch:o.pitch??.42,dist:o.dist??9,target:o.target||[0,0,0]},home={...cam};
+  let vy=0,vp=0,active=0,raf=0,lastT=0,pinch=0,seen=true;const ptrs=new Map(),mn=o.min||2.5,mx=o.max||40;
+  const wrap=document.createElement('div');wrap.className='v3';cv.before(wrap);wrap.appendChild(cv);cv.tabIndex=0;cv.classList.add('drag');
+  wrap.insertAdjacentHTML('beforeend','<span class="v3hint" aria-hidden="true">Drag to spin 360°</span><div class="v3ui"><button type="button" data-z="in" aria-label="Zoom in">+</button><button type="button" data-z="out" aria-label="Zoom out">−</button><button type="button" data-z="home" aria-label="Reset the view">⟲</button></div>');
+  const live=()=>seen&&!document.hidden&&cv.offsetParent!==null;
+  function render(t){const w=cv.clientWidth;if(!w)return;const big=cv.closest('.lab.big');const h=Math.round(big?Math.max((o.height||(x=>clamp(x*.62,260,420)))(w),innerHeight*.6):(o.height||(x=>clamp(x*.62,260,420)))(w));
+    const c=prep(cv,h);if(!c)return;const ctx=c.ctx,tg=cam.target,cy=Math.cos(cam.yaw),sy=Math.sin(cam.yaw),cp=Math.cos(cam.pitch),sp=Math.sin(cam.pitch);
+    const eye=[tg[0]+cam.dist*cp*cy,tg[1]+cam.dist*cp*sy,tg[2]+cam.dist*sp],f=V3.norm(V3.sub(tg,eye)),r=V3.norm(V3.cross(f,[0,0,1])),u=V3.cross(r,f),F=Math.min(w,h)*1.25,ox=w/2,oy=h/2;
+    const P=p=>{const d=V3.sub(p,eye),z=V3.dot(d,f);if(z<.05)return null;const k=F/z;return [ox+V3.dot(d,r)*k,oy-V3.dot(d,u)*k,z,k];};
+    const L=[],push=(z,fn)=>L.push([z,fn]);
+    const S={P,pitch:cam.pitch,
+      line(a,b,col,lw=1.5,dash){const A=P(a),B=P(b);if(!A||!B)return;push((A[2]+B[2])/2,x=>{x.save();x.strokeStyle=col;x.lineWidth=lw;x.lineCap='round';if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(A[0],A[1]);x.lineTo(B[0],B[1]);x.stroke();x.restore();});},
+      path(pts,col,lw=1.5,dash,z){const Q=pts.map(P);if(Q.some(q=>!q))return;push(z??Q.reduce((s,q)=>s+q[2],0)/Q.length,x=>{x.save();x.strokeStyle=col;x.lineWidth=lw;if(dash)x.setLineDash(dash);x.beginPath();Q.forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.stroke();x.restore();});},
+      arrow(a,b,col,lw=3,lab){const d=V3.sub(b,a),n=V3.len(d);if(n<1e-6)return;const hl=Math.min(.3,n*.4),A=P(a),B=P(b),K=P(V3.sub(b,V3.mul(d,hl/n)));if(!A||!B||!K)return;
+        push((A[2]+B[2])/2,x=>{const dx=B[0]-K[0],dy=B[1]-K[1],l=Math.hypot(dx,dy)||1,ux=dx/l,uy=dy/l,hh=Math.max(8,Math.min(l,26)),hw=hh*.5;
+          x.save();x.strokeStyle=x.fillStyle=col;x.lineWidth=lw;x.lineCap='round';x.beginPath();x.moveTo(A[0],A[1]);x.lineTo(B[0]-ux*hh*.7,B[1]-uy*hh*.7);x.stroke();
+          x.beginPath();x.moveTo(B[0],B[1]);x.lineTo(B[0]-ux*hh-uy*hw,B[1]-uy*hh+ux*hw);x.lineTo(B[0]-ux*hh+uy*hw,B[1]-uy*hh-ux*hw);x.closePath();x.fill();x.restore();});
+        if(lab)S.text(V3.add(b,V3.mul(d,.3/n)),lab,col);},
+      ball(p,rad,col,al=1,shadow=true){const C=P(p);if(!C)return;const R=Math.max(1.5,rad*C[3]);
+        if(shadow&&p[2]>0){const G=P([p[0],p[1],0]);if(G){const g=Math.max(.12,Math.abs(Math.sin(cam.pitch)));push(G[2]+1e6,x=>{x.save();x.globalAlpha=.22*al;x.fillStyle='#000';x.beginPath();x.ellipse(G[0],G[1],R,R*g,0,0,7);x.fill();x.restore();});}}
+        push(C[2],x=>{x.save();x.globalAlpha=al;x.beginPath();x.arc(C[0],C[1],R,0,7);x.fillStyle=col;x.fill();
+          const g=x.createRadialGradient(C[0]-R*.35,C[1]-R*.4,R*.05,C[0],C[1],R*1.02);g.addColorStop(0,'rgba(255,255,255,.8)');g.addColorStop(.32,'rgba(255,255,255,0)');g.addColorStop(1,'rgba(0,0,0,.38)');x.fillStyle=g;x.fill();x.restore();});},
+      poly(pts,fill,stroke,z){const Q=pts.map(P);if(Q.some(q=>!q))return;push(z??Q.reduce((s,q)=>s+q[2],0)/Q.length,x=>{x.beginPath();Q.forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]));x.closePath();if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=1.5;x.stroke();}});},
+      text(p,str,col,font=LABEL){const C=P(p);if(!C)return;push(-1e9+C[2],x=>{x.save();x.font=font;const w2=x.measureText(str).width/2+5;x.fillStyle=alpha(T.surface,.78);x.beginPath();x.roundRect?x.roundRect(C[0]-w2,C[1]-10,w2*2,20,6):x.rect(C[0]-w2,C[1]-10,w2*2,20);x.fill();x.restore();label(x,str,C[0],C[1],col,'center','middle',font);});},
+      grid(x0,x1,y0,y1,st=1){S.poly([[x0,y0,0],[x1,y0,0],[x1,y1,0],[x0,y1,0]],alpha(T.sunk,.55),null,2e6);
+        for(let x=x0;x<=x1+1e-9;x+=st)S.line([x,y0,0],[x,y1,0],T.line,1),L[L.length-1][0]=1.5e6;for(let y=y0;y<=y1+1e-9;y+=st)S.line([x0,y,0],[x1,y,0],T.line,1),L[L.length-1][0]=1.5e6;},
+      stars(){STARS.forEach(([a,b,c2,sz])=>{const C=P(V3.add(cam.target,[a,b,c2]));if(C)push(3e6,x=>{x.fillStyle=alpha(T.muted,.55);x.fillRect(C[0],C[1],sz,sz);});});}};
+    o.scene(S,t);L.sort((a,b)=>b[0]-a[0]);L.forEach(e=>e[1](ctx));}
+  function frame(ts){raf=0;const dt=lastT?Math.min(.05,(ts-lastT)/1000):0;lastT=ts;
+    if(!ptrs.size){if(Math.abs(vy)>2e-4||Math.abs(vp)>2e-4){cam.yaw+=vy;cam.pitch=clamp(cam.pitch+vp,-1.45,1.45);vy*=.93;vp*=.93;}else if(o.auto!==false&&ts-active>3500)cam.yaw+=dt*.22;}
+    render(ts/1000);if(live())raf=requestAnimationFrame(frame);}
+  function kick(){if(REDUCE){render(null);return;}if(!raf&&live())raf=requestAnimationFrame(frame);}
+  const touch=()=>{active=performance.now();kick();};
+  const pd=()=>{const v=[...ptrs.values()];return Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1]);};
+  cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,[e.clientX,e.clientY]);vy=vp=0;if(ptrs.size===2)pinch=pd();wrap.classList.add('used');touch();});
+  cv.addEventListener('pointermove',e=>{const pv=ptrs.get(e.pointerId);if(!pv)return;ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+    if(ptrs.size===2){const d=pd();if(pinch)cam.dist=clamp(cam.dist*pinch/d,mn,mx);pinch=d;}else{vy=-(e.clientX-pv[0])*.009;vp=(e.clientY-pv[1])*.007;cam.yaw+=vy;cam.pitch=clamp(cam.pitch+vp,-1.45,1.45);}
+    if(REDUCE)vy=vp=0;touch();});
+  const up=e=>{ptrs.delete(e.pointerId);pinch=0;touch();};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+  cv.addEventListener('wheel',e=>{if(!(e.ctrlKey||e.metaKey))return;e.preventDefault();cam.dist=clamp(cam.dist*Math.exp(e.deltaY*.01),mn,mx);touch();},{passive:false});
+  cv.addEventListener('keydown',e=>{const k={ArrowLeft:[.15,0],ArrowRight:[-.15,0],ArrowUp:[0,.1],ArrowDown:[0,-.1]}[e.key];
+    if(k){cam.yaw+=k[0];cam.pitch=clamp(cam.pitch+k[1],-1.45,1.45);}else if(e.key==='+'||e.key==='=')cam.dist=clamp(cam.dist*.85,mn,mx);else if(e.key==='-')cam.dist=clamp(cam.dist/.85,mn,mx);else return;e.preventDefault();touch();});
+  const goHome=()=>{cam={...home,target:[...home.target]};vy=vp=0;touch();};cv.addEventListener('dblclick',goHome);
+  wrap.querySelector('.v3ui').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const z=b.dataset.z;if(z==='home')goHome();else cam.dist=clamp(cam.dist*(z==='in'?.8:1.25),mn,mx);touch();});
+  if('IntersectionObserver' in window)new IntersectionObserver(es=>{seen=es[es.length-1].isIntersecting;if(seen)kick();}).observe(cv);
+  document.addEventListener('visibilitychange',kick);window.addEventListener('hashchange',()=>setTimeout(kick,50));
+  return {render:()=>{render(REDUCE?null:performance.now()/1000);kick();},setHome(h){home={...home,...h};goHome();}};}
+
 /* ---------------- Overview hero ---------------- */
 (function hero(){
   /* The balls fall in slowed real time. Each 0.1 s flash leaves a dot (with a brief ripple) and a dashed
@@ -2609,6 +2733,37 @@ const apTag=id=>MODS[id].ap.startsWith('AP')?'ap':'na';
 function renderMods(){const solved=store('kin-solved')||{};const cnt={};let k=0;PROBS.forEach(p=>{const c=cnt[p.topic]=cnt[p.topic]||[0,0];c[1]++;if(solved[p.id])c[0]++;});
   $('#modgrid').innerHTML=GROUPS.map(g=>`<div class="modgroup"><div class="eyebrow">${g.w}</div><h3 class="gtitle">${g.name}</h3><div class="modgrid-inner">${g.ids.map(id=>{const m=MODS[id],c=cnt[id]||[0,0];
     return `<a class="mod" href="#${id}" style="--i:${Math.min(k++,14)}"><h3>${m.t}</h3><p>${m.d}</p><div class="row"><span class="tag ${apTag(id)}">${m.ap}</span><span class="prog">${c[0]}/${c[1]} solved</span></div></a>`;}).join('')}</div></div>`).join('');}
+
+/* ---------------- Overview: See it in 3D ---------------- */
+(function g3(){const cv=$('#g3-canvas');if(!cv)return;let scene='proj';
+  const N=9,dt=.1,ux=2.1,TF=(N-1)*dt,H=.5*G*TF*TF,SLOW=.35,HOLD=1.6,rb=.085;
+  const CAP={proj:'The strobe photo above, in 3D. One flash every 0.1 s. At every flash the two balls are at the same height, so moving sideways does not change how fast a ball falls.',
+    orbit:'A circular orbit. The velocity (green) points along the path; the acceleration (pink) points at the center of the planet. The speed stays the same, but the direction of motion keeps turning.',
+    cross:'A = (2, 1, 0) and B = (0.5, 2, 0). A × B = (0, 0, 3.5) points straight out of the plane of A and B: curl the fingers of your right hand from A to B and your thumb points along A × B. Its length, 3.5, equals the shaded area.'};
+  const HOME={proj:{yaw:-1.3,pitch:.26,dist:6.6,target:[.7,0,1.75]},orbit:{yaw:-.7,pitch:.38,dist:10.5,target:[0,0,0]},cross:{yaw:-.6,pitch:.42,dist:10,target:[1,1,1.3]}};
+  const SC={
+    proj(S,t){const span=TF/SLOW+HOLD,tt=t==null?TF:Math.min(TF,(t%span)*SLOW),z=q=>H-.5*G*q*q+rb;
+      S.grid(-1,2.5,-1,1,.25);
+      S.poly([[-.8,-.75,H],[0,-.75,H],[0,.75,H],[-.8,.75,H]],alpha(T.muted,.45),T.muted);[[-.75,-.7],[-.75,.7],[-.05,-.7],[-.05,.7]].forEach(([a,b])=>S.line([a,b,0],[a,b,H],T.muted,2.5));
+      for(let k=0;k<N;k++){const q=k*dt;if(q>tt+1e-9)break;S.ball([0,-.45,z(q)],rb,T.muted,.4,false);S.ball([ux*q,.45,z(q)],rb,T.hot,.45,false);if(k)S.line([0,-.45,z(q)],[ux*q,.45,z(q)],T.muted,1,[3,4]);}
+      const pa=[0,-.45,z(tt)],pb=[ux*tt,.45,z(tt)];S.ball(pa,rb*1.3,T.ink);S.ball(pb,rb*1.3,T.hot);
+      const k2=.2;S.arrow(pb,V3.add(pb,[ux*k2,0,0]),T.cv,2.5);if(tt>.05)S.arrow(pb,V3.add(pb,[0,0,-G*tt*k2]),T.cv,2.5,'v');
+      S.text([-.45,-.45,H+.35],'dropped',T.ink);S.text([.8,.45,H+.8],'launched sideways →',T.hot);},
+    orbit(S,t){const R=3.2,inc=.42,th=t==null?.9:t*.7,pt=a=>[R*Math.cos(a),R*Math.sin(a)*Math.cos(inc),R*Math.sin(a)*Math.sin(inc)];S.stars();
+      for(let i=0;i<72;i++)S.line(pt(i/72*Math.PI*2),pt((i+.6)/72*Math.PI*2),T.muted,1.5);
+      for(let i=0;i<12;i++)S.ball(pt(th-(i+1)*.5),.06,T.hot,.25,false);
+      S.ball([0,0,0],1.1,T.cx,1,false);for(let i=0;i<48;i++){const a=i/48*Math.PI*2,b=(i+1)/48*Math.PI*2;S.line([1.12*Math.cos(a),1.12*Math.sin(a),0],[1.12*Math.cos(b),1.12*Math.sin(b),0],alpha(T.surface,.55),1.5);}
+      const p=pt(th),tv=V3.norm([-Math.sin(th),Math.cos(th)*Math.cos(inc),Math.cos(th)*Math.sin(inc)]);S.ball(p,.2,T.hot,1,false);
+      S.arrow(p,V3.add(p,V3.mul(tv,1.4)),T.cv,3,'v');S.arrow(p,V3.add(p,V3.mul(V3.norm(p),-1.1)),T.ca,3,'a');},
+    cross(S){const A=[2,1,0],B=[.5,2,0],C=V3.cross(A,B),O=[0,0,0];S.grid(-1,3,-1,3,.5);
+      [[[3.4,0,0],'x'],[[0,3.4,0],'y'],[[0,0,4],'z']].forEach(([q,l])=>S.arrow(O,q,T.muted,1.25,l));
+      S.poly([O,A,V3.add(A,B),B],alpha(T.cx,.2),alpha(T.cx,.5));S.text(V3.mul(V3.add(A,B),.5),'area = 3.5',T.cx);
+      const a0=Math.atan2(A[1],A[0]),a1=Math.atan2(B[1],B[0]);S.path(Array.from({length:21},(_,i)=>{const a=a0+(a1-a0)*i/20;return [.9*Math.cos(a),.9*Math.sin(a),0];}),T.muted,1.5,[4,3]);
+      S.arrow(A.map(()=>0),A,T.hot,3.5,'A');S.arrow(O,B,T.ink,3.5,'B');S.arrow(O,C,T.cv,3.5,'A × B');}};
+  const v=view3d(cv,{...HOME.proj,height:w=>clamp(w*.5,280,440),scene:(S,t)=>SC[scene](S,t)});
+  function pick(k){scene=k;$$('#g3-scene button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));setText('g3-cap',CAP[k]);v.setHome(HOME[k]);}
+  $$('#g3-scene button').forEach(b=>b.addEventListener('click',()=>pick(b.dataset.k)));pick('proj');
+  const h0=drawers.overview;drawers.overview=()=>{h0&&h0();v.render();};})();
 
 /* ---------------- 01 Motion graphs ---------------- */
 (function graphs(){
@@ -3509,7 +3664,7 @@ const extra={};
     setText('ig-sum',fmt(sum,3));setText('ig-ex',fmt(ex,3));setText('ig-err',fmt(Math.abs(sum-ex),3));$('#ig-eq').innerHTML=F.e;}
   extra.integ=draw;const bEl=bindRange('ig-b',x=>'t = '+fmt(x,2),x=>{b=x;draw();});bindRange('ig-N',x=>String(x),x=>{N=x;draw();});
   segBind('ig-fn','k',k=>{key=k;bEl.max=FN[k].max;b=Math.min(b,FN[k].max);bEl.value=b;$('#ig-b-out').textContent='t = '+fmt(b,2);draw();});})();
-(function products(){const cv=$('#xp-canvas');const ids=['xa-x','xa-y','xa-z','xb-x','xb-y','xb-z'];let yaw=.7,drag=null;
+(function products(){const cv=$('#xp-canvas');const ids=['xa-x','xa-y','xa-z','xb-x','xb-y','xb-z'];
   const get=()=>ids.map(id=>{const v=parseFloat($('#'+id).value.replace(/[−–]/g,'-'));return isFinite(v)?v:0;});
   const n=v=>num(v);
   function steps(A,B){const d=A[0]*B[0]+A[1]*B[1]+A[2]*B[2],a=Math.hypot(...A),b=Math.hypot(...B),C=[A[1]*B[2]-A[2]*B[1],A[2]*B[0]-A[0]*B[2],A[0]*B[1]-A[1]*B[0]],cm=Math.hypot(...C),th=a&&b?Math.acos(clamp(d/(a*b),-1,1))*180/Math.PI:NaN;
@@ -3517,17 +3672,16 @@ const extra={};
       <div><b>Lengths and angle</b><span class="m">|A| = ${fmt(a)}, |B| = ${fmt(b)}</span><span class="m">cos θ = ${fmt(d,2)}/(${fmt(a)}·${fmt(b)}) → θ = ${isFinite(th)?fmt(th,1)+'°':'—'}</span></div>
       <div><b>Cross product, one component at a time</b><span class="m">x: ${n(A[1])}·${n(B[2])} − ${n(A[2])}·${n(B[1])} = ${n(+C[0].toFixed(4))}</span><span class="m">y: ${n(A[2])}·${n(B[0])} − ${n(A[0])}·${n(B[2])} = ${n(+C[1].toFixed(4))}</span><span class="m">z: ${n(A[0])}·${n(B[1])} − ${n(A[1])}·${n(B[0])} = ${n(+C[2].toFixed(4))}</span><span class="small">Pattern: each component uses the other two letters, in cyclic order.</span></div>
       <div><b>Check</b><span class="m">|A × B| = ${fmt(cm)} and |A||B| sin θ = ${isFinite(th)?fmt(a*b*Math.sin(th*Math.PI/180)):'—'}</span><span class="small">A × B is perpendicular to both A and B (right-hand rule).</span></div>`;return C;}
-  function draw(){const w=cv.clientWidth;if(!w)return;const h=Math.round(clamp(w*.5,240,340));const c=prep(cv,h);if(!c)return;const {ctx}=c;const v=get(),A=v.slice(0,3),B=v.slice(3),C=steps(A,B);
-    const P=.42,cx=w/2,cy=h*.62,mx=Math.max(Math.hypot(...A),Math.hypot(...B),Math.hypot(...C),1),s=Math.min(w,h)*.36/mx;
-    const pr=q=>{const X=q[0]*Math.cos(yaw)-q[1]*Math.sin(yaw),Y=q[0]*Math.sin(yaw)+q[1]*Math.cos(yaw);return [cx+X*s,cy-(q[2]*Math.cos(P)+Y*Math.sin(P))*s];};
-    [[[mx,0,0],'x'],[[0,mx,0],'y'],[[0,0,mx],'z']].forEach(([q,l])=>{const e=pr(q),o=pr([0,0,0]);ctx.strokeStyle=T.line;ctx.lineWidth=1.25;ctx.beginPath();ctx.moveTo(o[0],o[1]);ctx.lineTo(e[0],e[1]);ctx.stroke();label(ctx,l,e[0]+8,e[1],T.muted,'left','middle',MONO);});
-    const o=pr([0,0,0]),pa=pr(A),pb=pr(B),ps=pr([A[0]+B[0],A[1]+B[1],A[2]+B[2]]);ctx.fillStyle=alpha(T.cx,.12);ctx.beginPath();ctx.moveTo(...o);ctx.lineTo(...pa);ctx.lineTo(...ps);ctx.lineTo(...pb);ctx.closePath();ctx.fill();
-    const pc=pr(C);arrow(ctx,o[0],o[1],pa[0],pa[1],T.hot,3);arrow(ctx,o[0],o[1],pb[0],pb[1],T.ink,3);arrow(ctx,o[0],o[1],pc[0],pc[1],T.cv,3);
-    label(ctx,'A',pa[0]+10,pa[1]-8,T.hot);label(ctx,'B',pb[0]+10,pb[1]-8,T.ink);label(ctx,'A × B',pc[0]+10,pc[1]-8,T.cv);label(ctx,'drag sideways to rotate the view',10,h-10,T.muted,'left','middle',MONO);}
+  let cur={A:[2,1,0],B:[0,3,0],C:[0,0,6]};
+  const v3=view3d(cv,{yaw:-.95,pitch:.42,dist:11,target:[0,0,.8],height:w=>clamp(w*.55,260,400),scene:S=>{const {A,B,C}=cur,m=Math.max(V3.len(A),V3.len(B),V3.len(C),1),k=3/m,q=v=>V3.mul(v,k),O=[0,0,0];
+    S.grid(-3.5,3.5,-3.5,3.5,.5);[[[3.8,0,0],'x'],[[0,3.8,0],'y'],[[0,0,3.8],'z']].forEach(([e,l])=>S.arrow(O,e,T.muted,1.25,l));
+    [A,B,C].forEach(v=>{const e=q(v);if(Math.abs(e[2])>.05)S.line(e,[e[0],e[1],0],T.muted,1,[3,4]);});
+    S.poly([O,q(A),q(V3.add(A,B)),q(B)],alpha(T.cx,.18),alpha(T.cx,.45));
+    S.arrow(O,q(A),T.hot,3.5,'A');S.arrow(O,q(B),T.ink,3.5,'B');S.arrow(O,q(C),T.cv,3.5,'A × B');}});
+  function draw(){const v=get(),A=v.slice(0,3),B=v.slice(3),C=steps(A,B);cur={A,B,C};v3.render();}
   extra.products=draw;ids.forEach(id=>$('#'+id).addEventListener('input',draw));
   const set=v=>{ids.forEach((id,i)=>$('#'+id).value=v[i]);draw();};
-  $$('[data-xp]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.xp,v=get();if(k==='torque')set([0.3,0,0,0,20,0]);if(k==='par')set([2,1,0,4,2,0]);if(k==='perp')set([2,0,0,0,3,0]);if(k==='swap')set([...v.slice(3),...v.slice(0,3)]);}));
-  cv.addEventListener('pointerdown',e=>{drag=e.clientX;cv.setPointerCapture(e.pointerId);});cv.addEventListener('pointermove',e=>{if(drag===null)return;yaw+=(e.clientX-drag)*.01;drag=e.clientX;draw();});cv.addEventListener('pointerup',()=>drag=null);cv.addEventListener('pointercancel',()=>drag=null);})();
+  $$('[data-xp]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.xp,v=get();if(k==='torque')set([0.3,0,0,0,20,0]);if(k==='par')set([2,1,0,4,2,0]);if(k==='perp')set([2,0,0,0,3,0]);if(k==='swap')set([...v.slice(3),...v.slice(0,3)]);}));})();
 (function diffeq(){const cv=$('#de-canvas');let key='terminal',k=.5,v0=0;const g=9.8;
   const OD={terminal:{f:v=>g-k*v,sol:t=>g/k+(v0-g/k)*Math.exp(-k*t),e:()=>`d<i class="v">v</i>/d<i>t</i> = <i>g</i> − <i>k</i><i class="v">v</i> &nbsp; → &nbsp; <i class="v">v</i> = ${fmt(g/k,1)} + (${fmt(v0,1)} − ${fmt(g/k,1)})<i>e</i><sup>−${fmt(k,2)}<i>t</i></sup>`},
     decay:{f:v=>-k*v,sol:t=>v0*Math.exp(-k*t),e:()=>`d<i class="v">v</i>/d<i>t</i> = −<i>k</i><i class="v">v</i> &nbsp; → &nbsp; <i class="v">v</i> = ${fmt(v0,1)}<i>e</i><sup>−${fmt(k,2)}<i>t</i></sup>`},
@@ -3871,7 +4025,7 @@ const PROBS=[
 /* ---------------- "How to read it" keys and Set-it-up buttons ---------------- */
 (function guides(){const KEYS={"g-canvas": ["Press Play, or drag across the graphs to move through time.", [["cx", "position x"], ["cv", "velocity v"], ["ca", "acceleration a"], ["muted", "tangent lines (their slope)", "dash"]]], "c-canvas": ["Then the graph of the same motion.", [["cv", "velocity over time"], ["cv", "shaded area = displacement Δx", "fill"]]], "d-canvas": ["Then the graphs of the same motion.", [["cv", "speed v(t)"], ["ca", "acceleration a(t)"], ["muted", "terminal speed", "dash"]]], "m-canvas": ["Drag the tips of the two arrows.", [["hot", "A"], ["ink", "B"], ["muted", "A + B", "dash"], ["cx", "area = |A × B|", "fill"]]], "p-canvas": ["Set speed and angle, then press Launch.", [["cx", "path"], ["hot", "ball, with dots at equal time steps"], ["cv", "velocity"], ["ca", "acceleration"]]], "r-canvas": ["Change the heading. The boat points where it aims.", [["cx", "boat"], ["hot", "path it actually follows", "dash"], ["muted", "current"]]], "o-canvas": ["Change the sliders and watch the arrows.", [["cv", "velocity"], ["ca", "acceleration (dashed: its two parts)"], ["hot", "particle and strobe trail"]]], "f-canvas": ["Tilt the ramp, change friction, or push.", [["cx", "block"], ["hot", "forces on the block"], ["ca", "acceleration"]]], "at-canvas": ["Change the masses and friction.", [["cx", "blocks"], ["hot", "forces"], ["ca", "acceleration"]]], "bk-canvas": ["Change the speed and watch the friction arrow.", [["cx", "car (from behind)"], ["hot", "forces"], ["ca", "net force, toward the center"]]], "tb-canvas": ["Change the angle; tick the box to ride along.", [["hot", "real forces"], ["ca", "net force"], ["muted", "fictitious force (rotating view)", "dash"]]], "e-canvas": ["Slide the total energy E.", [["ink", "potential energy U(x)"], ["hot", "total energy E, and the particle"], ["cv", "kinetic energy (gap between E and U)", "fill"]]], "lp-canvas": ["Slide the release height.", [["hot", "starting point"], ["cv", "where the cart goes"], ["ca", "where it leaves the track"]]], "k-canvas": ["Set the carts up, then press Play or drag the time slider.", [["cx", "cart 1"], ["hot", "cart 2"], ["cv", "velocities"], ["ink", "center of mass (triangle)"]]], "it-canvas": ["Pick a landing surface or drag the stopping time.", [["hot", "force during the stop"], ["hot", "area = impulse = Δp", "fill"]]], "rk-canvas": ["Change the exhaust speed and mass ratio.", [["cv", "speed gained"], ["hot", "your rocket"], ["muted", "orbit speed", "dash"]]], "tq-canvas": ["Drag a block along the beam, or use the sliders.", [["hot", "left block"], ["cx", "right block"], ["ca", "which way it turns"]]], "ro-canvas": ["Press Race.", [["hot", "rolling objects (spokes show spin)"], ["muted", "sliding block"]]], "am-canvas": ["Drag the r slider to pull the masses in.", [["hot", "masses"], ["cv", "their velocity"]]], "or-canvas": ["Change the launch speed.", [["cx", "orbit"], ["hot", "satellite and equal-time wedges"], ["cv", "velocity"], ["ca", "pull of gravity"]]], "gf-canvas": ["Drag either mass.", [["ca", "direction a pebble would be pulled"], ["hot", "zero-pull point"]]], "s-canvas": ["Change the sliders; switch spring or pendulum at the top.", [["cx", "position"], ["cv", "velocity"], ["ca", "acceleration"], ["hot", "potential energy bar"]]], "dd-canvas": ["Then the graphs: motion over time, and the resonance curve.", [["cx", "motion over time"], ["ink", "resonance curve"], ["hot", "your drive frequency"]]], "w-canvas": ["Change tension, density or frequency.", [["cx", "string"], ["hot", "one piece of string"], ["cv", "its velocity"]]], "if-canvas": ["Change the spacing, wavelength or phase.", [["cx", "dark = big wave, pale = calm", "fill"], ["hot", "sources"]]], "sn-canvas": ["Pick a string or pipe and step through the modes.", [["cx", "wave shape"], ["cx", "range of motion", "fill"]]], "bt-canvas": ["Move the two tones close together.", [["cx", "the two tones added"], ["ca", "loudness envelope", "dash"]]], "dp-canvas": ["Change the source speed.", [["cx", "wavefronts"], ["hot", "source"]]], "fo-canvas": ["Add terms, or pick a different shape.", [["muted", "target shape", "dash"], ["cx", "your sum"], ["cv", "individual sine waves and spectrum"]]], "c-scene": ["First, the picture: load an example and watch what actually happens.", [["cx", "object, with faded strobe copies"], ["cv", "velocity"], ["ca", "acceleration"], ["hot", "forces (free-body diagram, right)"]]], "d-scene": ["First, the picture: a ball falling through air.", [["hot", "forces on the ball"], ["ca", "net force"], ["cv", "speed gauge"]]], "dd-scene": ["First, the picture: the block on its spring.", [["cx", "block"], ["hot", "forces on it (dashed: damping)"]]], "cm-canvas": ["Slide the person along the canoe, or press Walk.", [["hot", "canoe"], ["ink", "person"], ["cv", "center of mass (never moves)"]]], "bm-canvas": ["Press Launch, or try the classic setup.", [["cv", "original path = CM path", "dash"], ["hot", "front piece"], ["cx", "back piece"]]], "dv-canvas": ["Move the point and shrink the gap.", [["cx", "the function"], ["muted", "secant (average slope)", "dash"], ["cv", "tangent (the derivative)"]]], "ig-canvas": ["Change the upper limit and the number of rectangles.", [["cv", "the function and positive area", "fill"], ["ca", "negative area", "fill"]]], "xp-canvas": ["Type components above or press a preset. Drag to rotate.", [["hot", "A"], ["ink", "B"], ["cv", "A × B"], ["cx", "parallelogram (area = |A × B|)", "fill"]]], "de-canvas": ["Pick an equation, then change the starting value.", [["muted", "slope marks"], ["cv", "solution"], ["hot", "starting point"]]], "fw-canvas": ["Set the speed and spin. Roll it, then add engine or brakes.", [["cv", "wheel velocity"], ["muted", "how the bottom slides", "dash"], ["hot", "friction from the ground"]]], "mp-canvas": ["Change the pulley mass; press \"Week 2 model\" to compare.", [["hot", "masses and the rope's pull on them"], ["ca", "rope's pull on the pulley"]]], "rf-canvas": ["Switch views at the top; change the flatcar speed.", [["hot", "flatcar"], ["cx", "ball, with strobe dots"], ["cv", "ball velocity"], ["ca", "acceleration"]]]};
   Object.entries(KEYS).forEach(([id,[todo,items]])=>{const cv=$('#'+id);if(!cv)return;const d=document.createElement('div');d.className='howto';
-    d.innerHTML=`<span class="do">${todo}</span>`+items.map(([c,t,st])=>`<span class="key"><i class="${st||''}" style="--k:var(--${c})"></i>${t}</span>`).join('');cv.before(d);});
+    d.innerHTML=`<span class="do">${todo}</span>`+items.map(([c,t,st])=>`<span class="key"><i class="${st||''}" style="--k:var(--${c})"></i>${t}</span>`).join('');(cv.closest('.v3')||cv).before(d);});
   document.addEventListener('click',e=>{const b=e.target.closest('[data-show]');if(!b)return;const acts=JSON.parse(b.dataset.show),sec=b.closest('.view');let first=null;
     acts.forEach(a=>{let el;if(a[0]==='click'){el=$(a[1],sec);el&&el.click();}else{el=$(a[0]);if(!el)return;
       if(el.type==='checkbox'){if(el.checked!==a[1]){el.checked=a[1];el.dispatchEvent(new Event('change',{bubbles:true}));el.dispatchEvent(new Event('input',{bubbles:true}));}}
@@ -4136,6 +4290,10 @@ function flipFrom(el,from,ms=480){if(REDUCE||!el.animate)return null;const to=el
   document.addEventListener('keydown',e=>{const tg=e.target,typing=tg.closest&&tg.closest('input,textarea,select,[contenteditable]');
     if(((e.key==='/'&&!typing)||((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'))&&!d.open){e.preventDefault();open();}});})();
 
+/* Module cards: a spotlight follows the pointer and the card tilts toward it */
+document.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const c=e.target.closest&&e.target.closest('.mod');if(!c)return;const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+  c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%');if(!REDUCE)c.style.transform=`perspective(700px) rotateX(${(.5-y)*7}deg) rotateY(${(x-.5)*9}deg) translateY(-3px)`;});
+document.addEventListener('pointerout',e=>{const c=e.target.closest&&e.target.closest('.mod');if(c&&!c.contains(e.relatedTarget))c.style.transform='';});
 /* Module preview: clicking a module card expands it into a preview */
 (function preview(){const d=$('#mprev'),body=$('#mprev-body');let card=null;
   function countUp(el,to){if(REDUCE){el.textContent=to;return;}const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)/600);el.textContent=Math.round(to*(1-(1-k)**3));if(k<1)requestAnimationFrame(f);};requestAnimationFrame(f);}
