@@ -751,6 +751,11 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
 .countdown .lbl{display:flex;flex-direction:column;gap:2px;font-size:13.5px;color:var(--ink)}
 .countdown .lbl small{font:500 11.5px var(--f-mono);color:var(--muted)}
 #rail-count:empty{display:none}
+.credit-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0 0 6px;font-size:13.5px;color:var(--ink)}
+.li-link{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 8px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--ink);font:600 12.5px var(--f-body);text-decoration:none;transition:border-color var(--d-1),color var(--d-1),transform var(--d-1)}
+.li-link svg{width:14px;height:14px;fill:#0A66C2}
+.li-link:hover{border-color:#0A66C2;color:#0A66C2;transform:translateY(-1px)}
+.rail .li-link{margin-top:6px}
 #rail-count{color:var(--hot)}
 @media (prefers-reduced-motion: reduce){*,::before,::after{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
 </style>
@@ -814,7 +819,7 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
       <div class="lv"><b>v</b> velocity</div>
       <div class="la"><b>a</b> acceleration</div>
     </div>
-    <div class="foot">For Physics 1 and AP Physics C: Mechanics. <span class="m"><i>g</i> = 9.8 m/s²</span> throughout.<span class="mapnote">Week numbers are mapped to the PHY 103 schedule at Princeton.</span><span class="mapnote">Unofficial study aid. Not affiliated with Princeton University or the College Board.</span><span class="mapnote">Last updated October 22, 2026</span><span class="mapnote">Anonymous visit counts (GoatCounter, no cookies).</span><span class="mapnote credit">Made by <a href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener">JL</a> · Princeton Class of 2030</span></div>
+    <div class="foot">For Physics 1 and AP Physics C: Mechanics. <span class="m"><i>g</i> = 9.8 m/s²</span> throughout.<span class="mapnote">Week numbers are mapped to the PHY 103 schedule at Princeton.</span><span class="mapnote">Unofficial study aid. Not affiliated with Princeton University or the College Board.</span><span class="mapnote">Last updated October 22, 2026</span><span class="mapnote">Anonymous visit counts (GoatCounter, no cookies).</span><span class="mapnote credit">Made by JL · Princeton Class of 2030</span><span class="mapnote"><a class="li-link" href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener" aria-label="JL on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4z"/></svg>LinkedIn</a></span></div>
   </aside>
 
   <main>
@@ -829,7 +834,7 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
           <div class="row"><a class="btn primary" href="#graphs" style="text-decoration:none">Start with motion graphs</a><a class="btn" href="#practice" style="text-decoration:none">Go to the practice set</a></div>
           <div class="countdown" id="ap-count" aria-live="polite"></div>
           <p class="heronote">The weeks follow the order of PHY 103 at Princeton University, so Princeton students can study along with the course. This is an independent, unofficial study aid. It is not affiliated with, reviewed by, or endorsed by Princeton University, its Physics Department, or the College Board. Use it to study, not on graded work.</p>
-          <p class="ov-report"><span class="mapnote" style="margin:0 0 4px">Made by <a href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener">JL</a> · Princeton Class of 2030 · a student project · Last updated October 22, 2026 · matches the May 2027 AP exam format</span>Spotted a mistake or something confusing? <button type="button" class="btn link rp-link" data-report="overview" style="padding:0">Report an issue</button></p>
+          <p class="ov-report"><span class="credit-row"><span>Made by <b>JL</b> · Princeton Class of 2030 · a student project</span><a class="li-link" href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener" aria-label="JL on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4z"/></svg>LinkedIn</a></span><span class="mapnote" style="margin:0 0 4px">Last updated October 22, 2026 · matches the May 2027 AP exam format</span>Spotted a mistake or something confusing? <button type="button" class="btn link rp-link" data-report="overview" style="padding:0">Report an issue</button></p>
         </div>
         <figure class="strobe" style="margin:0">
           <canvas id="hero-canvas" aria-label="Strobe image of a dropped ball and a ball launched sideways, one flash every 0.1 seconds"></canvas>
