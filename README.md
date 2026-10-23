@@ -23,9 +23,9 @@ The whole site is one HTML file (`index.html`) with no build step. Open it in a 
 
 ## Reporting a problem
 
-Every module and practice problem has a **Report an issue** link. On this site it opens a pre-filled GitHub issue. Issues go to the shared [AP Science Labs feedback](https://github.com/jiacode2030/ap-labs-feedback/issues) tracker, labelled `course:mechanics`. You can also [open one directly](https://github.com/jiacode2030/ap-labs-feedback/issues/new/choose).
+Every module and practice problem has a **Report an issue** link. On this site it opens a pre-filled GitHub issue. Issues go to the shared [AP Labs feedback](https://github.com/jiacode2030/ap-labs-feedback/issues) tracker, labelled `course:mechanics`. You can also [open one directly](https://github.com/jiacode2030/ap-labs-feedback/issues/new/choose).
 
-The **More AP labs** link in the side rail goes to the [AP Science Labs](https://jiacode2030.github.io/ap-labs/) landing page.
+The **More AP labs** link in the side rail goes to the [AP Labs](https://jiacode2030.github.io/ap-labs/) landing page.
 
 ## Privacy
 
