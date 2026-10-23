@@ -162,6 +162,12 @@ def phy_version(text):
     p.rep('/ap-labs/terms.html', '/princeton-labs/terms.html', count=2)
     p.rep('<a class="morelabs" href="/ap-labs/" aria-label="More AP labs">', '<a class="morelabs" href="/princeton-labs/" aria-label="More Princeton labs">')
     p.rep('<span class="tl">More AP labs</span>', '<span class="tl">More labs</span>')
+    # no credit line or LinkedIn on Princeton Labs
+    p.rep('<span class="mapnote credit">Created by JL · Princeton Class of 2030</span>', '')
+    p.cut('<span class="mapnote"><a class="li-link"', 'LinkedIn</a></span>')
+    p.cut('<span class="credit-row">', 'LinkedIn</a></span>')
+    p.s, n = re.subn(r'\.credit-row\{[^}]*\}\n(?:(?:\.rail )?\.li-link[^{]*\{[^}]*\}\n)+', '', p.s)
+    if n != 1: sys.exit(f'[phy] expected the credit and LinkedIn styles, found {n}')
     # hero
     p.rep('<span class="tag pu">Physics 1</span><span class="tag ap">AP Physics C: Mechanics</span>',
           '<span class="tag pu">PHY 103</span><span class="tag calc">Calculus-based</span>')
@@ -268,7 +274,7 @@ def main():
     if phy_dir:
         phy = phy_version(src)
         check_js(phy, 'phy')
-        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'ap-labs', "'kin-", 'ap-count'])
+        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'ap-labs', "'kin-", 'ap-count', 'LinkedIn', 'li-link', 'Created by', 'Class of 2030'])
         write(os.path.join(os.path.abspath(phy_dir), 'index.html'), phy)
 
 
