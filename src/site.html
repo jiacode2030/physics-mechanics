@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mechanics Lab</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -456,6 +458,8 @@ kbd{font:500 11px/1.4 var(--f-mono);border:1px solid var(--line);border-bottom-w
 .exfmt dd{margin:0;color:var(--muted)}
 .exfmt .exsrc{font-size:12.5px;color:var(--muted);margin:0}
 @media (max-width:560px){.exfmt dl{grid-template-columns:1fr}.exfmt dd{margin-bottom:6px}}
+/* small phones: long formulas in practice questions may wrap */
+@media (max-width:420px){.prob .q .m{white-space:normal}}
 /* link back to the AP Labs landing page */
 .morelabs{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:36px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 12px 6px 9px;font:500 12.5px var(--f-body);text-decoration:none;
   transition:color var(--d-1),border-color var(--d-1)}
