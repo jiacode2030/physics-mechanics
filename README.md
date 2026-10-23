@@ -30,7 +30,7 @@ The site is one HTML file (`index.html`). Open it in a browser, or visit the Git
 | Part of | Intulab | Princeton Labs |
 | Menu | AP Physics C units | PHY 103 weeks |
 | AP countdown, formula sheet, FRQ practice, exam format | yes | no (a Key formulas page instead) |
-| Visit counts | GoatCounter (`aplabs`) | none |
+| Visit counts | GoatCounter (`intulab`) | none |
 | Saved progress keys | `kin-` | `phy-` |
 | Reports | `intulab-feedback` | the `phy103-lab` repo's issues |
 
