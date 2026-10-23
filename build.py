@@ -144,6 +144,69 @@ PHY_FORMULAS_CSS = """
 """
 
 
+PHY_STUDY_CSS = """
+/* ---------------- PHY 103: the Multivariable Calculus Lab look ----------------
+   Same tokens as MAT 201: light only, IBM Plex Sans / STIX Two Text / IBM Plex Mono, one blue accent,
+   white cards on a plain gray page. Plot colors (x blue, v green, a red) keep their meaning; nothing decorative
+   moves. The simulations still run. */
+:root{
+  color-scheme:light;
+  --bg:#F4F6F8; --surface:#FFFFFF; --sunk:#F6F8FA; --ink:#18202B; --muted:#5A6676; --line:#DEE3EA; --grid:transparent; --accent:#2457A6;
+  --cx:#2457A6; --cv:#2E8B57; --ca:#C2453A; --hot:#D9822B; --good:#2E8B57; --bad:#C2453A;
+  --f-display:"IBM Plex Sans","Segoe UI",system-ui,sans-serif; --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-math:"STIX Two Text","Cambria Math","Times New Roman",serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --shadow-1:none; --shadow-2:none;
+  --h-font:var(--f-body); --h-w:600; --h-track:-.01em; --brand-w:700;
+  --radius:10px; --btn-bg:var(--accent); --btn-fg:#FFFFFF; --btn-font:var(--f-body); --btn-case:none; --btn-track:0; --btn-size:14px;
+  --nav-bg:#E6EEFA; --nav-fg:var(--accent); --lab-c:var(--muted); --ro-c:var(--ink);
+  --cap-font:var(--f-body); --cap-style:normal; --cap-size:13px; --page-grid:none;
+  --fig-tag:none; --fig-tag-c:var(--muted); --hl-style:normal; --h2-rule:1px solid var(--line); --h2-bar:none; --lift:0px;
+}
+html{background:var(--bg)}
+body{font-size:15.5px;line-height:1.55}
+*,::before,::after{animation:none!important}
+.nav .ind,.steps .ind,.nav a,.rmeter i,.mod,.modnav a,.btn,.searchbtn,.morelabs,details summary::before{transition:none!important}
+.mod:hover,.modnav a:hover,.btn:active,.searchbtn:active{transform:none!important}
+h1{font-size:clamp(28px,3.6vw,38px);line-height:1.15;font-weight:600}
+.view:not(#v-overview) .head h1{font-size:clamp(26px,3.2vw,34px)}
+h2{font-size:clamp(20px,2.4vw,24px);font-weight:600}
+.mod h3,.modgroup .gtitle,.start h3,.modnav a strong{font-weight:600}
+.modgroup .gtitle{font-size:19px}.mod h3{font-size:16px}
+.hero h1 .hl{color:var(--ink);font-style:normal}
+.brand{font-size:18px}
+/* labels: small caps in the body font, like the MAT 201 boxes */
+.eyebrow,.tag,.nav .grp,.labbar .title,.intuit .k,.note b,.try h3,.oops h3,.example h3,.sorter h3,.assume h3,.assume dt,.coach b,.ttip h3,
+.fs h3,.fsp h3,.modnav a span,.mod .n,.mod .prog,.railprog,.steps a .sn,th,.readout span,.eqgrid .eqn small,.mapnote,.rp .ri .meta{
+  font-family:var(--f-body)!important;font-weight:600;letter-spacing:.08em}
+.mapnote,.railprog,.mod .prog,.mod .n{font-weight:400;letter-spacing:0;font-size:12px}
+.eqgrid .eqn small,.readout span,.assume dt{letter-spacing:.04em}
+select,input[type=text]{font-family:var(--f-body)}
+.credit-row{font-size:13.5px}
+/* one neutral card style; color only where it carries meaning */
+.lab,.example,.sorter,.frq,.strobe,.quiz,.prob,.start>div,.modnav a,.tablewrap,.try,.assume,.ttip,.v3{background:var(--surface);border:1px solid var(--line);box-shadow:none}
+.lab::before,.strobe::before,.mod::before,.modgroup .gtitle::before{display:none}
+.start>div:nth-child(n){border-top:1px solid var(--line)}
+.modgroup{--c:var(--line)}
+.mod{border-top:0}
+.mod:hover{border-color:var(--accent)}
+.intuit{background:#E6EEFA;border-left:3px solid var(--accent)}
+.intuit .k{color:var(--accent)}
+.oops{background:#FCEFE0;border-left-color:var(--hot)}
+.oops h3{color:#9A5512}
+.assume.upgrade,.assume.fornow{background:var(--sunk);border:1px solid var(--line)}
+.assume.upgrade h3,.assume.fornow h3,.example h3,.sorter h3,.try h3{color:var(--muted)}
+.coach{background:var(--sunk);border-color:var(--line)}
+.coach b{color:var(--accent)}
+.eqn{background:var(--sunk);border:1px solid var(--line)}
+.tag,.tag.pu,.tag.calc,.tag.ap{color:var(--muted);border-color:var(--line);background:var(--surface)}
+.rmeter i{background:var(--accent)}
+.mp-hero{background:var(--sunk)}
+.wrap>.head h2{border-top:0;padding-top:0}
+.btn.primary:hover{box-shadow:none;filter:brightness(1.08)}
+.fx,.bubble,.cele{display:none!important}
+"""
+
+
 def phy_version(text):
     p = Page(text, 'phy')
     shared_edits(p)
@@ -162,12 +225,26 @@ def phy_version(text):
     p.rep('/ap-labs/terms.html', '/princeton-labs/terms.html', count=2)
     p.rep('<a class="morelabs" href="/ap-labs/" aria-label="More AP labs">', '<a class="morelabs" href="/princeton-labs/" aria-label="More Princeton labs">')
     p.rep('<span class="tl">More AP labs</span>', '<span class="tl">More labs</span>')
-    # no credit line or LinkedIn on Princeton Labs
-    p.rep('<span class="mapnote credit">Created by JL · Princeton Class of 2030</span>', '')
+    # credit as plain text: "JL · Princeton Class of 2030", no LinkedIn
+    p.rep('<span class="mapnote credit">Created by JL · Princeton Class of 2030</span>', '<span class="mapnote credit">JL · Princeton Class of 2030</span>')
     p.cut('<span class="mapnote"><a class="li-link"', 'LinkedIn</a></span>')
-    p.cut('<span class="credit-row">', 'LinkedIn</a></span>')
-    p.s, n = re.subn(r'\.credit-row\{[^}]*\}\n(?:(?:\.rail )?\.li-link[^{]*\{[^}]*\}\n)+', '', p.s)
-    if n != 1: sys.exit(f'[phy] expected the credit and LinkedIn styles, found {n}')
+    p.cut('<span class="credit-row">', 'LinkedIn</a></span>', new='<span class="credit-row">JL · Princeton Class of 2030</span>')
+    p.s, n = re.subn(r'(?:(?:\.rail )?\.li-link[^{]*\{[^}]*\}\n)+', '', p.s)
+    if n != 1: sys.exit(f'[phy] expected the LinkedIn styles, found {n}')
+    # look: match Multivariable Calculus Lab (fonts, light only, calm motion)
+    i = p.s.find('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?'); j = p.s.find('>', i) + 1
+    p.rep(p.s[i:j], '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=STIX+Two+Text:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap">')
+    p.rep('.rv{opacity:1;transform:none}}\n</style>', '.rv{opacity:1;transform:none}}\n' + PHY_STUDY_CSS + '</style>')
+    p.cut('<button type="button" class="themebtn" id="theme-btn"', '</button>')
+    p.cut('/* ---------------- Theme switch: auto (follows the device), light, dark ---------------- */', '/* ---------------- Feedback motion', include_end=False,
+          new="/* light theme only, like Multivariable Calculus Lab */\ndocument.documentElement.setAttribute('data-theme','light');\n")
+    # decorative motion off (sparks, bubbles, count-ups, card flips, scroll reveals); the simulations keep running
+    p.rep("const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;", "const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches,CALM=true;")
+    for old, new in [('spray(x,y,n,o={}){if(REDUCE)', 'spray(x,y,n,o={}){if(CALM)'), ('function burst(el,n=14){if(REDUCE', 'function burst(el,n=14){if(CALM'),
+                     ('function bubble(el,text,bad){if(REDUCE)', 'function bubble(el,text,bad){if(CALM)'), ('function flipFrom(el,from,ms=480){if(REDUCE', 'function flipFrom(el,from,ms=480){if(CALM'),
+                     ('function countUp(el,to){if(REDUCE)', 'function countUp(el,to){if(CALM)'), ("closest('summary');if(!s||REDUCE)", "closest('summary');if(!s||CALM)"),
+                     ('(function reveal(){if(REDUCE', '(function reveal(){if(CALM')]:
+        p.rep(old, new)
     # hero
     p.rep('<span class="tag pu">Physics 1</span><span class="tag ap">AP Physics C: Mechanics</span>',
           '<span class="tag pu">PHY 103</span><span class="tag calc">Calculus-based</span>')
@@ -220,7 +297,7 @@ def phy_version(text):
     # scripts that only exist for AP content
     p.cut('/* ---------------- FRQ section ---------------- */', '/* ---------------- Formula sheet drawer ---------------- */', include_end=False)
     p.cut('/* ---------------- Formula sheet drawer ---------------- */', '/* ---------------- Free-body diagrams', include_end=False)
-    p.cut('/* ---------------- AP exam countdown ----------------', '/* ---------------- Theme switch', include_end=False)
+    p.cut('/* ---------------- AP exam countdown ----------------', '/* light theme only, like Multivariable Calculus Lab */', include_end=False)
     i = p.s.find('(function analytics(){'); c = p.s.rfind('/*', 0, i)
     p.cut(p.s[c:i + len('(function analytics(){')], '})();\n')
     # reports go to this site's own repo
@@ -274,7 +351,7 @@ def main():
     if phy_dir:
         phy = phy_version(src)
         check_js(phy, 'phy')
-        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'ap-labs', "'kin-", 'ap-count', 'LinkedIn', 'li-link', 'Created by', 'Class of 2030'])
+        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'ap-labs', "'kin-", 'ap-count', 'LinkedIn', 'li-link', 'Created by', 'theme-btn'])
         write(os.path.join(os.path.abspath(phy_dir), 'index.html'), phy)
 
 
