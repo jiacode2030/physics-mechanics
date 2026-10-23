@@ -442,6 +442,20 @@ main::before{content:"";position:absolute;inset:0 0 auto;height:560px;pointer-ev
 .searchbtn .tl{flex:1}
 kbd{font:500 11px/1.4 var(--f-mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 6px;color:var(--muted);background:var(--surface)}
 .railtools{display:flex;flex-direction:column;gap:10px}
+/* Exam format box (top of Exam review) */
+.exfmt{border:1px solid var(--line);border-left:4px solid var(--accent,var(--acc));border-radius:var(--r,var(--radius,10px));background:var(--surface);padding:18px 20px;margin:0 0 22px;max-width:880px}
+.exfmt h2{margin:0 0 4px;font-size:22px}
+.exfmt .exsub{margin:0 0 14px;color:var(--muted);font-size:14px}
+.exfmt .exsecs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:0 0 12px}
+.exfmt .exsec{background:var(--sunk);border-radius:10px;padding:12px 14px}
+.exfmt .exsec b{display:block;font-size:15px;margin-bottom:2px}
+.exfmt .exbig{font:700 15px var(--f-mono);color:var(--ink);margin:2px 0 6px}
+.exfmt .exsec ul{margin:6px 0 0;padding-left:18px;font-size:14px}
+.exfmt dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0 0 10px;font-size:14px}
+.exfmt dt{font-weight:600;color:var(--ink)}
+.exfmt dd{margin:0;color:var(--muted)}
+.exfmt .exsrc{font-size:12.5px;color:var(--muted);margin:0}
+@media (max-width:560px){.exfmt dl{grid-template-columns:1fr}.exfmt dd{margin-bottom:6px}}
 /* link back to the AP Labs landing page */
 .morelabs{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:36px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 12px 6px 9px;font:500 12.5px var(--f-body);text-decoration:none;
   transition:color var(--d-1),border-color var(--d-1)}
@@ -2619,6 +2633,21 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
   <section class="view" id="v-exam" hidden>
     <div class="wrap">
       <div class="head"><div class="eyebrow">Review<span class="tag ap">Physics 1 + AP C</span></div><h1>Exam review</h1><p class="lede">Build a mixed problem set from the weeks your exam covers. No hints during the set; everything is graded and explained when you submit.</p></div>
+      <div class="exfmt" aria-labelledby="exfmt-h">
+        <h2 id="exfmt-h">Exam format</h2>
+        <p class="exsub">AP Physics C: Mechanics · May 2027 exam · 3 hours total</p>
+        <div class="exsecs">
+          <div class="exsec"><b>Section I: Multiple choice</b><div class="exbig">42 questions · 85 min · 50%</div>Four answer choices each. About 2 minutes per question.</div>
+          <div class="exsec"><b>Section II: Free response</b><div class="exbig">4 questions · 95 min · 50%</div>One of each type:<ul><li>Mathematical Routines</li><li>Translation Between Representations</li><li>Experimental Design and Analysis</li><li>Qualitative/Quantitative Translation</li></ul></div>
+        </div>
+        <dl>
+          <dt>How you take it</dt><dd>Hybrid digital. You answer multiple choice in the Bluebook app. Free-response questions appear in Bluebook, and you handwrite your answers in a paper booklet.</dd>
+          <dt>Calculator</dt><dd>Allowed on both sections: an approved scientific or graphing calculator, or the Desmos calculator built into Bluebook.</dd>
+          <dt>Reference sheet</dt><dd>An equation and constants sheet is provided for both sections.</dd>
+          <dt>What changed</dt><dd>For May 2027, multiple choice went from 40 questions in 80 minutes to 42 in 85, and free response went from 100 to 95 minutes. The four question types and the 50/50 split are the same.</dd>
+        </dl>
+        <p class="exsrc">Checked October 23, 2026 against College Board's published format. Formats can change, so confirm on <a href="https://apcentral.collegeboard.org/courses/ap-physics-c-mechanics/exam" target="_blank" rel="noopener">AP Central</a> before your exam.</p>
+      </div>
       <div class="lab" id="ex-setup">
         <div class="ctl"><span class="lbl">Which weeks does your exam cover?</span><div class="seg" id="ex-weeks" role="group" aria-label="Weeks"></div><div class="row"><button type="button" class="btn link" id="ex-all">Select all</button><button type="button" class="btn link" id="ex-none">Clear</button></div></div>
         <div class="controls">
