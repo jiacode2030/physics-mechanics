@@ -32,6 +32,7 @@ The **More AP labs** link in the side rail goes to the [AP Labs](https://jiacode
 - Progress (modules done, solved problems, review queue, theme) is saved only in your browser's local storage.
 - The public site counts visits per page with [GoatCounter](https://www.goatcounter.com): anonymous, no cookies.
 - The Report button opens a pre-filled GitHub issue, which is public. Don't include personal information.
+- Full details: [Privacy policy](https://jiacode2030.github.io/ap-labs/privacy.html) and [Terms of use](https://jiacode2030.github.io/ap-labs/terms.html).
 
 ## Checks
 
