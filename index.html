@@ -7,7 +7,7 @@
 /* Layout: a lab-notebook app. Module rail on the left (top strip on phones), one module per view.
    Position, velocity and acceleration keep one color each on every graph, arrow and equation. */
 :root{
-  --bg:#F5F1E8; --surface:#FFFCF5; --sunk:#EFE8DA; --ink:#1D1A16; --muted:#6B6152; --line:#D9CDB8; --grid:#E9E1D1;
+  --bg:#EAF1FA; --surface:#FBFDFF; --sunk:#DDE7F4; --ink:#0E1B2E; --muted:#4D6079; --line:#C3D3E7; --grid:#DCE6F3; --accent:#1D3F8F;
   --cx:#2350C6; --cv:#0A8262; --ca:#BC2A76; --hot:#D46F1C;
   --good:#167A4A; --bad:#B42318;
   --f-display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
@@ -17,17 +17,17 @@
   /* motion: one set of timings. Enter decelerates; exit accelerates and runs ~65% as long. */
   --ease-out:cubic-bezier(.2,.8,.2,1); --ease-in:cubic-bezier(.4,0,1,1); --ease-spring:cubic-bezier(.34,1.56,.64,1);
   --d-1:.16s; --d-2:.28s; --d-3:.45s; --d-exit:.2s;
-  --shadow-1:none; --shadow-2:0 2px 4px rgba(40,30,15,.06),0 12px 28px rgba(40,30,15,.12);
+  --shadow-1:0 1px 2px rgba(20,45,90,.06),0 4px 14px rgba(20,45,90,.06); --shadow-2:0 2px 4px rgba(20,45,90,.07),0 16px 34px rgba(20,45,90,.13);
   /* skin: light = Textbook (paper, serif headlines, hairlines); dark = Instrument (see the dark blocks) */
   --h-font:"STIX Two Text",Georgia,serif; --h-w:400; --h-track:-.01em; --brand-w:600;
-  --radius:4px; --btn-bg:var(--ink); --btn-fg:var(--surface); --btn-font:var(--f-body); --btn-case:none; --btn-track:0; --btn-size:14px;
-  --nav-bg:var(--ink); --nav-fg:var(--surface); --lab-c:var(--muted); --ro-c:var(--ink);
+  --radius:6px; --btn-bg:var(--accent); --btn-fg:#FFFFFF; --btn-font:var(--f-body); --btn-case:none; --btn-track:0; --btn-size:14px;
+  --nav-bg:var(--accent); --nav-fg:#FFFFFF; --lab-c:var(--accent); --ro-c:var(--ink);
   --cap-font:"STIX Two Text",Georgia,serif; --cap-style:italic; --cap-size:14px; --page-grid:none; --top-grid:none;
   --fig-tag:"Fig. 1"; --fig-tag-c:var(--muted); --hl-style:italic; --h2-rule:2px solid var(--ink); --h2-bar:none; --lift:0px; --mg-gap:0px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0A0F17; --surface:#0E1520; --sunk:#141D2A; --ink:#DCE3EC; --muted:#8E9CAD; --line:#233042; --grid:#18212E;
+    --bg:#0A1220; --surface:#101A2C; --sunk:#16223A; --ink:#E4ECF7; --muted:#93A5BF; --line:#22324D; --grid:#14203A; --accent:#FFA94D;
     --cx:#7FA2FF; --cv:#43D3A0; --ca:#FF6FB5; --hot:#FFA94D; --good:#43D3A0; --bad:#FF7D6E; color-scheme:dark;
     --shadow-1:none; --shadow-2:0 2px 4px rgba(0,0,0,.4),0 14px 30px rgba(0,0,0,.45);
     --h-font:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif; --h-w:800; --h-track:-.03em; --brand-w:800;
@@ -39,7 +39,7 @@
   }
 }
 :root[data-theme="dark"]{
-    --bg:#0A0F17; --surface:#0E1520; --sunk:#141D2A; --ink:#DCE3EC; --muted:#8E9CAD; --line:#233042; --grid:#18212E;
+    --bg:#0A1220; --surface:#101A2C; --sunk:#16223A; --ink:#E4ECF7; --muted:#93A5BF; --line:#22324D; --grid:#14203A; --accent:#FFA94D;
     --cx:#7FA2FF; --cv:#43D3A0; --ca:#FF6FB5; --hot:#FFA94D; --good:#43D3A0; --bad:#FF7D6E; color-scheme:dark;
     --shadow-1:none; --shadow-2:0 2px 4px rgba(0,0,0,.4),0 14px 30px rgba(0,0,0,.45);
     --h-font:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif; --h-w:800; --h-track:-.03em; --brand-w:800;
@@ -819,7 +819,7 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
       <div class="lv"><b>v</b> velocity</div>
       <div class="la"><b>a</b> acceleration</div>
     </div>
-    <div class="foot">For Physics 1 and AP Physics C: Mechanics. <span class="m"><i>g</i> = 9.8 m/s²</span> throughout.<span class="mapnote">Week numbers are mapped to the PHY 103 schedule at Princeton.</span><span class="mapnote">Unofficial study aid. Not affiliated with Princeton University or the College Board.</span><span class="mapnote">Last updated October 22, 2026</span><span class="mapnote">Privacy: your progress stays in your browser. Visit counts are anonymous (GoatCounter, no cookies).</span><span class="mapnote">AP® and Advanced Placement® are trademarks registered by the College Board, which is not affiliated with, and does not endorse, this site.</span><span class="mapnote credit">Made by JL · Princeton Class of 2030</span><span class="mapnote"><a class="li-link" href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener" aria-label="JL on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4z"/></svg>LinkedIn</a></span></div>
+    <div class="foot">For Physics 1 and AP Physics C: Mechanics. <span class="m"><i>g</i> = 9.8 m/s²</span> throughout.<span class="mapnote">Week numbers are mapped to the PHY 103 schedule at Princeton.</span><span class="mapnote">Unofficial study aid. Not affiliated with Princeton University or the College Board.</span><span class="mapnote">Last updated October 23, 2026</span><span class="mapnote">Privacy: your progress stays in your browser. Visit counts are anonymous (GoatCounter, no cookies).</span><span class="mapnote">AP® and Advanced Placement® are trademarks registered by the College Board, which is not affiliated with, and does not endorse, this site.</span><span class="mapnote credit">Made by JL · Princeton Class of 2030</span><span class="mapnote"><a class="li-link" href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener" aria-label="JL on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4z"/></svg>LinkedIn</a></span></div>
   </aside>
 
   <main>
@@ -834,7 +834,7 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
           <div class="row"><a class="btn primary" href="#graphs" style="text-decoration:none">Start with motion graphs</a><a class="btn" href="#practice" style="text-decoration:none">Go to the practice set</a></div>
           <div class="countdown" id="ap-count" aria-live="polite"></div>
           <p class="heronote">The weeks follow the order of PHY 103 at Princeton University, so Princeton students can study along with the course. This is an independent, unofficial study aid. It is not affiliated with, reviewed by, or endorsed by Princeton University, its Physics Department, or the College Board. Use it to study, not on graded work. AP® and Advanced Placement® are trademarks registered by the College Board, which is not affiliated with, and does not endorse, this site.</p>
-          <p class="ov-report"><span class="credit-row"><span>Made by <b>JL</b> · Princeton Class of 2030 · a student project</span><a class="li-link" href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener" aria-label="JL on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4z"/></svg>LinkedIn</a></span><span class="mapnote" style="margin:0 0 4px">Last updated October 22, 2026 · matches the May 2027 AP exam format</span>Spotted a mistake or something confusing? <button type="button" class="btn link rp-link" data-report="overview" style="padding:0">Report an issue</button></p>
+          <p class="ov-report"><span class="credit-row"><span>Made by <b>JL</b> · Princeton Class of 2030 · a student project</span><a class="li-link" href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener" aria-label="JL on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4z"/></svg>LinkedIn</a></span><span class="mapnote" style="margin:0 0 4px">Last updated October 23, 2026 · matches the May 2027 AP exam format</span>Spotted a mistake or something confusing? <button type="button" class="btn link rp-link" data-report="overview" style="padding:0">Report an issue</button></p>
         </div>
         <figure class="strobe" style="margin:0">
           <canvas id="hero-canvas" aria-label="Strobe image of a dropped ball and a ball launched sideways, one flash every 0.1 seconds"></canvas>
