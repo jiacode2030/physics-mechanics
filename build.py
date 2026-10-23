@@ -64,6 +64,13 @@ def shared_edits(p):
 APP_HEAD = '<link rel="manifest" href="/ap-labs/manifest.webmanifest">\n<meta name="theme-color" content="#0A1220">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-title" content="AP Labs">\n<meta name="apple-mobile-web-app-status-bar-style" content="default">\n<link rel="apple-touch-icon" href="/ap-labs/icons/apple-touch-icon.png">\n'
 APP_REG = "/* AP Labs app: offline support (sw.js). Only on the live site, and localhost for testing. */\nif('serviceWorker' in navigator&&(/\\.github\\.io$/.test(location.hostname)||location.hostname==='localhost'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));\n"
 
+# "Get the app" button and steps dialog (AP version only)
+APP_BTN = '<button type="button" class="morelabs appbtn" id="app-btn" hidden aria-haspopup="dialog" aria-label="Get the AP Labs app"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 7v7M9 11l3 3 3-3"/></svg><span class="tl">Get the app</span></button>'
+APP_DLG = '<dialog class="appdlg" id="app-dlg" aria-labelledby="app-dlg-h">\n  <form method="dialog">\n    <h2 id="app-dlg-h">Get the AP Labs app</h2>\n    <p>Mechanics, E&amp;M and Chemistry in one free app, with no app store. It opens full screen from your home screen, and once you\'ve opened it, it works offline too.</p>\n    <div class="appos" data-os="ios"><h3>iPhone or iPad (Safari)</h3><ol><li>Tap the <b>Share</b> button at the bottom (or top) of Safari.</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li></ol>\n      <p class="appnote">On iPhone and iPad, the app keeps its own saved progress, separate from Safari.</p></div>\n    <div class="appos" data-os="android"><h3>Android (Chrome)</h3><ol><li>Tap the <b>⋮</b> menu at the top right.</li><li>Tap <b>Install app</b> (or <b>Add to Home screen</b>).</li><li>Tap <b>Install</b>.</li></ol></div>\n    <div class="appos" data-os="desktop"><h3>Computer (Chrome or Edge)</h3><ol><li>Click the install icon at the right end of the address bar.</li><li>Click <b>Install</b>.</li></ol></div>\n    <div class="approw"><button class="btn primary" value="close">Got it</button></div>\n  </form>\n</dialog>\n'
+APP_CSS = "\n/* Get the AP Labs app: button in the rail and the steps dialog */\n.appbtn,.appbtn2{cursor:pointer}\n.appbtn[hidden],.appbtn2[hidden]{display:none!important}\n/* computers: in the side rail; phones: on the course's home page (the top bar is full) */\n@media (max-width:900px){.appbtn{display:none!important}}\n@media (min-width:901px){.appbtn2{display:none!important}}\n.appdlg{max-width:min(520px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;width:100%;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.35)}\n.appdlg::backdrop{background:rgba(5,10,20,.55)}\n.appdlg h2{margin:0 0 8px;font-size:22px}\n.appdlg h3{margin:16px 0 6px;font-size:15px}\n.appdlg p{margin:0 0 4px;color:var(--muted)}\n.appdlg ol{margin:0;padding-left:22px}.appdlg li{margin:4px 0}\n.appdlg .appnote{font-size:13.5px;margin-top:8px}\n.appdlg details{margin-top:14px;border-top:1px solid var(--line);padding-top:6px}\n.appdlg summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}\n.appdlg summary::before{content:'▸';margin-right:8px}.appdlg details[open] summary::before{content:'▾'}\n.appdlg .approw{display:flex;justify-content:flex-end;margin-top:18px}\n"
+APP_JS = '/* Get the AP Labs app (same app as the AP Labs page; hidden once you\'re in it) */\n(function appInstall(){var btns=document.querySelectorAll(\'.appbtn,.appbtn2\'),dlg=document.getElementById(\'app-dlg\');if(!btns.length||!dlg)return;\n  var each=function(f){Array.prototype.forEach.call(btns,f);};\n  if(matchMedia(\'(display-mode: standalone)\').matches||navigator.standalone===true)return;\n  each(function(b){b.hidden=false;});var prompt=null;\n  var ua=navigator.userAgent,os=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1)?\'ios\':/Android/.test(ua)?\'android\':\'desktop\';\n  var form=dlg.querySelector(\'form\'),mine=dlg.querySelector(\'[data-os="\'+os+\'"]\'),more=document.createElement(\'details\');more.innerHTML=\'<summary>Other devices</summary>\';\n  Array.prototype.forEach.call(dlg.querySelectorAll(\'.appos\'),function(el){if(el!==mine)more.appendChild(el);});form.insertBefore(more,form.querySelector(\'.approw\'));\n  addEventListener(\'beforeinstallprompt\',function(e){e.preventDefault();prompt=e;});\n  addEventListener(\'appinstalled\',function(){each(function(b){b.hidden=true;});});\n  each(function(b){b.addEventListener(\'click\',function(){if(prompt){prompt.prompt();prompt=null;return;}if(dlg.showModal)dlg.showModal();else dlg.setAttribute(\'open\',\'\');});});})();\n'
+APP_MORE_END = '<span class="tl">More AP labs</span></a>'
+
 AP_GROUPS = """const GROUPS=[
   {w:'Optional',ch:'',name:'Math toolkit',ids:['deriv','integ','products','diffeq']},
   {w:'Unit 1',ch:'U1',name:'Kinematics',ids:['graphs','constant','variable','vectors','projectile','relative']},
@@ -134,8 +141,12 @@ def ap_version(text):
     # AP Labs app: install tags and offline support (sw.js lives in this repo)
     p.rep('<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n',
           '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + APP_HEAD)
+    p.rep(APP_MORE_END, APP_MORE_END + APP_BTN)
+    p.rep('<a class="btn" href="#practice" style="text-decoration:none">Go to the practice set</a>', '<a class="btn" href="#practice" style="text-decoration:none">Go to the practice set</a><button type="button" class="btn appbtn2" hidden aria-haspopup="dialog">Get the app</button>')
+    p.rep('\n    <nav class="nav" id="nav"', '\n    ' + APP_DLG.rstrip('\n') + '\n    <nav class="nav" id="nav"')
+    p.rep('/* link back to the AP Labs landing page */', APP_CSS.lstrip('\n') + '/* link back to the AP Labs landing page */')
     i = p.s.rindex('</script>')
-    p.s = p.s[:i] + APP_REG + p.s[i:]
+    p.s = p.s[:i] + APP_REG + APP_JS + p.s[i:]
     return p.s
 
 
@@ -359,7 +370,7 @@ def main():
     if phy_dir:
         phy = phy_version(src)
         check_js(phy, 'phy')
-        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'ap-labs', "'kin-", 'ap-count', 'LinkedIn', 'li-link', 'Created by', 'theme-btn', 'manifest', 'serviceWorker'])
+        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'ap-labs', "'kin-", 'ap-count', 'LinkedIn', 'li-link', 'Created by', 'theme-btn', 'manifest', 'serviceWorker', 'app-btn', 'Get the app'])
         write(os.path.join(os.path.abspath(phy_dir), 'index.html'), phy)
 
 

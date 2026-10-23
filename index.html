@@ -467,6 +467,23 @@ kbd{font:500 11px/1.4 var(--f-mono);border:1px solid var(--line);border-bottom-w
 @media (max-width:560px){.exfmt dl{grid-template-columns:1fr}.exfmt dd{margin-bottom:6px}}
 /* small phones: long formulas in practice questions may wrap */
 @media (max-width:420px){.prob .q .m{white-space:normal}}
+/* Get the AP Labs app: button in the rail and the steps dialog */
+.appbtn,.appbtn2{cursor:pointer}
+.appbtn[hidden],.appbtn2[hidden]{display:none!important}
+/* computers: in the side rail; phones: on the course's home page (the top bar is full) */
+@media (max-width:900px){.appbtn{display:none!important}}
+@media (min-width:901px){.appbtn2{display:none!important}}
+.appdlg{max-width:min(520px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;width:100%;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.appdlg::backdrop{background:rgba(5,10,20,.55)}
+.appdlg h2{margin:0 0 8px;font-size:22px}
+.appdlg h3{margin:16px 0 6px;font-size:15px}
+.appdlg p{margin:0 0 4px;color:var(--muted)}
+.appdlg ol{margin:0;padding-left:22px}.appdlg li{margin:4px 0}
+.appdlg .appnote{font-size:13.5px;margin-top:8px}
+.appdlg details{margin-top:14px;border-top:1px solid var(--line);padding-top:6px}
+.appdlg summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
+.appdlg summary::before{content:'▸';margin-right:8px}.appdlg details[open] summary::before{content:'▾'}
+.appdlg .approw{display:flex;justify-content:flex-end;margin-top:18px}
 /* link back to the AP Labs landing page */
 .morelabs{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:36px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 12px 6px 9px;font:500 12.5px var(--f-body);text-decoration:none;
   transition:color var(--d-1),border-color var(--d-1)}
@@ -855,8 +872,19 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
     <div class="railtools">
     <button type="button" class="searchbtn" id="cmd-btn" aria-label="Search modules"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span class="tl">Search modules</span><kbd>/</kbd></button>
     <button type="button" class="themebtn" id="theme-btn" data-mode="auto"><svg class="ti-auto" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg><svg class="ti-light" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="ti-dark" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><span class="tl">Theme: auto</span></button>
-    <a class="morelabs" href="/ap-labs/" aria-label="More AP labs"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="tl">More AP labs</span></a>
+    <a class="morelabs" href="/ap-labs/" aria-label="More AP labs"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="tl">More AP labs</span></a><button type="button" class="morelabs appbtn" id="app-btn" hidden aria-haspopup="dialog" aria-label="Get the AP Labs app"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 7v7M9 11l3 3 3-3"/></svg><span class="tl">Get the app</span></button>
     </div>
+    <dialog class="appdlg" id="app-dlg" aria-labelledby="app-dlg-h">
+  <form method="dialog">
+    <h2 id="app-dlg-h">Get the AP Labs app</h2>
+    <p>Mechanics, E&amp;M and Chemistry in one free app, with no app store. It opens full screen from your home screen, and once you've opened it, it works offline too.</p>
+    <div class="appos" data-os="ios"><h3>iPhone or iPad (Safari)</h3><ol><li>Tap the <b>Share</b> button at the bottom (or top) of Safari.</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li></ol>
+      <p class="appnote">On iPhone and iPad, the app keeps its own saved progress, separate from Safari.</p></div>
+    <div class="appos" data-os="android"><h3>Android (Chrome)</h3><ol><li>Tap the <b>⋮</b> menu at the top right.</li><li>Tap <b>Install app</b> (or <b>Add to Home screen</b>).</li><li>Tap <b>Install</b>.</li></ol></div>
+    <div class="appos" data-os="desktop"><h3>Computer (Chrome or Edge)</h3><ol><li>Click the install icon at the right end of the address bar.</li><li>Click <b>Install</b>.</li></ol></div>
+    <div class="approw"><button class="btn primary" value="close">Got it</button></div>
+  </form>
+</dialog>
     <nav class="nav" id="nav" aria-label="Modules"></nav>
     <select id="navsel" class="navsel" aria-label="Go to module"></select>
     <div class="legend" aria-label="Color code">
@@ -876,7 +904,7 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
           <div class="eyebrow"><span class="tag ap">AP Physics C: Mechanics</span><span class="tag calc">Calculus-based</span></div>
           <h1>Mechanics, with the <span class="hl">calculus left in.</span></h1>
           <p class="lede">An interactive module for every topic in AP Physics C: Mechanics, from kinematics and Newton's laws through rotation, orbits and oscillations, plus waves as an extra. Every graph is live. Drag it, change it, and check the numbers against the equations.</p>
-          <div class="row"><a class="btn primary" href="#graphs" style="text-decoration:none">Start with motion graphs</a><a class="btn" href="#practice" style="text-decoration:none">Go to the practice set</a></div>
+          <div class="row"><a class="btn primary" href="#graphs" style="text-decoration:none">Start with motion graphs</a><a class="btn" href="#practice" style="text-decoration:none">Go to the practice set</a><button type="button" class="btn appbtn2" hidden aria-haspopup="dialog">Get the app</button></div>
           <div class="countdown" id="ap-count" aria-live="polite"></div>
           <p class="heronote">The modules follow the AP Physics C: Mechanics units in order. This is an independent, unofficial study aid. It is not affiliated with, reviewed by, or endorsed by the College Board. Use it to study, not on graded work. AP® and Advanced Placement® are trademarks registered by the College Board, which is not affiliated with, and does not endorse, this site.</p>
           <p class="ov-report"><span class="credit-row"><span>Created by <b>JL</b> · Princeton Class of 2030 · a student project</span><a class="li-link" href="https://www.linkedin.com/in/jiarui-li2030" target="_blank" rel="noopener" aria-label="JL on LinkedIn (opens in a new tab)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.7V21h-4z"/></svg>LinkedIn</a></span><span class="mapnote" style="margin:0 0 4px">© 2026 JL. All rights reserved. · <a href="/ap-labs/privacy.html">Privacy policy</a> · <a href="/ap-labs/terms.html">Terms of use</a></span><span class="mapnote" style="margin:0 0 4px">Last updated October 23, 2026 · matches the May 2027 AP exam format</span>Spotted a mistake or something confusing? <button type="button" class="btn link rp-link" data-report="overview" style="padding:0">Report an issue</button></p>
@@ -4705,4 +4733,15 @@ current='';route();
 })();
 /* AP Labs app: offline support (sw.js). Only on the live site, and localhost for testing. */
 if('serviceWorker' in navigator&&(/\.github\.io$/.test(location.hostname)||location.hostname==='localhost'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+/* Get the AP Labs app (same app as the AP Labs page; hidden once you're in it) */
+(function appInstall(){var btns=document.querySelectorAll('.appbtn,.appbtn2'),dlg=document.getElementById('app-dlg');if(!btns.length||!dlg)return;
+  var each=function(f){Array.prototype.forEach.call(btns,f);};
+  if(matchMedia('(display-mode: standalone)').matches||navigator.standalone===true)return;
+  each(function(b){b.hidden=false;});var prompt=null;
+  var ua=navigator.userAgent,os=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1)?'ios':/Android/.test(ua)?'android':'desktop';
+  var form=dlg.querySelector('form'),mine=dlg.querySelector('[data-os="'+os+'"]'),more=document.createElement('details');more.innerHTML='<summary>Other devices</summary>';
+  Array.prototype.forEach.call(dlg.querySelectorAll('.appos'),function(el){if(el!==mine)more.appendChild(el);});form.insertBefore(more,form.querySelector('.approw'));
+  addEventListener('beforeinstallprompt',function(e){e.preventDefault();prompt=e;});
+  addEventListener('appinstalled',function(){each(function(b){b.hidden=true;});});
+  each(function(b){b.addEventListener('click',function(){if(prompt){prompt.prompt();prompt=null;return;}if(dlg.showModal)dlg.showModal();else dlg.setAttribute('open','');});});})();
 </script>
