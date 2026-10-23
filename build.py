@@ -61,6 +61,9 @@ def shared_edits(p):
           "$('#nav').innerHTML=nh;{const mb=$('#map-body');if(mb)mb.innerHTML=GROUPS.map(g=>`<tr><td>${g.w}</td><td>${g.name}</td><td>${g.ids.map(id=>`<a href=\"#${id}\">${MODS[id].t}</a>`).join(', ')}</td></tr>`).join('');}")
 
 
+APP_HEAD = '<link rel="manifest" href="/ap-labs/manifest.webmanifest">\n<meta name="theme-color" content="#0A1220">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-title" content="AP Labs">\n<meta name="apple-mobile-web-app-status-bar-style" content="default">\n<link rel="apple-touch-icon" href="/ap-labs/icons/apple-touch-icon.png">\n'
+APP_REG = "/* AP Labs app: offline support (sw.js). Only on the live site, and localhost for testing. */\nif('serviceWorker' in navigator&&(/\\.github\\.io$/.test(location.hostname)||location.hostname==='localhost'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));\n"
+
 AP_GROUPS = """const GROUPS=[
   {w:'Optional',ch:'',name:'Math toolkit',ids:['deriv','integ','products','diffeq']},
   {w:'Unit 1',ch:'U1',name:'Kinematics',ids:['graphs','constant','variable','vectors','projectile','relative']},
@@ -128,6 +131,11 @@ def ap_version(text):
     p.rep('<span class="tag na">Not on AP C Mech</span>', '<span class="tag na">Beyond AP C</span>', count='all')
     # reports
     p.rep('(Physics 1 + AP Physics C: Mechanics)', '(AP Physics C: Mechanics)')
+    # AP Labs app: install tags and offline support (sw.js lives in this repo)
+    p.rep('<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n',
+          '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + APP_HEAD)
+    i = p.s.rindex('</script>')
+    p.s = p.s[:i] + APP_REG + p.s[i:]
     return p.s
 
 
@@ -351,7 +359,7 @@ def main():
     if phy_dir:
         phy = phy_version(src)
         check_js(phy, 'phy')
-        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'ap-labs', "'kin-", 'ap-count', 'LinkedIn', 'li-link', 'Created by', 'theme-btn'])
+        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'ap-labs', "'kin-", 'ap-count', 'LinkedIn', 'li-link', 'Created by', 'theme-btn', 'manifest', 'serviceWorker'])
         write(os.path.join(os.path.abspath(phy_dir), 'index.html'), phy)
 
 
