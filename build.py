@@ -11,7 +11,7 @@ This script turns it into two sites by exact text edits:
   AP version (Mechanics Lab, part of Intulab)
     modules grouped by AP Physics C units, damping and waves under "Beyond AP C",
     AP countdown, formula sheet, FRQ practice, exam format box, GoatCounter visit counts,
-    College Board legal text, reports to jiacode2030/ap-labs-feedback.
+    College Board legal text, reports to jiacode2030/intulab-feedback.
 
   PHY 103 version (PHY 103 Lab, part of Princeton Labs)
     modules grouped by PHY 103 weeks, no AP content (no countdown, FRQ, exam format box),
@@ -61,7 +61,7 @@ def shared_edits(p):
           "$('#nav').innerHTML=nh;{const mb=$('#map-body');if(mb)mb.innerHTML=GROUPS.map(g=>`<tr><td>${g.w}</td><td>${g.name}</td><td>${g.ids.map(id=>`<a href=\"#${id}\">${MODS[id].t}</a>`).join(', ')}</td></tr>`).join('');}")
 
 
-APP_HEAD = '<link rel="manifest" href="/ap-labs/manifest.webmanifest">\n<meta name="theme-color" content="#0A1220">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-title" content="Intulab">\n<meta name="apple-mobile-web-app-status-bar-style" content="default">\n<link rel="apple-touch-icon" href="/ap-labs/icons/apple-touch-icon.png">\n'
+APP_HEAD = '<link rel="manifest" href="/intulab/manifest.webmanifest">\n<meta name="theme-color" content="#0A1220">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-title" content="Intulab">\n<meta name="apple-mobile-web-app-status-bar-style" content="default">\n<link rel="apple-touch-icon" href="/intulab/icons/apple-touch-icon.png">\n'
 APP_REG = "/* Intulab app: offline support (sw.js). Only on the live site, and localhost for testing. */\nif('serviceWorker' in navigator&&(/\\.github\\.io$/.test(location.hostname)||location.hostname==='localhost'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));\n"
 
 # "Get the app" button and steps dialog (AP version only)
@@ -240,9 +240,9 @@ def phy_version(text):
           '<span class="mapnote">Unofficial study aid. Not affiliated with Princeton University.</span>')
     p.rep('Visit counts are anonymous (GoatCounter, no cookies).', 'Nothing is counted or tracked.')
     p.rep('<span class="mapnote">AP® and Advanced Placement® are trademarks registered by the College Board, which is not affiliated with, and does not endorse, this site.</span>', '')
-    p.rep('/ap-labs/privacy.html', '/princeton-labs/privacy.html', count=2)
-    p.rep('/ap-labs/terms.html', '/princeton-labs/terms.html', count=2)
-    p.rep('<a class="morelabs" href="/ap-labs/" aria-label="More labs from Intulab">', '<a class="morelabs" href="/princeton-labs/" aria-label="More Princeton labs">')
+    p.rep('/intulab/privacy.html', '/princeton-labs/privacy.html', count=2)
+    p.rep('/intulab/terms.html', '/princeton-labs/terms.html', count=2)
+    p.rep('<a class="morelabs" href="/intulab/" aria-label="More labs from Intulab">', '<a class="morelabs" href="/princeton-labs/" aria-label="More Princeton labs">')
     # credit as plain text: "JL · Princeton Class of 2030", no LinkedIn
     p.rep('<span class="mapnote credit">Created by JL · Princeton Class of 2030</span>', '<span class="mapnote credit">JL · Princeton Class of 2030</span>')
     p.cut('<span class="mapnote"><a class="li-link"', 'LinkedIn</a></span>')
@@ -319,7 +319,7 @@ def phy_version(text):
     i = p.s.find('(function analytics(){'); c = p.s.rfind('/*', 0, i)
     p.cut(p.s[c:i + len('(function analytics(){')], '})();\n')
     # reports go to this site's own repo
-    p.rep("const REPO='https://github.com/jiacode2030/ap-labs-feedback';", "const REPO='https://github.com/jiacode2030/phy103-lab';")
+    p.rep("const REPO='https://github.com/jiacode2030/intulab-feedback';", "const REPO='https://github.com/jiacode2030/phy103-lab';")
     p.rep("const COURSE='Mechanics Lab',COURSE_LABEL='course:mechanics'", "const COURSE='PHY 103 Lab',COURSE_LABEL=''")
     p.rep("REPO+'/issues/new?labels='+encodeURIComponent(COURSE_LABEL)+'&title='", "REPO+'/issues/new?title='")
     p.rep('(Physics 1 + AP Physics C: Mechanics)', '(PHY 103)')
@@ -369,7 +369,7 @@ def main():
     if phy_dir:
         phy = phy_version(src)
         check_js(phy, 'phy')
-        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'ap-labs', "'kin-", 'ap-count', 'LinkedIn', 'li-link', 'Created by', 'theme-btn', 'manifest', 'serviceWorker', 'app-btn', 'Get the app'])
+        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'intulab', "'kin-", 'ap-count', 'LinkedIn', 'li-link', 'Created by', 'theme-btn', 'manifest', 'serviceWorker', 'app-btn', 'Get the app'])
         write(os.path.join(os.path.abspath(phy_dir), 'index.html'), phy)
 
 

@@ -1,6 +1,6 @@
 # Mechanics Lab: AP Physics C: Mechanics
 
-An interactive, intuition-first study site for AP Physics C: Mechanics, part of [Intulab](https://jiacode2030.github.io/ap-labs/).
+An interactive, intuition-first study site for AP Physics C: Mechanics, part of [Intulab](https://jiacode2030.github.io/intulab/).
 
 Each topic gets its own module with:
 
@@ -32,7 +32,7 @@ The site is one HTML file (`index.html`). Open it in a browser, or visit the Git
 | AP countdown, formula sheet, FRQ practice, exam format | yes | no (a Key formulas page instead) |
 | Visit counts | GoatCounter (`aplabs`) | none |
 | Saved progress keys | `kin-` | `phy-` |
-| Reports | `ap-labs-feedback` | the `phy103-lab` repo's issues |
+| Reports | `intulab-feedback` | the `phy103-lab` repo's issues |
 
 Edit `src/site.html`, never `index.html`, then rebuild:
 
@@ -44,16 +44,16 @@ python3 build.py --all ../phy103-lab   # writes index.html here and ../phy103-la
 
 ## Reporting a problem
 
-Every module and practice problem has a **Report an issue** link. On this site it opens a pre-filled GitHub issue. Issues go to the shared [Intulab feedback](https://github.com/jiacode2030/ap-labs-feedback/issues) tracker, labelled `course:mechanics`. You can also [open one directly](https://github.com/jiacode2030/ap-labs-feedback/issues/new/choose).
+Every module and practice problem has a **Report an issue** link. On this site it opens a pre-filled GitHub issue. Issues go to the shared [Intulab feedback](https://github.com/jiacode2030/intulab-feedback/issues) tracker, labelled `course:mechanics`. You can also [open one directly](https://github.com/jiacode2030/intulab-feedback/issues/new/choose).
 
-The **More labs** link in the side rail goes to the [Intulab](https://jiacode2030.github.io/ap-labs/) landing page.
+The **More labs** link in the side rail goes to the [Intulab](https://jiacode2030.github.io/intulab/) landing page.
 
 ## Privacy
 
 - Progress (modules done, solved problems, review queue, theme) is saved only in your browser's local storage.
 - The public site counts visits per page with [GoatCounter](https://www.goatcounter.com): anonymous, no cookies.
 - The Report button opens a pre-filled GitHub issue, which is public. Don't include personal information.
-- Full details: [Privacy policy](https://jiacode2030.github.io/ap-labs/privacy.html) and [Terms of use](https://jiacode2030.github.io/ap-labs/terms.html).
+- Full details: [Privacy policy](https://jiacode2030.github.io/intulab/privacy.html) and [Terms of use](https://jiacode2030.github.io/intulab/terms.html).
 
 ## Checks
 
