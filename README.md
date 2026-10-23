@@ -1,6 +1,6 @@
 # Mechanics Lab: AP Physics C: Mechanics
 
-An interactive, intuition-first study site for AP Physics C: Mechanics, part of [AP Labs](https://jiacode2030.github.io/ap-labs/).
+An interactive, intuition-first study site for AP Physics C: Mechanics, part of [Intulab](https://jiacode2030.github.io/ap-labs/).
 
 Each topic gets its own module with:
 
@@ -27,7 +27,7 @@ The site is one HTML file (`index.html`). Open it in a browser, or visit the Git
 
 | | This repo (`index.html`) | [`phy103-lab`](https://github.com/jiacode2030/phy103-lab) |
 |---|---|---|
-| Part of | AP Labs | Princeton Labs |
+| Part of | Intulab | Princeton Labs |
 | Menu | AP Physics C units | PHY 103 weeks |
 | AP countdown, formula sheet, FRQ practice, exam format | yes | no (a Key formulas page instead) |
 | Visit counts | GoatCounter (`aplabs`) | none |
@@ -44,9 +44,9 @@ python3 build.py --all ../phy103-lab   # writes index.html here and ../phy103-la
 
 ## Reporting a problem
 
-Every module and practice problem has a **Report an issue** link. On this site it opens a pre-filled GitHub issue. Issues go to the shared [AP Labs feedback](https://github.com/jiacode2030/ap-labs-feedback/issues) tracker, labelled `course:mechanics`. You can also [open one directly](https://github.com/jiacode2030/ap-labs-feedback/issues/new/choose).
+Every module and practice problem has a **Report an issue** link. On this site it opens a pre-filled GitHub issue. Issues go to the shared [Intulab feedback](https://github.com/jiacode2030/ap-labs-feedback/issues) tracker, labelled `course:mechanics`. You can also [open one directly](https://github.com/jiacode2030/ap-labs-feedback/issues/new/choose).
 
-The **More AP labs** link in the side rail goes to the [AP Labs](https://jiacode2030.github.io/ap-labs/) landing page.
+The **More labs** link in the side rail goes to the [Intulab](https://jiacode2030.github.io/ap-labs/) landing page.
 
 ## Privacy
 
