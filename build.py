@@ -1,0 +1,276 @@
+#!/usr/bin/env python3
+"""Build both Mechanics sites from one source.
+
+    python3 build.py                      # AP Labs version  -> index.html
+    python3 build.py --phy ../phy103-lab  # Princeton Labs PHY 103 version -> ../phy103-lab/index.html
+    python3 build.py --all ../phy103-lab  # both
+
+src/site.html is the shared page: every module, simulation, worked example, quiz and problem.
+This script turns it into two sites by exact text edits:
+
+  AP version (Mechanics Lab, part of AP Labs)
+    modules grouped by AP Physics C units, damping and waves under "Beyond AP C",
+    AP countdown, formula sheet, FRQ practice, exam format box, GoatCounter visit counts,
+    College Board legal text, reports to jiacode2030/ap-labs-feedback.
+
+  PHY 103 version (PHY 103 Lab, part of Princeton Labs)
+    modules grouped by PHY 103 weeks, no AP content (no countdown, FRQ, exam format box),
+    a Key formulas page instead of the formula drawer, no analytics,
+    Princeton legal text, reports to jiacode2030/phy103-lab, its own progress keys (phy-).
+
+Every edit must find its text exactly (most exactly once), or the build stops. So if you change
+src/site.html and an edit no longer matches, you get an error instead of a half-converted site.
+After building, both outputs are scanned for words that belong to the other site.
+"""
+import os, re, subprocess, sys, tempfile
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+SRC = os.path.join(ROOT, 'src', 'site.html')
+
+
+class Page:
+    def __init__(self, text, name):
+        self.s, self.name = text, name
+
+    def rep(self, old, new, count=1):
+        n = self.s.count(old)
+        if (count == 'all' and n == 0) or (count != 'all' and n != count):
+            sys.exit(f'[{self.name}] expected {count} of: {old[:90]!r} (found {n})')
+        self.s = self.s.replace(old, new)
+
+    def cut(self, start, end, include_end=True, new=''):
+        """Replace from `start` through `end` (the first `end` after `start`)."""
+        i = self.s.find(start)
+        if i < 0 or self.s.count(start) != 1:
+            sys.exit(f'[{self.name}] cut start not unique: {start[:80]!r}')
+        j = self.s.find(end, i + len(start))
+        if j < 0:
+            sys.exit(f'[{self.name}] cut end not found: {end[:80]!r}')
+        j += len(end) if include_end else 0
+        removed = self.s[i:j]
+        self.s = self.s[:i] + new + self.s[j:]
+        return removed
+
+
+def shared_edits(p):
+    """Same for both: the course table on the overview is generated from GROUPS."""
+    p.cut('<div class="tablewrap">\n        <table>\n          <thead><tr><th>Week</th>', '</table>\n      </div>',
+          new='<div class="tablewrap">\n        <table>\n          <thead><tr><th id="map-col">Week</th><th>Topic</th><th>Modules</th></tr></thead>\n'
+              '          <tbody id="map-body"></tbody>\n        </table>\n      </div>')
+    p.rep("$('#nav').innerHTML=nh;",
+          "$('#nav').innerHTML=nh;{const mb=$('#map-body');if(mb)mb.innerHTML=GROUPS.map(g=>`<tr><td>${g.w}</td><td>${g.name}</td><td>${g.ids.map(id=>`<a href=\"#${id}\">${MODS[id].t}</a>`).join(', ')}</td></tr>`).join('');}")
+
+
+AP_GROUPS = """const GROUPS=[
+  {w:'Optional',ch:'',name:'Math toolkit',ids:['deriv','integ','products','diffeq']},
+  {w:'Unit 1',ch:'U1',name:'Kinematics',ids:['graphs','constant','variable','vectors','projectile','relative']},
+  {w:'Unit 2',ch:'U2',name:'Force and translational dynamics',ids:['forces','friction','pulleys','circular','dynamics','com','gfield']},
+  {w:'Unit 3',ch:'U3',name:'Work, energy and power',ids:['energy','loop']},
+  {w:'Unit 4',ch:'U4',name:'Linear momentum',ids:['momentum','impulse']},
+  {w:'Unit 5',ch:'U5',name:'Torque and rotational dynamics',ids:['torque','rotation']},
+  {w:'Unit 6',ch:'U6',name:'Energy and momentum of rotating systems',ids:['angular','gravity']},
+  {w:'Unit 7',ch:'U7',name:'Oscillations',ids:['shm']},
+  {w:'Beyond AP C',ch:'',name:'Damping and waves',ids:['damped','waves','interf','sound','beats','fourier']}
+];"""
+
+
+def ap_version(text):
+    p = Page(text, 'ap')
+    shared_edits(p)
+    # side rail
+    p.rep('For Physics 1 and AP Physics C: Mechanics.', 'For AP Physics C: Mechanics.')
+    p.rep('<span class="mapnote">Week numbers are mapped to the PHY 103 schedule at Princeton.</span>', '')
+    p.rep('<span class="mapnote">Unofficial study aid. Not affiliated with Princeton University or the College Board.</span>',
+          '<span class="mapnote">Unofficial study aid. Not affiliated with the College Board.</span>')
+    # hero
+    p.rep('<span class="tag pu">Physics 1</span><span class="tag ap">AP Physics C: Mechanics</span>',
+          '<span class="tag ap">AP Physics C: Mechanics</span><span class="tag calc">Calculus-based</span>')
+    p.rep("An interactive module for every topic in calculus-based Physics 1, from kinematics and Newton's laws through rotation, orbits, oscillations and waves, each mapped to AP Physics C: Mechanics.",
+          "An interactive module for every topic in AP Physics C: Mechanics, from kinematics and Newton's laws through rotation, orbits and oscillations, plus waves as an extra.")
+    p.rep('<p class="heronote">The weeks follow the order of PHY 103 at Princeton University, so Princeton students can study along with the course. This is an independent, unofficial study aid. It is not affiliated with, reviewed by, or endorsed by Princeton University, its Physics Department, or the College Board.',
+          '<p class="heronote">The modules follow the AP Physics C: Mechanics units in order. This is an independent, unofficial study aid. It is not affiliated with, reviewed by, or endorsed by the College Board.')
+    # overview
+    p.rep('<p><b>Physics 1:</b> follow the weeks in order alongside your class.</p><p><b>AP Physics C:</b> do Weeks 1–9, skip damping and waves, then work through the <a href="#frq">FRQ practice</a> section.</p>',
+          '<p><b>In order:</b> work through Units 1 to 7. Damping and waves at the end go beyond AP C, so they are optional.</p><p><b>Free response:</b> when you finish the units, work through the <a href="#frq">FRQ practice</a> section.</p>')
+    p.rep('Modules by week</h2>', 'Modules by unit</h2>')
+    p.rep('AP Physics C: Mechanics covers everything through simple harmonic motion. Damping, resonance and waves are Physics 1 only. <span class="mapnote">Week numbers are mapped to the PHY 103 schedule at Princeton. Unofficial study aid, not affiliated with Princeton University or the College Board.</span>',
+          'Each row is one unit of AP Physics C: Mechanics. The last group, damping and waves, goes beyond AP C: good extras, not on the exam.')
+    p.rep('<th id="map-col">Week</th>', '<th id="map-col">Unit</th>')
+    # groups: AP units instead of PHY 103 weeks
+    p.cut('const GROUPS=[', '];', new=AP_GROUPS)
+    # cross-references inside lessons
+    for old, new in [('simple harmonic motion in Week 9.', 'simple harmonic motion in Unit 7.'),
+                     ('flew through the air (Week 1)', 'flew through the air (Unit 1)'),
+                     ('<dd>Week 6, <a href="#rotation">Rolling</a> (Pulleys revisited)', '<dd>Unit 5, <a href="#rotation">Rolling</a> (Pulleys revisited)'),
+                     ('<dd>Week 6, <a href="#rotation">Rolling</a>: a rolling', '<dd>Unit 5, <a href="#rotation">Rolling</a>: a rolling'),
+                     ('pulleys were massless (Week 2)', 'pulleys were massless (Unit 2)'),
+                     ('loop-the-loop cart slid (Week 4)', 'loop-the-loop cart slid (Unit 3)'),
+                     ('no torque about the Sun (Week 8)', 'no torque about the Sun (Unit 6)'),
+                     ('<dd>Week 10, <a href="#damped">', '<dd>Beyond AP C, <a href="#damped">'),
+                     ('no friction or air resistance (Week 9)', 'no friction or air resistance (Unit 7)')]:
+        p.rep(old, new)
+    p.rep('Week 2 model', 'Unit 2 model', count=4)
+    # review views
+    p.rep('<span class="tag ap">Physics 1 + AP C</span>', '<span class="tag ap">AP Physics C</span>', count=2)
+    p.rep('All weeks<span class="tag ap">AP C style</span><span class="tag pu">Physics 1 style</span>',
+          'All units<span class="tag ap">AP C style</span><span class="tag na">Beyond AP C</span>')
+    p.rep("'AP C':'Physics 1'", "'AP C':'Beyond AP C'")
+    p.rep('covering every week of the course', 'covering every unit of the course')
+    p.rep('Build a mixed problem set from the weeks your exam covers.', 'Build a mixed problem set from the units your exam covers.')
+    p.rep('Which weeks does your exam cover?', 'Which units does your exam cover?')
+    p.rep('id="ex-weeks" role="group" aria-label="Weeks"', 'id="ex-weeks" role="group" aria-label="Units"')
+    # formula sheet
+    p.rep('plus waves for Physics 1.', 'plus waves (beyond AP C).')
+    p.rep('Your Physics 1 class may give you a different sheet on exams.', 'Your class may give you a different sheet on tests.')
+    p.rep('<span class="tag na">Physics 1 only</span>', '<span class="tag na">Beyond AP C</span>', count='all')
+    # one label for the extras, matching the menu group
+    p.rep("ap:'Not on AP C'", "ap:'Beyond AP C'", count='all')
+    p.rep('<span class="tag na">Not on AP C Mech</span>', '<span class="tag na">Beyond AP C</span>', count='all')
+    # reports
+    p.rep('(Physics 1 + AP Physics C: Mechanics)', '(AP Physics C: Mechanics)')
+    return p.s
+
+
+PHY_FORMULAS_CSS = """
+/* Key formulas page (PHY 103 version) */
+.fsp{max-width:820px}
+.fsp h3{font:500 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:22px 0 6px}
+.fsp dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;align-items:baseline;border-top:1px solid var(--line);padding-top:8px}
+.fsp dt{font-family:var(--f-math);font-size:17px;overflow-x:auto}
+.fsp dt i{font-style:italic}
+.fsp dd{margin:0;font-size:13px;color:var(--muted);text-align:right}
+/* no AP unit tags on PHY 103 module headers and cards */
+.view .head .eyebrow .tag.ap,.view .head .eyebrow .tag.na{display:none}
+"""
+
+
+def phy_version(text):
+    p = Page(text, 'phy')
+    shared_edits(p)
+    # name
+    p.rep('<title>Mechanics Lab</title>', '<title>PHY 103 Lab</title>')
+    p.rep('aria-label="Mechanics Lab home"', 'aria-label="PHY 103 Lab home"')
+    p.rep('<span>Mechanics Lab</span>', '<span>PHY 103 Lab</span>')
+    # side rail
+    p.rep('For Physics 1 and AP Physics C: Mechanics.', 'For PHY 103: calculus-based mechanics and waves.')
+    p.rep('Week numbers are mapped to the PHY 103 schedule at Princeton.</span>', 'Weeks follow the PHY 103 schedule.</span>')
+    p.rep('<span class="mapnote">Unofficial study aid. Not affiliated with Princeton University or the College Board.</span>',
+          '<span class="mapnote">Unofficial study aid. Not affiliated with Princeton University.</span>')
+    p.rep('Visit counts are anonymous (GoatCounter, no cookies).', 'Nothing is counted or tracked.')
+    p.rep('<span class="mapnote">AP® and Advanced Placement® are trademarks registered by the College Board, which is not affiliated with, and does not endorse, this site.</span>', '')
+    p.rep('/ap-labs/privacy.html', '/princeton-labs/privacy.html', count=2)
+    p.rep('/ap-labs/terms.html', '/princeton-labs/terms.html', count=2)
+    p.rep('<a class="morelabs" href="/ap-labs/" aria-label="More AP labs">', '<a class="morelabs" href="/princeton-labs/" aria-label="More Princeton labs">')
+    p.rep('<span class="tl">More AP labs</span>', '<span class="tl">More labs</span>')
+    # hero
+    p.rep('<span class="tag pu">Physics 1</span><span class="tag ap">AP Physics C: Mechanics</span>',
+          '<span class="tag pu">PHY 103</span><span class="tag calc">Calculus-based</span>')
+    p.rep("An interactive module for every topic in calculus-based Physics 1, from kinematics and Newton's laws through rotation, orbits, oscillations and waves, each mapped to AP Physics C: Mechanics.",
+          "An interactive module for every topic in PHY 103, in the order of the course: kinematics and Newton's laws through rotation, orbits, oscillations and waves.")
+    p.rep('<div class="countdown" id="ap-count" aria-live="polite"></div>', '')
+    p.rep('<p class="heronote">The weeks follow the order of PHY 103 at Princeton University, so Princeton students can study along with the course. This is an independent, unofficial study aid. It is not affiliated with, reviewed by, or endorsed by Princeton University, its Physics Department, or the College Board. Use it to study, not on graded work. AP® and Advanced Placement® are trademarks registered by the College Board, which is not affiliated with, and does not endorse, this site.</p>',
+          '<p class="heronote">The modules follow the week-by-week order of PHY 103 at Princeton University, so you can study along with the course. This is an independent, unofficial study aid. It is not affiliated with, reviewed by, or endorsed by Princeton University or its Physics Department. Use it to study, not on graded work, and follow the course\'s collaboration rules.</p>')
+    p.rep(' · matches the May 2027 AP exam format', '')
+    # overview
+    p.rep('<p><b>Physics 1:</b> follow the weeks in order alongside your class.</p><p><b>AP Physics C:</b> do Weeks 1–9, skip damping and waves, then work through the <a href="#frq">FRQ practice</a> section.</p>',
+          '<p><b>Each week:</b> do that week\'s modules alongside the lectures and problem sets.</p>')
+    p.rep('<p><b>Before an exam:</b>', '<p><b>Before a midterm or final:</b>')
+    p.rep('<p>Stuck on notation? Open the <b>Formula sheet</b> button at the bottom right.</p>',
+          '<p>Stuck on notation? The <a href="#formulas">Key formulas</a> page in the menu lists the main equations.</p>')
+    p.rep('AP Physics C: Mechanics covers everything through simple harmonic motion. Damping, resonance and waves are Physics 1 only. <span class="mapnote">Week numbers are mapped to the PHY 103 schedule at Princeton. Unofficial study aid, not affiliated with Princeton University or the College Board.</span>',
+          'Each row is one week of PHY 103. <span class="mapnote">Unofficial study aid, not affiliated with Princeton University.</span>')
+    # formula drawer -> Key formulas page
+    p.cut('<div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>', '</button>')
+    aside = p.cut('<aside class="fs" id="fs" aria-label="Formula sheet" aria-hidden="true">', '</aside>')
+    body = aside[aside.find('<div class="body">') + len('<div class="body">'):aside.rfind('</div>')]
+    body = re.sub(r'\s*<p class="fine"[^>]*>.*?</p>', '', body, count=1, flags=re.S)
+    body = body.replace('<span class="tag na">Physics 1 only</span>', '')
+    page = ('  <!-- ============ KEY FORMULAS ============ -->\n  <section class="view" id="v-formulas" hidden>\n    <div class="wrap">\n'
+            '      <div class="head"><div class="eyebrow">Review<span class="tag pu">PHY 103</span></div><h1>Key formulas</h1>'
+            '<p class="lede">The main equations of the course in one place, written for this site. It is a study page, not an official exam sheet, so check what your exams allow.</p></div>\n'
+            '      <div class="fsp">' + body + '</div>\n    </div>\n  </section>\n\n')
+    # FRQ view -> gone; Key formulas page takes its place
+    p.cut('<!-- ============ FRQ ============ -->', '</section>', new=page.lstrip())
+    # exam format box
+    p.cut('      <div class="exfmt" aria-labelledby="exfmt-h">', '</p>\n      </div>\n')
+    # review views
+    p.rep('<span class="tag ap">Physics 1 + AP C</span>', '<span class="tag pu">PHY 103</span>', count=2)
+    p.rep('All weeks<span class="tag ap">AP C style</span><span class="tag pu">Physics 1 style</span>', 'All weeks')
+    p.rep('Build a mixed problem set from the weeks your exam covers.', 'Build a mixed problem set from the weeks your midterm or final covers.')
+    p.rep('Which weeks does your exam cover?', 'Which weeks does your midterm or final cover?')
+    p.rep("<span class=\"tag ${apTag(p.topic)}\">${apTag(p.topic)==='ap'?'AP C':'Physics 1'}</span>", '')
+    p.rep('<span class="tag ${apTag(id)}">${m.ap}</span>', '<span></span>', count=2)
+    # AP unit tags on module headers, and the AP labels in the module list
+    p.s, n = re.subn(r'<span class="tag (?:ap|na)">(?:AP C[^<]*|Not on AP C[^<]*|Beyond AP C)</span>', '', p.s)
+    if n < 20: sys.exit(f'[phy] expected the module AP tags, found {n}')
+    i = p.s.find('const MODS={'); j = p.s.find('};', i) + 2
+    p.s = p.s[:i] + re.sub(r",ap:(['\"])[^'\"]*\1", ",ap:''", p.s[i:j]) + p.s[j:]
+    p.rep('covers that case, and AP C free-response questions use it often.', 'covers that case, and exam problems use it often.')
+    # navigation: Key formulas instead of FRQ practice
+    p.rep('<a href="#frq" data-view="frq">AP C FRQ practice</a>', '<a href="#formulas" data-view="formulas">Key formulas</a>')
+    p.rep('<option value="frq">AP C FRQ practice</option>', '<option value="formulas">Key formulas</option>')
+    p.rep("const VIEWS=['overview',...Object.keys(MODS),'practice','frq','methods','exam','review'];",
+          "const VIEWS=['overview',...Object.keys(MODS),'practice','methods','exam','review','formulas'];")
+    # scripts that only exist for AP content
+    p.cut('/* ---------------- FRQ section ---------------- */', '/* ---------------- Formula sheet drawer ---------------- */', include_end=False)
+    p.cut('/* ---------------- Formula sheet drawer ---------------- */', '/* ---------------- Free-body diagrams', include_end=False)
+    p.cut('/* ---------------- AP exam countdown ----------------', '/* ---------------- Theme switch', include_end=False)
+    i = p.s.find('(function analytics(){'); c = p.s.rfind('/*', 0, i)
+    p.cut(p.s[c:i + len('(function analytics(){')], '})();\n')
+    # reports go to this site's own repo
+    p.rep("const REPO='https://github.com/jiacode2030/ap-labs-feedback';", "const REPO='https://github.com/jiacode2030/phy103-lab';")
+    p.rep("const COURSE='Mechanics Lab',COURSE_LABEL='course:mechanics'", "const COURSE='PHY 103 Lab',COURSE_LABEL=''")
+    p.rep("REPO+'/issues/new?labels='+encodeURIComponent(COURSE_LABEL)+'&title='", "REPO+'/issues/new?title='")
+    p.rep('(Physics 1 + AP Physics C: Mechanics)', '(PHY 103)')
+    # styles, and separate saved progress from the AP site (same origin)
+    p.rep('/* link back to the AP Labs landing page */', PHY_FORMULAS_CSS.lstrip('\n') + '/* link back to the AP Labs landing page */')
+    p.rep("'kin-", "'phy-", count='all')
+    return p.s
+
+
+def check_js(html, name):
+    """node --check every inline script."""
+    for k, js in enumerate(re.findall(r'<script>(.*?)</script>', html, re.S)):
+        with tempfile.NamedTemporaryFile('w', suffix='.js', delete=False) as f:
+            f.write(js)
+        r = subprocess.run(['node', '--check', f.name], capture_output=True, text=True)
+        if r.returncode:
+            print(r.stderr); sys.exit(f'[{name}] JS syntax error in script {k}')
+
+
+def scan(html, name, banned, allowed=()):
+    text = html
+    for a in allowed:
+        text = text.replace(a, '')
+    hits = [(w, text.count(w)) for w in banned if w in text]
+    if hits:
+        sys.exit(f'[{name}] leftover words from the other site: {hits}')
+
+
+def write(path, html):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(html)
+    print(f'{path}: {len(html)//1024} KB')
+
+
+def main():
+    src = open(SRC, encoding='utf-8').read()
+    args = sys.argv[1:]
+    want_ap = not args or args[0] == '--all'
+    phy_dir = args[1] if len(args) > 1 and args[0] in ('--phy', '--all') else None
+    if want_ap:
+        ap = ap_version(src)
+        check_js(ap, 'ap')
+        scan(ap, 'ap', ['PHY 103', 'Physics 1', 'Princeton University', 'Week ', 'week-by-week'],
+             allowed=['Princeton Class of 2030'])
+        write(os.path.join(ROOT, 'index.html'), ap)
+    if phy_dir:
+        phy = phy_version(src)
+        check_js(phy, 'phy')
+        scan(phy, 'phy', ['AP C', 'AP Physics', 'AP®', 'Advanced Placement', 'College Board', 'goatcounter', 'ap-labs', "'kin-", 'ap-count'])
+        write(os.path.join(os.path.abspath(phy_dir), 'index.html'), phy)
+
+
+if __name__ == '__main__':
+    main()

@@ -1,6 +1,6 @@
-# Physics 1 + AP Physics C: Mechanics
+# Mechanics Lab: AP Physics C: Mechanics
 
-An interactive, intuition-first study site for calculus-based Physics 1 and AP Physics C: Mechanics.
+An interactive, intuition-first study site for AP Physics C: Mechanics, part of [AP Labs](https://jiacode2030.github.io/ap-labs/).
 
 Each topic gets its own module with:
 
@@ -11,15 +11,36 @@ Each topic gets its own module with:
 - a "Check yourself" quiz
 - practice problems with randomized numbers
 
-The review sections are "Which principle?", exam review, a mistakes queue and FRQ practice. A formula sheet opens from the bottom-right corner.
+Modules are grouped by the seven AP Physics C: Mechanics units. Damping and waves come last, under "Beyond AP C". The review sections are "Which principle?", exam review (with the exam format), a mistakes queue and FRQ practice. A formula sheet opens from the bottom-right corner.
 
-The whole site is one HTML file (`index.html`) with no build step. Open it in a browser, or visit the GitHub Pages site.
+The site is one HTML file (`index.html`). Open it in a browser, or visit the GitHub Pages site.
 
-> **Unofficial study aid.** The week numbers are mapped to the PHY 103 schedule at Princeton, but this site is not affiliated with, reviewed by, or endorsed by Princeton University, its Physics Department, or the College Board.
+> **Unofficial study aid.** Not affiliated with, reviewed by, or endorsed by the College Board.
 >
 > **Use it to study, not on graded work.**
 >
 > AP® and Advanced Placement® are trademarks registered by the College Board, which is not affiliated with, and does not endorse, this site.
+
+## Two sites from one source
+
+`src/site.html` is the shared page: every module, simulation, worked example, quiz and problem. `build.py` turns it into two sites:
+
+| | This repo (`index.html`) | [`phy103-lab`](https://github.com/jiacode2030/phy103-lab) |
+|---|---|---|
+| Part of | AP Labs | Princeton Labs |
+| Menu | AP Physics C units | PHY 103 weeks |
+| AP countdown, formula sheet, FRQ practice, exam format | yes | no (a Key formulas page instead) |
+| Visit counts | GoatCounter (`aplabs`) | none |
+| Saved progress keys | `kin-` | `phy-` |
+| Reports | `ap-labs-feedback` | the `phy103-lab` repo's issues |
+
+Edit `src/site.html`, never `index.html`, then rebuild:
+
+```
+python3 build.py --all ../phy103-lab   # writes index.html here and ../phy103-lab/index.html
+```
+
+`build.py` makes each site's changes as exact text edits. If an edit no longer matches the source, it stops with an error. It then checks the JavaScript and scans each output for words that belong to the other site, such as "PHY 103" on the AP site or "AP C" on the PHY 103 site. Commit and push both repos.
 
 ## Reporting a problem
 
@@ -38,5 +59,5 @@ The **More AP labs** link in the side rail goes to the [AP Labs](https://jiacode
 
 These need Node.js and Playwright:
 
-- `node tests/check6.js` visits every page at desktop and phone width. It looks for overflow, blank canvases, NaN values and broken "Set it up for me" buttons.
+- `node tests/check6.js [file]` visits every page (of `index.html`, or the file you name, e.g. `../phy103-lab/index.html`) at desktop and phone width. It looks for overflow, blank canvases, NaN values and broken "Set it up for me" buttons.
 - `node tests/probdump.js` prints one generated sample of every practice problem, so you can check the answers.

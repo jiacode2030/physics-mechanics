@@ -3,7 +3,7 @@ const { chromium } = require(require('child_process').execSync('npm root -g').to
 for (const [w,dark] of [[1280,false],[400,true]]){
 const p=await b.newPage({viewport:{width:w,height:900},colorScheme:dark?'dark':'light'});
 p.on('pageerror',e=>console.log('PAGEERR',w,e.message));p.on('console',m=>{if(m.type()==='error')console.log('ERR',m.text())});
-await p.goto('file://'+require('path').join(__dirname,'..','index.html'));
+await p.goto('file://'+require('path').resolve(process.argv[2]||require('path').join(__dirname,'..','index.html')));
 if(w===1280){const d=await p.evaluate(()=>{const ids={};document.querySelectorAll('[id]').forEach(e=>ids[e.id]=(ids[e.id]||0)+1);return Object.entries(ids).filter(([k,v])=>v>1)});console.log('dup ids',JSON.stringify(d));
  console.log('groups',await p.evaluate(()=>Array.from(document.querySelectorAll('#nav .grp')).map(g=>{let n=0,e=g.nextElementSibling;while(e&&e.tagName==='A'){n++;e=e.nextElementSibling}return g.textContent+':'+n}).join(' | ')));}
 const views=await p.evaluate(()=>['overview',...Array.from(document.querySelectorAll('#nav a')).map(a=>a.dataset.view)].filter((v,i,a)=>a.indexOf(v)===i));
