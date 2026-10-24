@@ -62,6 +62,22 @@ def shared_edits(p):
 
 
 APP_HEAD = '<link rel="manifest" href="/intulab/manifest.webmanifest">\n<meta name="theme-color" content="#0A1220">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-title" content="Intulab">\n<meta name="apple-mobile-web-app-status-bar-style" content="default">\n<link rel="apple-touch-icon" href="/intulab/icons/apple-touch-icon.png">\n'
+OG_HEAD = r'''<meta property="og:type" content="website">
+<meta property="og:site_name" content="Intulab">
+<meta property="og:title" content="Mechanics Lab · Intulab">
+<meta property="og:description" content="Live simulations, worked examples and randomized practice for AP Physics C: Mechanics. Free, no sign-up.">
+<meta property="og:url" content="https://jiacode2030.github.io/physics-mechanics/">
+<meta property="og:image" content="https://jiacode2030.github.io/physics-mechanics/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Mechanics Lab, part of Intulab">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mechanics Lab · Intulab">
+<meta name="twitter:description" content="Live simulations, worked examples and randomized practice for AP Physics C: Mechanics. Free, no sign-up.">
+<meta name="twitter:image" content="https://jiacode2030.github.io/physics-mechanics/og.png">
+<meta name="description" content="Live simulations, worked examples and randomized practice for AP Physics C: Mechanics. Free, no sign-up.">
+'''
+APP_HEAD += OG_HEAD
 APP_REG = "/* Intulab app: offline support (sw.js). Only on the live site, and localhost for testing. */\nif('serviceWorker' in navigator&&(/\\.github\\.io$/.test(location.hostname)||location.hostname==='localhost'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));\n"
 
 # "Get the app" button and steps dialog (AP version only)
