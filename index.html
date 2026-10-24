@@ -498,15 +498,15 @@ kbd{font:500 11px/1.4 var(--f-mono);border:1px solid var(--line);border-bottom-w
 .appdlg summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
 .appdlg summary::before{content:'▸';margin-right:8px}.appdlg details[open] summary::before{content:'▾'}
 .appdlg .approw{display:flex;justify-content:flex-end;margin-top:18px}
-/* Pointer feel (shared with the Intulab landing page): a soft glow follows the mouse, module cards tilt toward it and light up. Mouse and trackpad only; off for reduced motion. */
-#ptr{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:0;opacity:0;transition:opacity .5s;
-  background:radial-gradient(circle,color-mix(in srgb,var(--accent,#5CB8FF) 12%,transparent),transparent 66%);will-change:transform}
-#ptr.on{opacity:1}
+/* Pointer feel (shared with the Intulab landing page): module cards tilt toward the mouse and light up; main buttons get a quick light sweep. Mouse and trackpad only; off for reduced motion. */
 @media (hover:hover) and (pointer:fine){
   a.mod:hover{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-3px);
     background-image:radial-gradient(220px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--accent,#5CB8FF) 15%,transparent),transparent 70%)}
+  .btn.primary{position:relative;overflow:hidden}
+  .btn.primary::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s}
+  .btn.primary:hover::after{transform:translateX(120%)}
 }
-@media (prefers-reduced-motion:reduce){#ptr{display:none}a.mod:hover{transform:translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){a.mod:hover{transform:translateY(-3px)}.btn.primary::after{display:none}}
 /* link back to the Intulab landing page */
 .morelabs{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:36px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 12px 6px 9px;font:500 12.5px var(--f-body);text-decoration:none;
   transition:color var(--d-1),border-color var(--d-1)}
@@ -842,6 +842,37 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
 .rail .li-link{margin-top:6px}
 #rail-count{color:var(--accent)}
 @media (prefers-reduced-motion: reduce){*,::before,::after{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
+/* ===== Module appeal layer: the Precalculus Lab look (soft tinted cards, rounded shapes, accent glow on the active tab) in this site's own colors ===== */
+:root{--m-acc:var(--accent);--m-on:#FFFFFF;--m-r:16px;--m-acc-d:color-mix(in srgb,var(--m-acc) 78%,#000);--m-lav:#8B7CFF}
+:root[data-theme="dark"]{--m-on:#06101F;--m-acc-d:color-mix(in srgb,var(--m-acc) 72%,#fff)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--m-on:#06101F;--m-acc-d:color-mix(in srgb,var(--m-acc) 72%,#fff)}}
+.rail{background:linear-gradient(180deg,color-mix(in srgb,var(--m-acc) 9%,var(--surface)),var(--surface) 45%)}
+.nav a{border-radius:12px;transition:background .18s,color .18s,transform .18s}
+.nav a:hover{background:color-mix(in srgb,var(--m-acc) 12%,transparent);transform:translateX(2px)}
+.nav a[aria-current="page"],.nav .ind,.steps .ind,.steps a.on{box-shadow:0 4px 12px color-mix(in srgb,var(--m-acc) 35%,transparent)}
+.nav .grp{color:var(--m-acc-d)}
+.searchbtn,.themebtn,.btn,.seg,select,input[type=text]{border-radius:12px}
+.btn:hover{background:color-mix(in srgb,var(--m-acc) 10%,var(--surface));border-color:color-mix(in srgb,var(--m-acc) 45%,var(--line))}
+.btn.primary{box-shadow:0 6px 16px color-mix(in srgb,var(--m-acc) 30%,transparent)}
+.steps a{border-radius:999px}
+.lab,.example,.sorter,.frq,.prob,.strobe,.start>div,.mod,.tablewrap,.hs-row,.stp{border-radius:var(--m-r)}
+.readout,.eq-block,.eqgrid .eqc,.eqgrid .eqn{border-radius:14px}
+.intuit{background:color-mix(in srgb,var(--m-acc) 11%,var(--surface));border-left:4px solid var(--m-acc);border-radius:0 var(--m-r) var(--m-r) 0}
+.intuit .k{color:var(--m-acc-d)}
+.assume{background:color-mix(in srgb,var(--m-lav) 13%,var(--surface));border:1px solid color-mix(in srgb,var(--m-lav) 38%,var(--line));border-radius:var(--m-r)}
+.assume h3,.assume .k{color:var(--m-acc-d)}
+.coach{background:color-mix(in srgb,var(--m-acc) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--m-acc) 32%,var(--line));border-radius:14px}
+.coach b{color:var(--m-acc-d)}
+.try{background:color-mix(in srgb,var(--m-acc) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--m-acc) 28%,var(--line));border-radius:var(--m-r)}
+.oops{border-radius:0 var(--m-r) var(--m-r) 0}
+.ttip{border-radius:var(--m-r)}
+.tag{background:color-mix(in srgb,var(--m-acc) 9%,var(--surface));border-color:color-mix(in srgb,var(--m-acc) 30%,var(--line));color:var(--m-acc-d)}
+.mod:hover{border-color:var(--m-acc)}
+details summary{color:var(--m-acc-d)}
+.quiz .opts button{border-radius:12px}
+.quiz .opts button:hover{background:color-mix(in srgb,var(--m-acc) 10%,var(--surface))}
+.steps{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
+.steps.stuck,.steps[data-stuck]{background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 </style>
 
 <div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>
@@ -4767,12 +4798,9 @@ if('serviceWorker' in navigator&&(/\.github\.io$/.test(location.hostname)||locat
   addEventListener('beforeinstallprompt',function(e){e.preventDefault();prompt=e;});
   addEventListener('appinstalled',function(){each(function(b){b.hidden=true;});});
   each(function(b){b.addEventListener('click',function(){if(prompt){prompt.prompt();prompt=null;return;}if(dlg.showModal)dlg.showModal();else dlg.setAttribute('open','');});});})();
-/* Pointer feel (same as the Intulab landing page): soft glow follows the mouse, module cards tilt and light up. Mouse and trackpad only, never with reduced motion. */
+/* Pointer feel (same as the Intulab landing page): module cards tilt toward the mouse and light up. Mouse and trackpad only, never with reduced motion. */
 (function pointerFeel(){var fine=matchMedia('(hover: hover) and (pointer: fine)'),rm=matchMedia('(prefers-reduced-motion: reduce)');if(!fine.matches||rm.matches)return;
-  var g=document.createElement('div');g.id='ptr';g.setAttribute('aria-hidden','true');document.body.appendChild(g);
-  var x=0,y=0,tx=0,ty=0,raf=0;function loop(){x+=(tx-x)*.18;y+=(ty-y)*.18;g.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)';raf=(Math.abs(tx-x)+Math.abs(ty-y)>.5)?requestAnimationFrame(loop):0;}
-  addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;tx=e.clientX;ty=e.clientY;g.classList.add('on');if(!raf)raf=requestAnimationFrame(loop);
-    var c=e.target.closest&&e.target.closest('a.mod');if(c){var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+  addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;var c=e.target.closest&&e.target.closest('a.mod');if(c){var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
       c.style.setProperty('--mx',(px*100).toFixed(1)+'%');c.style.setProperty('--my',(py*100).toFixed(1)+'%');c.style.setProperty('--ry',((px-.5)*5).toFixed(2)+'deg');c.style.setProperty('--rx',((.5-py)*5).toFixed(2)+'deg');}},{passive:true});
-  document.addEventListener('pointerout',function(e){var c=e.target.closest&&e.target.closest('a.mod');if(c&&!c.contains(e.relatedTarget)){c.style.removeProperty('--rx');c.style.removeProperty('--ry');}if(!e.relatedTarget)g.classList.remove('on');});})();
+  document.addEventListener('pointerout',function(e){var c=e.target.closest&&e.target.closest('a.mod');if(c&&!c.contains(e.relatedTarget)){c.style.removeProperty('--rx');c.style.removeProperty('--ry');}});})();
 </script>

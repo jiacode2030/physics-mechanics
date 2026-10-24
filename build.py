@@ -85,24 +85,53 @@ APP_BTN = '<button type="button" class="morelabs appbtn" id="app-btn" hidden ari
 APP_DLG = '<dialog class="appdlg" id="app-dlg" aria-labelledby="app-dlg-h">\n  <form method="dialog">\n    <h2 id="app-dlg-h">Get the Intulab app</h2>\n    <p>Mechanics, E&amp;M, Chemistry, Calculus and Biology in one free app, with no app store. It opens full screen from your home screen, and once you\'ve opened it, it works offline too.</p>\n    <div class="appos" data-os="ios"><h3>iPhone or iPad (Safari)</h3><ol><li>Tap the <b>Share</b> button at the bottom (or top) of Safari.</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li></ol>\n      <p class="appnote">On iPhone and iPad, the app keeps its own saved progress, separate from Safari.</p></div>\n    <div class="appos" data-os="android"><h3>Android (Chrome)</h3><ol><li>Tap the <b>⋮</b> menu at the top right.</li><li>Tap <b>Install app</b> (or <b>Add to Home screen</b>).</li><li>Tap <b>Install</b>.</li></ol></div>\n    <div class="appos" data-os="desktop"><h3>Computer (Chrome or Edge)</h3><ol><li>Click the install icon at the right end of the address bar.</li><li>Click <b>Install</b>.</li></ol></div>\n    <div class="approw"><button class="btn primary" value="close">Got it</button></div>\n  </form>\n</dialog>\n'
 APP_CSS = "\n/* Get the Intulab app: button in the rail and the steps dialog */\n.appbtn,.appbtn2{cursor:pointer}\n.appbtn[hidden],.appbtn2[hidden]{display:none!important}\n/* computers: in the side rail; phones: on the course's home page (the top bar is full) */\n@media (max-width:900px){.appbtn{display:none!important}}\n@media (min-width:901px){.appbtn2{display:none!important}}\n.appdlg{max-width:min(520px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;width:100%;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.35)}\n.appdlg::backdrop{background:rgba(5,10,20,.55)}\n.appdlg h2{margin:0 0 8px;font-size:22px}\n.appdlg h3{margin:16px 0 6px;font-size:15px}\n.appdlg p{margin:0 0 4px;color:var(--muted)}\n.appdlg ol{margin:0;padding-left:22px}.appdlg li{margin:4px 0}\n.appdlg .appnote{font-size:13.5px;margin-top:8px}\n.appdlg details{margin-top:14px;border-top:1px solid var(--line);padding-top:6px}\n.appdlg summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}\n.appdlg summary::before{content:'▸';margin-right:8px}.appdlg details[open] summary::before{content:'▾'}\n.appdlg .approw{display:flex;justify-content:flex-end;margin-top:18px}\n"
 APP_JS = '/* Get the Intulab app (same app as the Intulab page; hidden once you\'re in it) */\n(function appInstall(){var btns=document.querySelectorAll(\'.appbtn,.appbtn2\'),dlg=document.getElementById(\'app-dlg\');if(!btns.length||!dlg)return;\n  var each=function(f){Array.prototype.forEach.call(btns,f);};\n  if(matchMedia(\'(display-mode: standalone)\').matches||navigator.standalone===true)return;\n  each(function(b){b.hidden=false;});var prompt=null;\n  var ua=navigator.userAgent,os=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1)?\'ios\':/Android/.test(ua)?\'android\':\'desktop\';\n  var form=dlg.querySelector(\'form\'),mine=dlg.querySelector(\'[data-os="\'+os+\'"]\'),more=document.createElement(\'details\');more.innerHTML=\'<summary>Other devices</summary>\';\n  Array.prototype.forEach.call(dlg.querySelectorAll(\'.appos\'),function(el){if(el!==mine)more.appendChild(el);});form.insertBefore(more,form.querySelector(\'.approw\'));\n  addEventListener(\'beforeinstallprompt\',function(e){e.preventDefault();prompt=e;});\n  addEventListener(\'appinstalled\',function(){each(function(b){b.hidden=true;});});\n  each(function(b){b.addEventListener(\'click\',function(){if(prompt){prompt.prompt();prompt=null;return;}if(dlg.showModal)dlg.showModal();else dlg.setAttribute(\'open\',\'\');});});})();\n'
-PTR_CSS = r'''/* Pointer feel (shared with the Intulab landing page): a soft glow follows the mouse, module cards tilt toward it and light up. Mouse and trackpad only; off for reduced motion. */
-#ptr{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:0;opacity:0;transition:opacity .5s;
-  background:radial-gradient(circle,color-mix(in srgb,var(--accent,#5CB8FF) 12%,transparent),transparent 66%);will-change:transform}
-#ptr.on{opacity:1}
+APPEAL_CSS = r'''/* ===== Module appeal layer: the Precalculus Lab look (soft tinted cards, rounded shapes, accent glow on the active tab) in this site's own colors ===== */
+:root{--m-acc:var(--accent);--m-on:#FFFFFF;--m-r:16px;--m-acc-d:color-mix(in srgb,var(--m-acc) 78%,#000);--m-lav:#8B7CFF}
+:root[data-theme="dark"]{--m-on:#06101F;--m-acc-d:color-mix(in srgb,var(--m-acc) 72%,#fff)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--m-on:#06101F;--m-acc-d:color-mix(in srgb,var(--m-acc) 72%,#fff)}}
+.rail{background:linear-gradient(180deg,color-mix(in srgb,var(--m-acc) 9%,var(--surface)),var(--surface) 45%)}
+.nav a{border-radius:12px;transition:background .18s,color .18s,transform .18s}
+.nav a:hover{background:color-mix(in srgb,var(--m-acc) 12%,transparent);transform:translateX(2px)}
+.nav a[aria-current="page"],.nav .ind,.steps .ind,.steps a.on{box-shadow:0 4px 12px color-mix(in srgb,var(--m-acc) 35%,transparent)}
+.nav .grp{color:var(--m-acc-d)}
+.searchbtn,.themebtn,.btn,.seg,select,input[type=text]{border-radius:12px}
+.btn:hover{background:color-mix(in srgb,var(--m-acc) 10%,var(--surface));border-color:color-mix(in srgb,var(--m-acc) 45%,var(--line))}
+.btn.primary{box-shadow:0 6px 16px color-mix(in srgb,var(--m-acc) 30%,transparent)}
+.steps a{border-radius:999px}
+.lab,.example,.sorter,.frq,.prob,.strobe,.start>div,.mod,.tablewrap,.hs-row,.stp{border-radius:var(--m-r)}
+.readout,.eq-block,.eqgrid .eqc,.eqgrid .eqn{border-radius:14px}
+.intuit{background:color-mix(in srgb,var(--m-acc) 11%,var(--surface));border-left:4px solid var(--m-acc);border-radius:0 var(--m-r) var(--m-r) 0}
+.intuit .k{color:var(--m-acc-d)}
+.assume{background:color-mix(in srgb,var(--m-lav) 13%,var(--surface));border:1px solid color-mix(in srgb,var(--m-lav) 38%,var(--line));border-radius:var(--m-r)}
+.assume h3,.assume .k{color:var(--m-acc-d)}
+.coach{background:color-mix(in srgb,var(--m-acc) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--m-acc) 32%,var(--line));border-radius:14px}
+.coach b{color:var(--m-acc-d)}
+.try{background:color-mix(in srgb,var(--m-acc) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--m-acc) 28%,var(--line));border-radius:var(--m-r)}
+.oops{border-radius:0 var(--m-r) var(--m-r) 0}
+.ttip{border-radius:var(--m-r)}
+.tag{background:color-mix(in srgb,var(--m-acc) 9%,var(--surface));border-color:color-mix(in srgb,var(--m-acc) 30%,var(--line));color:var(--m-acc-d)}
+.mod:hover{border-color:var(--m-acc)}
+details summary{color:var(--m-acc-d)}
+.quiz .opts button{border-radius:12px}
+.quiz .opts button:hover{background:color-mix(in srgb,var(--m-acc) 10%,var(--surface))}
+.steps{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
+.steps.stuck,.steps[data-stuck]{background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+'''
+PTR_CSS = r'''/* Pointer feel (shared with the Intulab landing page): module cards tilt toward the mouse and light up; main buttons get a quick light sweep. Mouse and trackpad only; off for reduced motion. */
 @media (hover:hover) and (pointer:fine){
   a.mod:hover{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-3px);
     background-image:radial-gradient(220px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--accent,#5CB8FF) 15%,transparent),transparent 70%)}
+  .btn.primary{position:relative;overflow:hidden}
+  .btn.primary::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s}
+  .btn.primary:hover::after{transform:translateX(120%)}
 }
-@media (prefers-reduced-motion:reduce){#ptr{display:none}a.mod:hover{transform:translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){a.mod:hover{transform:translateY(-3px)}.btn.primary::after{display:none}}
 '''
-PTR_JS = r'''/* Pointer feel (same as the Intulab landing page): soft glow follows the mouse, module cards tilt and light up. Mouse and trackpad only, never with reduced motion. */
+PTR_JS = r'''/* Pointer feel (same as the Intulab landing page): module cards tilt toward the mouse and light up. Mouse and trackpad only, never with reduced motion. */
 (function pointerFeel(){var fine=matchMedia('(hover: hover) and (pointer: fine)'),rm=matchMedia('(prefers-reduced-motion: reduce)');if(!fine.matches||rm.matches)return;
-  var g=document.createElement('div');g.id='ptr';g.setAttribute('aria-hidden','true');document.body.appendChild(g);
-  var x=0,y=0,tx=0,ty=0,raf=0;function loop(){x+=(tx-x)*.18;y+=(ty-y)*.18;g.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)';raf=(Math.abs(tx-x)+Math.abs(ty-y)>.5)?requestAnimationFrame(loop):0;}
-  addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;tx=e.clientX;ty=e.clientY;g.classList.add('on');if(!raf)raf=requestAnimationFrame(loop);
-    var c=e.target.closest&&e.target.closest('a.mod');if(c){var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+  addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;var c=e.target.closest&&e.target.closest('a.mod');if(c){var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
       c.style.setProperty('--mx',(px*100).toFixed(1)+'%');c.style.setProperty('--my',(py*100).toFixed(1)+'%');c.style.setProperty('--ry',((px-.5)*5).toFixed(2)+'deg');c.style.setProperty('--rx',((.5-py)*5).toFixed(2)+'deg');}},{passive:true});
-  document.addEventListener('pointerout',function(e){var c=e.target.closest&&e.target.closest('a.mod');if(c&&!c.contains(e.relatedTarget)){c.style.removeProperty('--rx');c.style.removeProperty('--ry');}if(!e.relatedTarget)g.classList.remove('on');});})();
+  document.addEventListener('pointerout',function(e){var c=e.target.closest&&e.target.closest('a.mod');if(c&&!c.contains(e.relatedTarget)){c.style.removeProperty('--rx');c.style.removeProperty('--ry');}});})();
 '''
 APP_MORE_END = '<span class="tl">More labs</span></a>'
 
@@ -182,6 +211,8 @@ def ap_version(text):
     p.rep('/* link back to the Intulab landing page */', APP_CSS.lstrip('\n') + PTR_CSS + '/* link back to the Intulab landing page */')
     i = p.s.rindex('</script>')
     p.s = p.s[:i] + APP_REG + APP_JS + PTR_JS + p.s[i:]
+    j = p.s.rindex('</style>')
+    p.s = p.s[:j] + APPEAL_CSS + p.s[j:]
     return p.s
 
 
