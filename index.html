@@ -533,6 +533,12 @@ kbd{font:500 11px/1.4 var(--f-mono);border:1px solid var(--line);border-bottom-w
   .btn.primary:hover::after{transform:translateX(120%)}
 }
 @media (prefers-reduced-motion:reduce){a.mod:hover{transform:translateY(-3px)}.btn.primary::after{display:none}}
+#ptr{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:0;opacity:0;transition:opacity .5s;
+  background:radial-gradient(circle,color-mix(in srgb,var(--m-acc,var(--accent,#5CB8FF)) 13%,transparent),transparent 66%);will-change:transform}
+#ptr.on.ov{opacity:1}
+.spark{position:fixed;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;pointer-events:none;z-index:40;background:var(--m-acc,var(--accent,#5CB8FF));box-shadow:0 0 8px var(--m-acc,var(--accent,#5CB8FF));animation:spark .75s ease-out forwards}
+@keyframes spark{from{opacity:.9;transform:translate(0,0) scale(1)}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
+@media (prefers-reduced-motion:reduce){#ptr,.spark{display:none}}
 /* link back to the Intulab landing page */
 .morelabs{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:36px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 12px 6px 9px;font:500 12.5px var(--f-body);text-decoration:none;
   transition:color var(--d-1),border-color var(--d-1)}
@@ -938,6 +944,13 @@ details summary{color:var(--m-acc-d)}
 .theme-fade,.theme-fade *,.theme-fade *::before,.theme-fade *::after{transition:background-color .35s,color .35s,border-color .35s,fill .35s,stroke .35s!important}
 .btn.cont{max-width:100%;white-space:normal;text-align:left}
 @media (prefers-reduced-motion:reduce){#rdbar{transition:none}}
+/* ===== Delight pack (shared by all labs): the headline gradient follows the mouse, the main buttons lean toward it, the demo card tilts, clicks ring out, right answers burst, a lab lights up while you drag its controls ===== */
+.hero h1 .hl.gx{background-size:180% 100%!important;background-position:var(--gx,40%) 0!important;transition:background-position .25s ease-out}
+.ring{position:fixed;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;border:2px solid var(--m-acc,var(--accent,#5CB8FF));pointer-events:none;z-index:40;animation:ring .65s ease-out forwards}
+@keyframes ring{from{opacity:.8;transform:scale(.4)}to{opacity:0;transform:scale(5)}}
+.lab:has(input[type=range]:active),.lab:has(.seg button:active){box-shadow:0 0 0 3px color-mix(in srgb,var(--m-acc,var(--accent,#5CB8FF)) 30%,transparent),var(--shadow-1,none)}
+#v-overview .hero .strobe{transition:transform .25s ease-out}
+@media (prefers-reduced-motion:reduce){.ring{display:none}.hero h1 .hl.gx{transition:none}}
 </style>
 
 <div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>
@@ -4863,11 +4876,16 @@ if('serviceWorker' in navigator&&(/\.github\.io$/.test(location.hostname)||locat
   addEventListener('beforeinstallprompt',function(e){e.preventDefault();prompt=e;});
   addEventListener('appinstalled',function(){each(function(b){b.hidden=true;});});
   each(function(b){b.addEventListener('click',function(){if(prompt){prompt.prompt();prompt=null;return;}if(dlg.showModal)dlg.showModal();else dlg.setAttribute('open','');});});})();
-/* Pointer feel (same as the Intulab landing page): module cards tilt toward the mouse and light up. Mouse and trackpad only, never with reduced motion. */
+/* Pointer feel (same as the Intulab landing page): on the overview a soft glow and a few sparks follow the mouse; module cards tilt toward it and light up. Mouse and trackpad only, never with reduced motion. */
 (function pointerFeel(){var fine=matchMedia('(hover: hover) and (pointer: fine)'),rm=matchMedia('(prefers-reduced-motion: reduce)');if(!fine.matches||rm.matches)return;
-  addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;var c=e.target.closest&&e.target.closest('a.mod');if(c){var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+  var g=document.createElement('div');g.id='ptr';g.setAttribute('aria-hidden','true');document.body.appendChild(g);
+  var onOv=function(){return !location.hash||location.hash==='#overview';},sync=function(){g.classList.toggle('ov',onOv());};sync();addEventListener('hashchange',sync);
+  var x=0,y=0,tx=0,ty=0,raf=0,last=0,sparks=0;function loop(){x+=(tx-x)*.18;y+=(ty-y)*.18;g.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)';raf=(Math.abs(tx-x)+Math.abs(ty-y)>.5)?requestAnimationFrame(loop):0;}
+  function spark(px,py){if(sparks>18)return;var s=document.createElement('i');s.className='spark';s.style.left=px+'px';s.style.top=py+'px';s.style.setProperty('--dx',((Math.random()-.5)*46).toFixed(0)+'px');s.style.setProperty('--dy',(-14-Math.random()*34).toFixed(0)+'px');sparks++;s.addEventListener('animationend',function(){s.remove();sparks--;});document.body.appendChild(s);}
+  addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;tx=e.clientX;ty=e.clientY;if(g.classList.contains('ov')){g.classList.add('on');if(!raf)raf=requestAnimationFrame(loop);var n=performance.now();if(n-last>70){last=n;spark(e.clientX,e.clientY);}}
+    var c=e.target.closest&&e.target.closest('a.mod');if(c){var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
       c.style.setProperty('--mx',(px*100).toFixed(1)+'%');c.style.setProperty('--my',(py*100).toFixed(1)+'%');c.style.setProperty('--ry',((px-.5)*5).toFixed(2)+'deg');c.style.setProperty('--rx',((.5-py)*5).toFixed(2)+'deg');}},{passive:true});
-  document.addEventListener('pointerout',function(e){var c=e.target.closest&&e.target.closest('a.mod');if(c&&!c.contains(e.relatedTarget)){c.style.removeProperty('--rx');c.style.removeProperty('--ry');}});})();
+  document.addEventListener('pointerout',function(e){var c=e.target.closest&&e.target.closest('a.mod');if(c&&!c.contains(e.relatedTarget)){c.style.removeProperty('--rx');c.style.removeProperty('--ry');}if(!e.relatedTarget)g.classList.remove('on');});})();
 /* Phone UI pass (same in every lab): the floating button shrinks to its icon while you scroll and the page keeps room for it; a revealed worked-example step lights up its part of the figure; quiz answers pulse or shake. Honors reduced motion. */
 (function phoneUI(){var rm=matchMedia('(prefers-reduced-motion: reduce)'),phone=matchMedia('(max-width: 900px)'),fs=document.querySelector('.fs-btn');
   if(fs){var setH=function(){document.documentElement.style.setProperty('--fsb',Math.ceil(fs.getBoundingClientRect().height||52)+'px');};setH();addEventListener('resize',setH);
@@ -4893,4 +4911,18 @@ if('serviceWorker' in navigator&&(/\.github\.io$/.test(location.hostname)||locat
   addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);addEventListener('hashchange',function(){setTimeout(upd,80);});upd();
   var fs=document.querySelector('.fs-btn');if(fs&&!fs.getAttribute('aria-label'))fs.setAttribute('aria-label',fs.textContent.replace(/\s+/g,' ').trim());
   document.addEventListener('click',function(e){if(rm.matches)return;var b=e.target.closest&&e.target.closest('#theme-btn,.themebtn');if(!b)return;var d=document.documentElement;d.classList.add('theme-fade');setTimeout(function(){d.classList.remove('theme-fade');},450);},true);})();
+/* Delight pack (same in every lab). Hover effects need a mouse and no reduced-motion setting; the burst on a right answer works on any device. */
+(function delight(){var fine=matchMedia('(hover: hover) and (pointer: fine)'),rm=matchMedia('(prefers-reduced-motion: reduce)');
+  var onOv=function(){return !location.hash||location.hash==='#overview';};
+  function burstAt(el){var r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;for(var i=0;i<12;i++){(function(){var s=document.createElement('i');s.className='spark';s.style.left=cx+'px';s.style.top=cy+'px';var a=Math.random()*Math.PI*2,d=34+Math.random()*52;s.style.setProperty('--dx',(Math.cos(a)*d).toFixed(0)+'px');s.style.setProperty('--dy',(Math.sin(a)*d).toFixed(0)+'px');s.addEventListener('animationend',function(){s.remove();});document.body.appendChild(s);})();}}
+  document.addEventListener('click',function(e){if(rm.matches)return;var b=e.target.closest&&e.target.closest('.quiz .opts button');if(b)setTimeout(function(){if(b.classList.contains('right'))burstAt(b);},0);});
+  if(!fine.matches||rm.matches)return;
+  var hl=null,fig=null,btns=[];function grab(){var ov=document.getElementById('v-overview');if(!ov)return;hl=ov.querySelector('.hero h1 .hl');if(hl&&/text/.test(getComputedStyle(hl).webkitBackgroundClip||getComputedStyle(hl).backgroundClip))hl.classList.add('gx');else hl=null;fig=ov.querySelector('.hero .strobe,.hero>figure');btns=[].slice.call(ov.querySelectorAll('.hero .btn.primary'));}
+  grab();
+  addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'||!onOv())return;
+    if(hl)hl.style.setProperty('--gx',Math.round(e.clientX/innerWidth*100)+'%');
+    btns.forEach(function(b){var r=b.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),d=Math.hypot(dx,dy);if(d<110){var k=(1-d/110)*7;b.style.translate=(dx/Math.max(d,1)*k).toFixed(1)+'px '+(dy/Math.max(d,1)*k).toFixed(1)+'px';}else b.style.translate='';});
+    if(fig){var r=fig.getBoundingClientRect();if(e.clientX>r.left&&e.clientX<r.right&&e.clientY>r.top&&e.clientY<r.bottom){var px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;fig.style.transform='perspective(900px) rotateX('+(-py*4).toFixed(2)+'deg) rotateY('+(px*5).toFixed(2)+'deg)';}else fig.style.transform='';}},{passive:true});
+  document.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'||!onOv())return;var s=document.createElement('i');s.className='ring';s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';s.addEventListener('animationend',function(){s.remove();});document.body.appendChild(s);});
+  addEventListener('hashchange',function(){if(!onOv()){btns.forEach(function(b){b.style.translate='';});if(fig)fig.style.transform='';}});})();
 </script>

@@ -149,6 +149,29 @@ FONTS_STYLE = r'''<style>
 @font-face{font-family:'STIX Two Text';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/stixtwotext-latin-5cd9c2.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 </style>
 '''
+DELIGHT_CSS = r'''/* ===== Delight pack (shared by all labs): the headline gradient follows the mouse, the main buttons lean toward it, the demo card tilts, clicks ring out, right answers burst, a lab lights up while you drag its controls ===== */
+.hero h1 .hl.gx{background-size:180% 100%!important;background-position:var(--gx,40%) 0!important;transition:background-position .25s ease-out}
+.ring{position:fixed;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;border:2px solid var(--m-acc,var(--accent,#5CB8FF));pointer-events:none;z-index:40;animation:ring .65s ease-out forwards}
+@keyframes ring{from{opacity:.8;transform:scale(.4)}to{opacity:0;transform:scale(5)}}
+.lab:has(input[type=range]:active),.lab:has(.seg button:active){box-shadow:0 0 0 3px color-mix(in srgb,var(--m-acc,var(--accent,#5CB8FF)) 30%,transparent),var(--shadow-1,none)}
+#v-overview .hero .strobe{transition:transform .25s ease-out}
+@media (prefers-reduced-motion:reduce){.ring{display:none}.hero h1 .hl.gx{transition:none}}
+'''
+DELIGHT_JS = r'''/* Delight pack (same in every lab). Hover effects need a mouse and no reduced-motion setting; the burst on a right answer works on any device. */
+(function delight(){var fine=matchMedia('(hover: hover) and (pointer: fine)'),rm=matchMedia('(prefers-reduced-motion: reduce)');
+  var onOv=function(){return !location.hash||location.hash==='#overview';};
+  function burstAt(el){var r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;for(var i=0;i<12;i++){(function(){var s=document.createElement('i');s.className='spark';s.style.left=cx+'px';s.style.top=cy+'px';var a=Math.random()*Math.PI*2,d=34+Math.random()*52;s.style.setProperty('--dx',(Math.cos(a)*d).toFixed(0)+'px');s.style.setProperty('--dy',(Math.sin(a)*d).toFixed(0)+'px');s.addEventListener('animationend',function(){s.remove();});document.body.appendChild(s);})();}}
+  document.addEventListener('click',function(e){if(rm.matches)return;var b=e.target.closest&&e.target.closest('.quiz .opts button');if(b)setTimeout(function(){if(b.classList.contains('right'))burstAt(b);},0);});
+  if(!fine.matches||rm.matches)return;
+  var hl=null,fig=null,btns=[];function grab(){var ov=document.getElementById('v-overview');if(!ov)return;hl=ov.querySelector('.hero h1 .hl');if(hl&&/text/.test(getComputedStyle(hl).webkitBackgroundClip||getComputedStyle(hl).backgroundClip))hl.classList.add('gx');else hl=null;fig=ov.querySelector('.hero .strobe,.hero>figure');btns=[].slice.call(ov.querySelectorAll('.hero .btn.primary'));}
+  grab();
+  addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'||!onOv())return;
+    if(hl)hl.style.setProperty('--gx',Math.round(e.clientX/innerWidth*100)+'%');
+    btns.forEach(function(b){var r=b.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),d=Math.hypot(dx,dy);if(d<110){var k=(1-d/110)*7;b.style.translate=(dx/Math.max(d,1)*k).toFixed(1)+'px '+(dy/Math.max(d,1)*k).toFixed(1)+'px';}else b.style.translate='';});
+    if(fig){var r=fig.getBoundingClientRect();if(e.clientX>r.left&&e.clientX<r.right&&e.clientY>r.top&&e.clientY<r.bottom){var px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;fig.style.transform='perspective(900px) rotateX('+(-py*4).toFixed(2)+'deg) rotateY('+(px*5).toFixed(2)+'deg)';}else fig.style.transform='';}},{passive:true});
+  document.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'||!onOv())return;var s=document.createElement('i');s.className='ring';s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';s.addEventListener('animationend',function(){s.remove();});document.body.appendChild(s);});
+  addEventListener('hashchange',function(){if(!onOv()){btns.forEach(function(b){b.style.translate='';});if(fig)fig.style.transform='';}});})();
+'''
 PHONE_CSS = r'''/* ===== Phone UI pass (shared by all labs): 44px slider targets, a floating button that never covers content, step highlight, quiz feedback ===== */
 @media (max-width:900px),(pointer:coarse){
   input[type=range]{min-height:44px!important;height:44px;margin:0;box-sizing:border-box}
@@ -224,12 +247,23 @@ PTR_CSS = r'''/* Pointer feel (shared with the Intulab landing page): module car
   .btn.primary:hover::after{transform:translateX(120%)}
 }
 @media (prefers-reduced-motion:reduce){a.mod:hover{transform:translateY(-3px)}.btn.primary::after{display:none}}
+#ptr{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:0;opacity:0;transition:opacity .5s;
+  background:radial-gradient(circle,color-mix(in srgb,var(--m-acc,var(--accent,#5CB8FF)) 13%,transparent),transparent 66%);will-change:transform}
+#ptr.on.ov{opacity:1}
+.spark{position:fixed;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;pointer-events:none;z-index:40;background:var(--m-acc,var(--accent,#5CB8FF));box-shadow:0 0 8px var(--m-acc,var(--accent,#5CB8FF));animation:spark .75s ease-out forwards}
+@keyframes spark{from{opacity:.9;transform:translate(0,0) scale(1)}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
+@media (prefers-reduced-motion:reduce){#ptr,.spark{display:none}}
 '''
-PTR_JS = r'''/* Pointer feel (same as the Intulab landing page): module cards tilt toward the mouse and light up. Mouse and trackpad only, never with reduced motion. */
+PTR_JS = r'''/* Pointer feel (same as the Intulab landing page): on the overview a soft glow and a few sparks follow the mouse; module cards tilt toward it and light up. Mouse and trackpad only, never with reduced motion. */
 (function pointerFeel(){var fine=matchMedia('(hover: hover) and (pointer: fine)'),rm=matchMedia('(prefers-reduced-motion: reduce)');if(!fine.matches||rm.matches)return;
-  addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;var c=e.target.closest&&e.target.closest('a.mod');if(c){var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+  var g=document.createElement('div');g.id='ptr';g.setAttribute('aria-hidden','true');document.body.appendChild(g);
+  var onOv=function(){return !location.hash||location.hash==='#overview';},sync=function(){g.classList.toggle('ov',onOv());};sync();addEventListener('hashchange',sync);
+  var x=0,y=0,tx=0,ty=0,raf=0,last=0,sparks=0;function loop(){x+=(tx-x)*.18;y+=(ty-y)*.18;g.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)';raf=(Math.abs(tx-x)+Math.abs(ty-y)>.5)?requestAnimationFrame(loop):0;}
+  function spark(px,py){if(sparks>18)return;var s=document.createElement('i');s.className='spark';s.style.left=px+'px';s.style.top=py+'px';s.style.setProperty('--dx',((Math.random()-.5)*46).toFixed(0)+'px');s.style.setProperty('--dy',(-14-Math.random()*34).toFixed(0)+'px');sparks++;s.addEventListener('animationend',function(){s.remove();sparks--;});document.body.appendChild(s);}
+  addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;tx=e.clientX;ty=e.clientY;if(g.classList.contains('ov')){g.classList.add('on');if(!raf)raf=requestAnimationFrame(loop);var n=performance.now();if(n-last>70){last=n;spark(e.clientX,e.clientY);}}
+    var c=e.target.closest&&e.target.closest('a.mod');if(c){var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
       c.style.setProperty('--mx',(px*100).toFixed(1)+'%');c.style.setProperty('--my',(py*100).toFixed(1)+'%');c.style.setProperty('--ry',((px-.5)*5).toFixed(2)+'deg');c.style.setProperty('--rx',((.5-py)*5).toFixed(2)+'deg');}},{passive:true});
-  document.addEventListener('pointerout',function(e){var c=e.target.closest&&e.target.closest('a.mod');if(c&&!c.contains(e.relatedTarget)){c.style.removeProperty('--rx');c.style.removeProperty('--ry');}});})();
+  document.addEventListener('pointerout',function(e){var c=e.target.closest&&e.target.closest('a.mod');if(c&&!c.contains(e.relatedTarget)){c.style.removeProperty('--rx');c.style.removeProperty('--ry');}if(!e.relatedTarget)g.classList.remove('on');});})();
 '''
 APP_MORE_END = '<span class="tl">More labs</span></a>'
 
@@ -311,9 +345,9 @@ def ap_version(text):
     p.rep('\n    <nav class="nav" id="nav"', '\n    ' + APP_DLG.rstrip('\n') + '\n    <nav class="nav" id="nav"')
     p.rep('/* link back to the Intulab landing page */', APP_CSS.lstrip('\n') + PTR_CSS + '/* link back to the Intulab landing page */')
     i = p.s.rindex('</script>')
-    p.s = p.s[:i] + APP_REG + APP_JS + PTR_JS + PHONE_JS + UX_JS + p.s[i:]
+    p.s = p.s[:i] + APP_REG + APP_JS + PTR_JS + PHONE_JS + UX_JS + DELIGHT_JS + p.s[i:]
     j = p.s.rindex('</style>')
-    p.s = p.s[:j] + APPEAL_CSS + PHONE_CSS + UX_CSS + p.s[j:]
+    p.s = p.s[:j] + APPEAL_CSS + PHONE_CSS + UX_CSS + DELIGHT_CSS + p.s[j:]
     return p.s
 
 
