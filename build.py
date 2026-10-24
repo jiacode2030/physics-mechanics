@@ -309,10 +309,9 @@ def phy_version(text):
     p.rep('/intulab/privacy.html', '/princeton-labs/privacy.html', count=2)
     p.rep('/intulab/terms.html', '/princeton-labs/terms.html', count=2)
     p.rep('<a class="morelabs" href="/intulab/" aria-label="More labs from Intulab">', '<a class="morelabs" href="/princeton-labs/" aria-label="More Princeton labs">')
-    # credit as plain text: "JL · Princeton Class of 2030", no LinkedIn
-    p.rep('<span class="mapnote credit">Created by JL · Princeton Class of 2030</span>', '<span class="mapnote credit">JL · Princeton Class of 2030</span>')
+    # credit as plain text: "Built by Jiarui Li · Princeton Class of 2030 · a student project", no LinkedIn
     p.cut('<span class="mapnote"><a class="li-link"', 'LinkedIn</a></span>')
-    p.cut('<span class="credit-row">', 'LinkedIn</a></span>', new='<span class="credit-row">JL · Princeton Class of 2030</span>')
+    p.cut('<span class="credit-row">', 'LinkedIn</a></span>', new='<span class="credit-row">Built by Jiarui Li · Princeton Class of 2030 · a student project</span>')
     p.s, n = re.subn(r'(?:(?:\.rail )?\.li-link[^{]*\{[^}]*\}\n)+', '', p.s)
     if n != 1: sys.exit(f'[phy] expected the LinkedIn styles, found {n}')
     # look: match Multivariable Calculus Lab (fonts, light only, calm motion)
