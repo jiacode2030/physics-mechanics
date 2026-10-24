@@ -795,6 +795,21 @@ figcaption,.strobe figcaption,.fbdfig figcaption,.v3cap{font-family:var(--cap-fo
 .rail .li-link{margin-top:6px}
 #rail-count{color:var(--accent)}
 @media (prefers-reduced-motion: reduce){*,::before,::after{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
+/* Phone and touch pass (2026-10): every control at least 44px for a thumb, no text under 12px,
+   and draggable canvases keep the page from scrolling mid-drag. */
+canvas.drag{touch-action:none}
+@media (max-width:900px),(pointer:coarse){
+  .btn,.seg button,.sopts button,.quiz .opts button,.steps a,details summary,select,input[type=text],input[type=number],input[type=range],.check,.pt{min-height:44px!important}
+  .btn{padding-top:10px;padding-bottom:10px}
+  .btn,.seg button,.sopts button,.fs-btn,.stp-b button{min-width:44px}
+  .btn.link{display:inline-flex;align-items:center}
+  .check{display:flex;align-items:center}
+  .railtools .searchbtn,.railtools .themebtn,.railtools .morelabs,.v3ui button{min-width:44px!important;min-height:44px!important}
+  .v3ui button{width:44px;height:44px}
+  .rail .brand,.li-link{min-height:44px;display:inline-flex;align-items:center}
+  input[type=checkbox]{width:22px;height:22px}
+  .tag,.coach b,.steps .sn,.readout span,.eqn small,.modnav a span,.fbdnotes span,.assume dt,th,.bcbadge{font-size:12px!important}
+}
 </style>
 
 <div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>
