@@ -873,6 +873,27 @@ details summary{color:var(--m-acc-d)}
 .quiz .opts button:hover{background:color-mix(in srgb,var(--m-acc) 10%,var(--surface))}
 .steps{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
 .steps.stuck,.steps[data-stuck]{background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+/* ===== Phone UI pass (shared by all labs): 44px slider targets, a floating button that never covers content, step highlight, quiz feedback ===== */
+@media (max-width:900px),(pointer:coarse){
+  input[type=range]{min-height:44px!important;height:44px;margin:0;box-sizing:border-box}
+}
+@media (max-width:900px){
+  main::after{content:"";display:block;height:calc(var(--fsb,52px) + 32px + env(safe-area-inset-bottom,0px))}
+  .fs-btn .fs-lbl{display:inline-block;max-width:12em;overflow:hidden;white-space:nowrap;vertical-align:middle;transition:max-width .25s,opacity .2s}
+  .fs-btn.fs-mini .fs-lbl{max-width:0;opacity:0}
+  .fs-btn.fs-mini{gap:0}
+}
+.stepfig [data-s]{transition:opacity .35s}
+.stepfig.stephl [data-s]:not(.cur){opacity:.4}
+.fbd svg g{transition:opacity .35s}
+.fbd.stephl svg g:not(.fbnew){opacity:.4}
+@keyframes qpulse{0%{transform:scale(1)}40%{transform:scale(1.04);box-shadow:0 0 0 6px color-mix(in srgb,var(--good) 28%,transparent)}100%{transform:scale(1);box-shadow:0 0 0 0 transparent}}
+@keyframes qshake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+@keyframes fbpop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.quiz .opts button.pulse{animation:qpulse .45s ease-out}
+.quiz .opts button.shake{animation:qshake .4s ease-in-out}
+.quiz .fb.fb-pop{animation:fbpop .3s ease-out}
+@media (prefers-reduced-motion:reduce){.stepfig [data-s],.fbd svg g,.fs-btn .fs-lbl{transition:none}.quiz .opts button.pulse,.quiz .opts button.shake,.quiz .fb.fb-pop{animation:none}}
 </style>
 
 <div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>
@@ -4803,4 +4824,15 @@ if('serviceWorker' in navigator&&(/\.github\.io$/.test(location.hostname)||locat
   addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;var c=e.target.closest&&e.target.closest('a.mod');if(c){var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
       c.style.setProperty('--mx',(px*100).toFixed(1)+'%');c.style.setProperty('--my',(py*100).toFixed(1)+'%');c.style.setProperty('--ry',((px-.5)*5).toFixed(2)+'deg');c.style.setProperty('--rx',((.5-py)*5).toFixed(2)+'deg');}},{passive:true});
   document.addEventListener('pointerout',function(e){var c=e.target.closest&&e.target.closest('a.mod');if(c&&!c.contains(e.relatedTarget)){c.style.removeProperty('--rx');c.style.removeProperty('--ry');}});})();
+/* Phone UI pass (same in every lab): the floating button shrinks to its icon while you scroll and the page keeps room for it; a revealed worked-example step lights up its part of the figure; quiz answers pulse or shake. Honors reduced motion. */
+(function phoneUI(){var rm=matchMedia('(prefers-reduced-motion: reduce)'),phone=matchMedia('(max-width: 900px)'),fs=document.querySelector('.fs-btn');
+  if(fs){var setH=function(){document.documentElement.style.setProperty('--fsb',Math.ceil(fs.getBoundingClientRect().height||52)+'px');};setH();addEventListener('resize',setH);
+    var t=0;addEventListener('scroll',function(){if(!phone.matches||rm.matches)return;fs.classList.add('fs-mini');clearTimeout(t);t=setTimeout(function(){fs.classList.remove('fs-mini');},700);},{passive:true});}
+  document.addEventListener('click',function(e){var nx=e.target.closest&&e.target.closest('[data-next]'),all=e.target.closest&&e.target.closest('[data-all]');if(!nx&&!all)return;var ex=(nx||all).closest('.example');if(!ex)return;
+    var shown=ex.querySelectorAll('.exsteps li:not([hidden])').length;
+    Array.prototype.forEach.call(ex.querySelectorAll('.stepfig'),function(f){Array.prototype.forEach.call(f.querySelectorAll('[data-s]'),function(el){el.classList.toggle('cur',!el.hidden&&+el.dataset.s===shown);});f.classList.toggle('stephl',!!nx&&!!f.querySelector('[data-s].cur'));});
+    Array.prototype.forEach.call(ex.querySelectorAll('.fbd'),function(f){f.classList.toggle('stephl',!!nx&&shown>1);});});
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.quiz .opts button');if(!b||rm.matches)return;b.classList.remove('pulse','shake');void b.offsetWidth;
+    if(b.classList.contains('right'))b.classList.add('pulse');
+    else if(b.classList.contains('wrong')){b.classList.add('shake');var fb=b.closest('.quiz').querySelector('.fb');if(fb){fb.classList.remove('fb-pop');void fb.offsetWidth;fb.classList.add('fb-pop');if(fb.getBoundingClientRect().bottom>innerHeight-80)fb.scrollIntoView({block:'center',behavior:'smooth'});}}});})();
 </script>

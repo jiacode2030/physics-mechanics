@@ -85,6 +85,40 @@ APP_BTN = '<button type="button" class="morelabs appbtn" id="app-btn" hidden ari
 APP_DLG = '<dialog class="appdlg" id="app-dlg" aria-labelledby="app-dlg-h">\n  <form method="dialog">\n    <h2 id="app-dlg-h">Get the Intulab app</h2>\n    <p>Mechanics, E&amp;M, Chemistry, Calculus and Biology in one free app, with no app store. It opens full screen from your home screen, and once you\'ve opened it, it works offline too.</p>\n    <div class="appos" data-os="ios"><h3>iPhone or iPad (Safari)</h3><ol><li>Tap the <b>Share</b> button at the bottom (or top) of Safari.</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li></ol>\n      <p class="appnote">On iPhone and iPad, the app keeps its own saved progress, separate from Safari.</p></div>\n    <div class="appos" data-os="android"><h3>Android (Chrome)</h3><ol><li>Tap the <b>⋮</b> menu at the top right.</li><li>Tap <b>Install app</b> (or <b>Add to Home screen</b>).</li><li>Tap <b>Install</b>.</li></ol></div>\n    <div class="appos" data-os="desktop"><h3>Computer (Chrome or Edge)</h3><ol><li>Click the install icon at the right end of the address bar.</li><li>Click <b>Install</b>.</li></ol></div>\n    <div class="approw"><button class="btn primary" value="close">Got it</button></div>\n  </form>\n</dialog>\n'
 APP_CSS = "\n/* Get the Intulab app: button in the rail and the steps dialog */\n.appbtn,.appbtn2{cursor:pointer}\n.appbtn[hidden],.appbtn2[hidden]{display:none!important}\n/* computers: in the side rail; phones: on the course's home page (the top bar is full) */\n@media (max-width:900px){.appbtn{display:none!important}}\n@media (min-width:901px){.appbtn2{display:none!important}}\n.appdlg{max-width:min(520px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;width:100%;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.35)}\n.appdlg::backdrop{background:rgba(5,10,20,.55)}\n.appdlg h2{margin:0 0 8px;font-size:22px}\n.appdlg h3{margin:16px 0 6px;font-size:15px}\n.appdlg p{margin:0 0 4px;color:var(--muted)}\n.appdlg ol{margin:0;padding-left:22px}.appdlg li{margin:4px 0}\n.appdlg .appnote{font-size:13.5px;margin-top:8px}\n.appdlg details{margin-top:14px;border-top:1px solid var(--line);padding-top:6px}\n.appdlg summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}\n.appdlg summary::before{content:'▸';margin-right:8px}.appdlg details[open] summary::before{content:'▾'}\n.appdlg .approw{display:flex;justify-content:flex-end;margin-top:18px}\n"
 APP_JS = '/* Get the Intulab app (same app as the Intulab page; hidden once you\'re in it) */\n(function appInstall(){var btns=document.querySelectorAll(\'.appbtn,.appbtn2\'),dlg=document.getElementById(\'app-dlg\');if(!btns.length||!dlg)return;\n  var each=function(f){Array.prototype.forEach.call(btns,f);};\n  if(matchMedia(\'(display-mode: standalone)\').matches||navigator.standalone===true)return;\n  each(function(b){b.hidden=false;});var prompt=null;\n  var ua=navigator.userAgent,os=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1)?\'ios\':/Android/.test(ua)?\'android\':\'desktop\';\n  var form=dlg.querySelector(\'form\'),mine=dlg.querySelector(\'[data-os="\'+os+\'"]\'),more=document.createElement(\'details\');more.innerHTML=\'<summary>Other devices</summary>\';\n  Array.prototype.forEach.call(dlg.querySelectorAll(\'.appos\'),function(el){if(el!==mine)more.appendChild(el);});form.insertBefore(more,form.querySelector(\'.approw\'));\n  addEventListener(\'beforeinstallprompt\',function(e){e.preventDefault();prompt=e;});\n  addEventListener(\'appinstalled\',function(){each(function(b){b.hidden=true;});});\n  each(function(b){b.addEventListener(\'click\',function(){if(prompt){prompt.prompt();prompt=null;return;}if(dlg.showModal)dlg.showModal();else dlg.setAttribute(\'open\',\'\');});});})();\n'
+PHONE_CSS = r'''/* ===== Phone UI pass (shared by all labs): 44px slider targets, a floating button that never covers content, step highlight, quiz feedback ===== */
+@media (max-width:900px),(pointer:coarse){
+  input[type=range]{min-height:44px!important;height:44px;margin:0;box-sizing:border-box}
+}
+@media (max-width:900px){
+  main::after{content:"";display:block;height:calc(var(--fsb,52px) + 32px + env(safe-area-inset-bottom,0px))}
+  .fs-btn .fs-lbl{display:inline-block;max-width:12em;overflow:hidden;white-space:nowrap;vertical-align:middle;transition:max-width .25s,opacity .2s}
+  .fs-btn.fs-mini .fs-lbl{max-width:0;opacity:0}
+  .fs-btn.fs-mini{gap:0}
+}
+.stepfig [data-s]{transition:opacity .35s}
+.stepfig.stephl [data-s]:not(.cur){opacity:.4}
+.fbd svg g{transition:opacity .35s}
+.fbd.stephl svg g:not(.fbnew){opacity:.4}
+@keyframes qpulse{0%{transform:scale(1)}40%{transform:scale(1.04);box-shadow:0 0 0 6px color-mix(in srgb,var(--good) 28%,transparent)}100%{transform:scale(1);box-shadow:0 0 0 0 transparent}}
+@keyframes qshake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+@keyframes fbpop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.quiz .opts button.pulse{animation:qpulse .45s ease-out}
+.quiz .opts button.shake{animation:qshake .4s ease-in-out}
+.quiz .fb.fb-pop{animation:fbpop .3s ease-out}
+@media (prefers-reduced-motion:reduce){.stepfig [data-s],.fbd svg g,.fs-btn .fs-lbl{transition:none}.quiz .opts button.pulse,.quiz .opts button.shake,.quiz .fb.fb-pop{animation:none}}
+'''
+PHONE_JS = r'''/* Phone UI pass (same in every lab): the floating button shrinks to its icon while you scroll and the page keeps room for it; a revealed worked-example step lights up its part of the figure; quiz answers pulse or shake. Honors reduced motion. */
+(function phoneUI(){var rm=matchMedia('(prefers-reduced-motion: reduce)'),phone=matchMedia('(max-width: 900px)'),fs=document.querySelector('.fs-btn');
+  if(fs){var setH=function(){document.documentElement.style.setProperty('--fsb',Math.ceil(fs.getBoundingClientRect().height||52)+'px');};setH();addEventListener('resize',setH);
+    var t=0;addEventListener('scroll',function(){if(!phone.matches||rm.matches)return;fs.classList.add('fs-mini');clearTimeout(t);t=setTimeout(function(){fs.classList.remove('fs-mini');},700);},{passive:true});}
+  document.addEventListener('click',function(e){var nx=e.target.closest&&e.target.closest('[data-next]'),all=e.target.closest&&e.target.closest('[data-all]');if(!nx&&!all)return;var ex=(nx||all).closest('.example');if(!ex)return;
+    var shown=ex.querySelectorAll('.exsteps li:not([hidden])').length;
+    Array.prototype.forEach.call(ex.querySelectorAll('.stepfig'),function(f){Array.prototype.forEach.call(f.querySelectorAll('[data-s]'),function(el){el.classList.toggle('cur',!el.hidden&&+el.dataset.s===shown);});f.classList.toggle('stephl',!!nx&&!!f.querySelector('[data-s].cur'));});
+    Array.prototype.forEach.call(ex.querySelectorAll('.fbd'),function(f){f.classList.toggle('stephl',!!nx&&shown>1);});});
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.quiz .opts button');if(!b||rm.matches)return;b.classList.remove('pulse','shake');void b.offsetWidth;
+    if(b.classList.contains('right'))b.classList.add('pulse');
+    else if(b.classList.contains('wrong')){b.classList.add('shake');var fb=b.closest('.quiz').querySelector('.fb');if(fb){fb.classList.remove('fb-pop');void fb.offsetWidth;fb.classList.add('fb-pop');if(fb.getBoundingClientRect().bottom>innerHeight-80)fb.scrollIntoView({block:'center',behavior:'smooth'});}}});})();
+'''
 APPEAL_CSS = r'''/* ===== Module appeal layer: the Precalculus Lab look (soft tinted cards, rounded shapes, accent glow on the active tab) in this site's own colors ===== */
 :root{--m-acc:var(--accent);--m-on:#FFFFFF;--m-r:16px;--m-acc-d:color-mix(in srgb,var(--m-acc) 78%,#000);--m-lav:#8B7CFF}
 :root[data-theme="dark"]{--m-on:#06101F;--m-acc-d:color-mix(in srgb,var(--m-acc) 72%,#fff)}
@@ -210,9 +244,9 @@ def ap_version(text):
     p.rep('\n    <nav class="nav" id="nav"', '\n    ' + APP_DLG.rstrip('\n') + '\n    <nav class="nav" id="nav"')
     p.rep('/* link back to the Intulab landing page */', APP_CSS.lstrip('\n') + PTR_CSS + '/* link back to the Intulab landing page */')
     i = p.s.rindex('</script>')
-    p.s = p.s[:i] + APP_REG + APP_JS + PTR_JS + p.s[i:]
+    p.s = p.s[:i] + APP_REG + APP_JS + PTR_JS + PHONE_JS + p.s[i:]
     j = p.s.rindex('</style>')
-    p.s = p.s[:j] + APPEAL_CSS + p.s[j:]
+    p.s = p.s[:j] + APPEAL_CSS + PHONE_CSS + p.s[j:]
     return p.s
 
 
