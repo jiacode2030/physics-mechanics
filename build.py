@@ -156,6 +156,7 @@ DELIGHT_CSS = r'''/* ===== Delight pack (shared by all labs): the headline gradi
 .lab:has(input[type=range]:active),.lab:has(.seg button:active){box-shadow:0 0 0 3px color-mix(in srgb,var(--m-acc,var(--accent,#5CB8FF)) 30%,transparent),var(--shadow-1,none)}
 #v-overview .hero .strobe{transition:transform .25s ease-out}
 @media (prefers-reduced-motion:reduce){.ring{display:none}.hero h1 .hl.gx{transition:none}}
+@media (max-width:900px){.tag,.fh .tag,.frq .fh .tag{white-space:normal!important;max-width:100%;overflow-wrap:anywhere;flex-shrink:1}.fh,.fh .row{flex-wrap:wrap;min-width:0}.sol{overflow-x:auto;max-width:100%}.frq,.frq .part,.frq details,.rub{min-width:0;max-width:100%}}
 '''
 DELIGHT_JS = r'''/* Delight pack (same in every lab). Hover effects need a mouse and no reduced-motion setting; the burst on a right answer works on any device. */
 (function delight(){var fine=matchMedia('(hover: hover) and (pointer: fine)'),rm=matchMedia('(prefers-reduced-motion: reduce)');
