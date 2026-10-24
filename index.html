@@ -894,6 +894,24 @@ details summary{color:var(--m-acc-d)}
 .quiz .opts button.shake{animation:qshake .4s ease-in-out}
 .quiz .fb.fb-pop{animation:fbpop .3s ease-out}
 @media (prefers-reduced-motion:reduce){.stepfig [data-s],.fbd svg g,.fs-btn .fs-lbl{transition:none}.quiz .opts button.pulse,.quiz .opts button.shake,.quiz .fb.fb-pop{animation:none}}
+/* ===== UX pack (shared by all labs): the live demo comes before the fine print on phones, a quiet Reference button, a Continue button, a thin reading-progress bar, a soft theme cross-fade ===== */
+@media (max-width:900px){
+  #v-overview .hero{display:flex;flex-direction:column;align-items:stretch;gap:16px}
+  #v-overview .hero .copy{display:contents}
+  #v-overview .hero .copy>*{order:1}
+  #v-overview .hero>figure,#v-overview .hero>.strobe{order:2}
+  #v-overview .hero .copy>.heronote,#v-overview .hero .copy>.ov-report{order:3}
+  .fs-btn{gap:0;padding-left:14px;padding-right:14px}
+  .fs-btn .fs-lbl{max-width:0;opacity:0}
+  .course{margin:0;gap:0}
+  .course .small{display:none}
+  .course .seg{display:inline-flex;flex-direction:row}
+  .course .seg button{min-width:40px;padding-left:10px;padding-right:10px}
+}
+#rdbar{position:fixed;left:0;top:0;width:100%;height:3px;transform-origin:0 50%;transform:scaleX(0);background:var(--m-acc,var(--accent,#5CB8FF));z-index:30;pointer-events:none;opacity:.85}
+.theme-fade,.theme-fade *,.theme-fade *::before,.theme-fade *::after{transition:background-color .35s,color .35s,border-color .35s,fill .35s,stroke .35s!important}
+.btn.cont{max-width:100%;white-space:normal;text-align:left}
+@media (prefers-reduced-motion:reduce){#rdbar{transition:none}}
 </style>
 
 <div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>
@@ -4835,4 +4853,18 @@ if('serviceWorker' in navigator&&(/\.github\.io$/.test(location.hostname)||locat
   document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.quiz .opts button');if(!b||rm.matches)return;b.classList.remove('pulse','shake');void b.offsetWidth;
     if(b.classList.contains('right'))b.classList.add('pulse');
     else if(b.classList.contains('wrong')){b.classList.add('shake');var fb=b.closest('.quiz').querySelector('.fb');if(fb){fb.classList.remove('fb-pop');void fb.offsetWidth;fb.classList.add('fb-pop');if(fb.getBoundingClientRect().bottom>innerHeight-80)fb.scrollIntoView({block:'center',behavior:'smooth'});}}});})();
+/* UX pack (same in every lab): remembers the last module you opened (this device only) and offers Continue on the overview; thin reading-progress bar; soft cross-fade when the theme changes. */
+(function uxPack(){var KEY='kin-last',rm=matchMedia('(prefers-reduced-motion: reduce)');
+  var ls=function(f){try{return f();}catch(e){return null;}};
+  var titleOf=function(id){var a=document.querySelector('#nav a[data-view="'+id+'"]');return a?a.textContent.replace(/\s+/g,' ').trim():null;};
+  var save=function(){var id=(location.hash||'').slice(1);if(!id||id==='overview'||id==='practice'||!document.getElementById('v-'+id))return;var t=titleOf(id);if(!t)return;ls(function(){localStorage.setItem(KEY,JSON.stringify({id:id,t:t,ts:Date.now()}));});};
+  var load=function(){return ls(function(){var o=JSON.parse(localStorage.getItem(KEY)||'null');return o&&o.id&&o.t?o:null;});};
+  var addContinue=function(){var o=load(),ov=document.getElementById('v-overview');if(!ov||!o||!document.getElementById('v-'+o.id))return;var row=ov.querySelector('.hero .row');if(!row||row.querySelector('.cont'))return;
+    var a=document.createElement('a');a.className='btn primary cont';a.href='#'+o.id;a.style.textDecoration='none';a.textContent='Continue: '+o.t;row.prepend(a);var st=row.querySelector('.btn.primary:not(.cont)');if(st)st.classList.remove('primary');};
+  save();addContinue();addEventListener('hashchange',save);
+  var bar=document.createElement('div');bar.id='rdbar';bar.setAttribute('aria-hidden','true');document.body.appendChild(bar);
+  var upd=function(){var h=document.documentElement.scrollHeight-innerHeight;bar.style.transform='scaleX('+(h>0?Math.min(1,scrollY/h):0).toFixed(3)+')';};
+  addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);addEventListener('hashchange',function(){setTimeout(upd,80);});upd();
+  var fs=document.querySelector('.fs-btn');if(fs&&!fs.getAttribute('aria-label'))fs.setAttribute('aria-label',fs.textContent.replace(/\s+/g,' ').trim());
+  document.addEventListener('click',function(e){if(rm.matches)return;var b=e.target.closest&&e.target.closest('#theme-btn,.themebtn');if(!b)return;var d=document.documentElement;d.classList.add('theme-fade');setTimeout(function(){d.classList.remove('theme-fade');},450);},true);})();
 </script>
