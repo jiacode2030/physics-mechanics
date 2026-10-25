@@ -339,6 +339,8 @@ def ap_version(text):
     p.rep('<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n',
           '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + APP_HEAD)
     p.rep(APP_MORE_END, APP_MORE_END + APP_BTN)
+    SEO_TITLE = 'Mechanics Lab: free AP Physics C: Mechanics practice | Intulab'
+    p.rep('<title>Mechanics Lab</title>', '<title>' + SEO_TITLE + '</title>\n<link rel="canonical" href="https://jiacode2030.github.io/physics-mechanics/">')
     i = p.s.find('<link rel="preconnect" href="https://fonts.googleapis.com">'); k = p.s.find('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?'); j = p.s.find('>', k) + 1
     if i < 0 or k < 0: sys.exit('[ap] font links not found')
     p.s = p.s[:i] + FONTS_STYLE.rstrip('\n') + p.s[j:]
