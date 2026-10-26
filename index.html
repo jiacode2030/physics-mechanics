@@ -972,6 +972,16 @@ details summary{color:var(--m-acc-d)}
 .ig-link:hover{border-color:#C13584;color:#C13584}
 :root[data-theme="dark"] .ig-link svg{fill:#F58EB8}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ig-link svg{fill:#F58EB8}}
+/* Compact footer credit: icon-only social buttons on the credit line; © and Last updated share a line */
+.credit-row .li-link{font-size:0;gap:0;padding:0;width:34px;min-width:34px;height:34px;min-height:34px;justify-content:center;border-radius:50%}
+.credit-row .li-link svg{width:16px;height:16px;margin:0}
+.credit-row{flex-wrap:nowrap;gap:8px;align-items:center;font-size:12.5px}
+.credit-row>span:first-child{flex:1 1 0;min-width:0}
+.credit-row .li-link{flex:none}
+@media (max-width:900px),(pointer:coarse){.credit-row .li-link{width:44px;height:44px;min-width:44px;min-height:44px}}
+.ov-report .mapnote{display:inline!important;margin:0!important}
+.ov-report .mapnote+.mapnote::before{content:" \00b7 "}
+.ov-report .mapnote:last-of-type::after{content:" \00b7 "}
 </style>
 
 <div class="fs-scrim" id="fs-scrim" aria-hidden="true"></div>

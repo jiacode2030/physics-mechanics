@@ -179,6 +179,17 @@ IG_CSS = r'''.ig-link svg{fill:#C13584}
 :root[data-theme="dark"] .ig-link svg{fill:#F58EB8}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ig-link svg{fill:#F58EB8}}
 '''
+LAB_COMPACT = r'''/* Compact footer credit: icon-only social buttons on the credit line; © and Last updated share a line */
+.credit-row .li-link{font-size:0;gap:0;padding:0;width:34px;min-width:34px;height:34px;min-height:34px;justify-content:center;border-radius:50%}
+.credit-row .li-link svg{width:16px;height:16px;margin:0}
+.credit-row{flex-wrap:nowrap;gap:8px;align-items:center;font-size:12.5px}
+.credit-row>span:first-child{flex:1 1 0;min-width:0}
+.credit-row .li-link{flex:none}
+@media (max-width:900px),(pointer:coarse){.credit-row .li-link{width:44px;height:44px;min-width:44px;min-height:44px}}
+.ov-report .mapnote{display:inline!important;margin:0!important}
+.ov-report .mapnote+.mapnote::before{content:" \00b7 "}
+.ov-report .mapnote:last-of-type::after{content:" \00b7 "}
+'''
 PHONE_CSS = r'''/* ===== Phone UI pass (shared by all labs): 44px slider targets, a floating button that never covers content, step highlight, quiz feedback ===== */
 @media (max-width:900px),(pointer:coarse){
   input[type=range]{min-height:44px!important;height:44px;margin:0;box-sizing:border-box}
@@ -358,7 +369,7 @@ def ap_version(text):
     i = p.s.rindex('</script>')
     p.s = p.s[:i] + APP_REG + APP_JS + PTR_JS + PHONE_JS + UX_JS + DELIGHT_JS + p.s[i:]
     j = p.s.rindex('</style>')
-    p.s = p.s[:j] + APPEAL_CSS + PHONE_CSS + UX_CSS + DELIGHT_CSS + IG_CSS + p.s[j:]
+    p.s = p.s[:j] + APPEAL_CSS + PHONE_CSS + UX_CSS + DELIGHT_CSS + IG_CSS + LAB_COMPACT + p.s[j:]
     return p.s
 
 
