@@ -186,9 +186,9 @@ LAB_COMPACT = r'''/* Compact footer credit: icon-only social buttons on the cred
 .credit-row>span:first-child{flex:1 1 0;min-width:0}
 .credit-row .li-link{flex:none}
 @media (max-width:900px),(pointer:coarse){.credit-row .li-link{width:44px;height:44px;min-width:44px;min-height:44px}}
-.ov-report .mapnote{display:inline!important;margin:0!important}
-.ov-report .mapnote+.mapnote::before{content:" \00b7 "}
-.ov-report .mapnote:last-of-type::after{content:" \00b7 "}
+.ov-report .mapnote{display:block!important;margin:0 0 4px!important;font:500 12px/1.5 var(--f-body)!important;letter-spacing:0}
+.ov-report{margin-top:8px;line-height:1.5}
+.credit-row{margin-bottom:8px}
 '''
 PHONE_CSS = r'''/* ===== Phone UI pass (shared by all labs): 44px slider targets, a floating button that never covers content, step highlight, quiz feedback ===== */
 @media (max-width:900px),(pointer:coarse){
