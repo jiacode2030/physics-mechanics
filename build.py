@@ -173,6 +173,12 @@ DELIGHT_JS = r'''/* Delight pack (same in every lab). Hover effects need a mouse
   document.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'||!onOv())return;var s=document.createElement('i');s.className='ring';s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';s.addEventListener('animationend',function(){s.remove();});document.body.appendChild(s);});
   addEventListener('hashchange',function(){if(!onOv()){btns.forEach(function(b){b.style.translate='';});if(fig)fig.style.transform='';}});})();
 '''
+IG_LINK = r'''<a class="li-link ig-link" href="https://www.instagram.com/intulab.ap/" target="_blank" rel="noopener" aria-label="Intulab on Instagram (opens in a new tab)"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM17.3 5.7a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"/></svg>Instagram</a>'''
+IG_CSS = r'''.ig-link svg{fill:#C13584}
+.ig-link:hover{border-color:#C13584;color:#C13584}
+:root[data-theme="dark"] .ig-link svg{fill:#F58EB8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ig-link svg{fill:#F58EB8}}
+'''
 PHONE_CSS = r'''/* ===== Phone UI pass (shared by all labs): 44px slider targets, a floating button that never covers content, step highlight, quiz feedback ===== */
 @media (max-width:900px),(pointer:coarse){
   input[type=range]{min-height:44px!important;height:44px;margin:0;box-sizing:border-box}
@@ -339,6 +345,8 @@ def ap_version(text):
     p.rep('<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n',
           '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + APP_HEAD)
     p.rep(APP_MORE_END, APP_MORE_END + APP_BTN)
+    i = p.s.index('class="ov-report"'); j = p.s.index('LinkedIn</a>', i) + len('LinkedIn</a>')
+    p.s = p.s[:j] + IG_LINK + p.s[j:]
     SEO_TITLE = 'Mechanics Lab: free AP Physics C: Mechanics practice | Intulab'
     p.rep('<title>Mechanics Lab</title>', '<title>' + SEO_TITLE + '</title>\n<link rel="canonical" href="https://jiacode2030.github.io/physics-mechanics/">')
     i = p.s.find('<link rel="preconnect" href="https://fonts.googleapis.com">'); k = p.s.find('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?'); j = p.s.find('>', k) + 1
@@ -350,7 +358,7 @@ def ap_version(text):
     i = p.s.rindex('</script>')
     p.s = p.s[:i] + APP_REG + APP_JS + PTR_JS + PHONE_JS + UX_JS + DELIGHT_JS + p.s[i:]
     j = p.s.rindex('</style>')
-    p.s = p.s[:j] + APPEAL_CSS + PHONE_CSS + UX_CSS + DELIGHT_CSS + p.s[j:]
+    p.s = p.s[:j] + APPEAL_CSS + PHONE_CSS + UX_CSS + DELIGHT_CSS + IG_CSS + p.s[j:]
     return p.s
 
 
